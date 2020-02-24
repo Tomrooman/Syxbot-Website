@@ -5,6 +5,14 @@
     }
 }
 
+audio::-webkit-media-controls-panel {
+    background: linear-gradient(45deg, rgba(121,75,139,1) 0%, rgba(134,31,43,1) 100%);
+}
+
+audio::-webkit-media-controls-play-button, audio::-webkit-media-controls-volume-slider, audio::-webkit-media-controls-mute-button {
+    color: white;
+}
+
 audio {
     width: 220px;
     margin-left: 17.5px;
@@ -77,13 +85,21 @@ audio {
 }
 
 .radio_player {
-    display: none;
-    height: 0;
+    visibility: hidden;
     position: absolute;
     bottom : 75px;
     width : 90%;
+    border-radius: 10px;
     background: rgb(236, 236, 236);
-    border: 1px solid rgb(146, 146, 146);
+    transform : translateY(-50px);
+    /* border: 1px solid rgb(146, 146, 146); */
+    box-shadow: 0px 0px 2px rgb(55, 107, 138);
+    opacity: 0;
+    transition: all 0.2s;
+}
+
+.radio_player:hover {
+    box-shadow: 0px 0px 5px rgb(55, 107, 138);
 }
 
 .radio_player audio {
@@ -110,17 +126,22 @@ audio {
     width : 100%;
     /* background: linear-gradient(45deg, rgb(22, 22, 22) 0%, rgb(117, 31, 134) 100%); */
     /* background: rgb(180, 180, 180); */
-    background: rgb(236, 236, 236);
+    background: rgba(236, 236, 236, 0);
     border: none;
-    margin-bottom : 1rem;
     border-bottom : 1px solid grey;
     border-radius: 5px;
-    color: #fff;
+    color: black;
     cursor: pointer;
-    padding-top : 7px;
-    padding-bottom : 7px;
+    margin-bottom : 5px;
+    padding-top : 4px;
+    padding-bottom : 4px;
     padding-left: 10px;
     padding-right : 10px;
+    transition: all 0.2s;
+}
+
+.radio_select:active, .radio_select:focus {
+    outline : 0;
 }
 
 .radio_select svg {
@@ -161,7 +182,69 @@ audio {
     transition-duration: 0.2s;
 }
 
+.radio_select:hover {
+    background: rgb(201, 201, 201);
+    transition: all 0.2s;
+}
+
 audio:focus, audio:active {
     border: none;
     outline: 0;
 }
+
+.radio_controls_play, .slidecontainer {
+    display: inline-block;
+    height: 30px;
+}
+
+.radio_controls_play svg, .slider {
+    vertical-align: middle;
+}
+
+.radio_controls_play svg {
+    font-size: 1.3rem;
+    cursor: pointer;
+}
+
+.slidecontainer {
+    width: 100%; /* Width of the outside container */
+  }
+  
+  /* The slider itself */
+  .slider {
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    height: 15px;
+    border-radius: 5px;  
+    width: 100%; /* Full-width */
+    background: #d3d3d3; /* Grey background */
+    outline: none; /* Remove outline */
+    opacity: 0.85; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+    border: 1px solid rgb(92, 92, 92);
+  }
+  
+  /* Mouse-over effects */
+  .slider:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+  }
+  
+  /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    border-radius: 50%; 
+    background: linear-gradient(45deg, rgba(121,75,139,1) 0%, rgba(134,31,43,1) 100%);
+    cursor: pointer; /* Cursor on hover */
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, rgba(121,75,139,1) 0%, rgba(134,31,43,1) 100%);
+    cursor: pointer; /* Cursor on hover */
+  }

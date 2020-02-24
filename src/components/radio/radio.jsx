@@ -5,9 +5,9 @@ import $ from 'jquery';
 import Cookies from 'universal-cookie';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretSquareUp } from '@fortawesome/free-solid-svg-icons';
+import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import './radio.css';
-library.add(faCaretSquareUp);
+library.add(faCaretUp);
 
 const cookies = new Cookies();
 
@@ -24,6 +24,7 @@ export default class Radio extends React.Component {
         this.handlePlay = this.handlePlay.bind(this);
         this.handlePause = this.handlePause.bind(this);
         this.handleVolumeChange = this.handleVolumeChange.bind(this);
+        this.handleTogglePlay = this.handleTogglePlay.bind(this);
     }
 
     componentDidMount() {
@@ -43,8 +44,14 @@ export default class Radio extends React.Component {
                 });
             }
         }
+        else if (this.state.radio && this.state.radio.volume) {
+            const volume = this.state.radio.volume;
+            $('audio')[0].volume = volume;
+            $('.slider')[0].value = volume * 100;
+        }
         else {
             $('audio')[0].volume = 0.2;
+            $('.slider')[0].value = 20;
         }
     }
 
@@ -89,6 +96,7 @@ export default class Radio extends React.Component {
     setRadioSourceAndInfos(imagePath, radioUrl, index, radioName, volume) {
         $('.radio_png').css('display', 'initial');
         $('audio')[0].volume = volume;
+        $('.slider')[0].value = volume * 100;
         const radioImg = document.createElement('img');
         radioImg.src = imagePath;
         $('.radio_png')[0].innerHTML = '';
@@ -101,8 +109,9 @@ export default class Radio extends React.Component {
         });
     }
 
-    handleVolumeChange() {
+    handleVolumeChange(e) {
         const radioName = this.state.radioName.indexOf('&amp;') !== -1 ? this.state.radioName.split('&amp;').join(' & ') : this.state.radioName;
+        $('audio')[0].volume = parseInt(e.target.value, 10) / 100;
         if ($('audio')[0].paused) {
             this.setRadioCookie(false, this.state.index, $('audio')[0].volume, radioName);
         }
@@ -124,6 +133,17 @@ export default class Radio extends React.Component {
         this.setRadioCookie(true, this.state.index, $('audio')[0].volume, radioName);
     }
 
+    handleTogglePlay() {
+        if (this.state.radioName) {
+            if ($('audio')[0].paused) {
+                $('audio')[0].play();
+            }
+            else {
+                $('audio')[0].pause();
+            }
+        }
+    }
+
     setRadioCookie(play, index, volume, name) {
         const radioCookie = cookies.get('syxbot_radio');
         if (!radioCookie || (radioCookie && (radioCookie.play !== play || radioCookie.index !== index || radioCookie.volume !== volume || radioCookie.name !== name))) {
@@ -133,17 +153,27 @@ export default class Radio extends React.Component {
                 volume: volume,
                 name: name
             });
+            this.setState({
+                radio: {
+                    play: play,
+                    index: index,
+                    volume: volume,
+                    name: name
+                }
+            });
         }
     }
 
     showMenu() {
-        if ($('.radio_player').css('display') === 'block') {
-            $('.radio_player').css('display', 'none');
-            $('.radio_player').css('height', 0);
+        if ($('.radio_player').css('opacity') === '1') {
+            $('.radio_player').css('opacity', 0);
+            $('.radio_player').css('transform', 'translateY(-50px)');
+            $('.radio_player').css('visibility', 'hidden');
         }
         else {
-            $('.radio_player').css('height', 'auto');
-            $('.radio_player').css('display', 'initial');
+            $('.radio_player').css('opacity', 1);
+            $('.radio_player').css('transform', 'translateY(0px)');
+            $('.radio_player').css('visibility', 'visible');
         }
     }
 
@@ -152,11 +182,11 @@ export default class Radio extends React.Component {
             <div className='radio_container'>
                 <div className='radio_player'>
                     <div className='dropdown'>
-                        <button type='button' className='radio_select btn btn-secondary dropdown-toggle' id='dropdownMenu2' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                        <button type='button' className='radio_select dropdown-toggle' id='dropdownMenu2' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
                             {this.state.dropdown_title === 'Chargement' ?
                                 <span>{this.state.dropdown_title} <div className='custom-spinner-radio' /></span> :
                                 'Radios disponibles'}
-                            <FontAwesomeIcon icon='caret-square-up' />
+                            <FontAwesomeIcon icon='caret-up' />
                         </button>
                         <div id='radio_choices' className='dropdown-menu dropdown-menu-right' aria-labelledby='dropdownMenu2'>
                             {this.radios.map((obj, index) => {
@@ -176,12 +206,28 @@ export default class Radio extends React.Component {
                         </div>
                     </div>
                     <audio
-                        controls
                         autoPlay
                         onPlay={this.handlePlay}
                         onPause={this.handlePause}
-                        onVolumeChange={this.handleVolumeChange}
                     />
+                    <div className='radio_controls col-12'>
+                        <div
+                            className='radio_controls_play col-3'
+                            onClick={this.handleTogglePlay}
+                        >
+                            {this.state.radio && this.state.radio.play ? <FontAwesomeIcon icon='pause' /> : <FontAwesomeIcon icon='play' />}
+                        </div>
+                        <div className='slidecontainer col-9'>
+                            <input
+                                type='range'
+                                min='1'
+                                max='100'
+                                className='slider'
+                                id='myRange'
+                                onChange={this.handleVolumeChange}
+                            />
+                        </div>
+                    </div>
                 </div>
                 <div
                     className='radio_floating'

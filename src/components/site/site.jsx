@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAssistiveListeningSystems, faBookOpen } from '@fortawesome/free-solid-svg-icons';
 import Config from './../../../config.json';
 import Axios from 'axios';
+import $ from 'jquery';
 import './site.css';
 import Navbar from './navbar/navbar.jsx';
 
@@ -28,6 +29,9 @@ export default class Site extends React.Component {
             user: cookies.get('syxbot') || false,
             page: false
         };
+        window.document.addEventListener('scroll', (e) => {
+            $('.radio_container').css('transform', 'translateY(' + e.path[1].scrollY + 'px)');
+        });
     }
 
     componentDidMount() {
