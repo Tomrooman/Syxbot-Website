@@ -49,6 +49,7 @@ export default class Docs extends React.Component {
             { name: 'Stop', icon: 'stop', description: 'Arrête la musique et supprime la file d\'attente.' },
             { name: 'Resume', icon: 'play', description: 'Reprend la musique là où vous l\'aviez arrêtée.' },
             { name: 'Quit', icon: 'sign-out-alt', description: 'Se déconnecte du salon vocal et supprime les musiques en file d\'attente.' },
+            { name: 'Join', icon: 'sign-in-alt', description: 'Se connecte au salon vocal sur lequel vous êtes connectés.' },
             { name: 'Remove', icon: 'eraser', description: 'Supprime le nombre de message désiré.' },
             { name: 'Clear', icon: 'trash-alt', description: 'Supprime tout les messages chargés du salon.' },
             { name: 'Search', icon: 'search', description: 'Affiche la liste des résultats d\'une recherche, sélectionne un des résultats.' },

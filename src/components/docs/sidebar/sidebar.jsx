@@ -7,7 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
     faBookmark, faListUl, faHome, faPenFancy, faPause, faListOl, faHeadphonesAlt, faWindowClose, faQuestion,
-    faStepForward, faTrashAlt, faRss, faPlay, faSyncAlt, faEraser, faSignOutAlt, faSearch, faForward, faStop
+    faStepForward, faTrashAlt, faRss, faPlay, faSyncAlt, faEraser, faSignOutAlt, faSearch, faForward, faStop,
+    faSignInAlt
 } from '@fortawesome/free-solid-svg-icons';
 library.add(faBookmark);
 library.add(faListUl);
@@ -25,6 +26,7 @@ library.add(faPlay);
 library.add(faSyncAlt);
 library.add(faEraser);
 library.add(faSignOutAlt);
+library.add(faSignInAlt);
 library.add(faSearch);
 library.add(faForward);
 library.add(faStop);
@@ -44,6 +46,7 @@ export default class Sidebar extends React.Component {
             { name: 'Stop', icon: 'stop' },
             { name: 'Resume', icon: 'play' },
             { name: 'Quit', icon: 'sign-out-alt' },
+            { name: 'Join', icon: 'sign-in-alt' },
             { name: 'Remove', icon: 'eraser' },
             { name: 'Clear', icon: 'trash-alt' },
             { name: 'Search', icon: 'search' },
@@ -57,7 +60,7 @@ export default class Sidebar extends React.Component {
         if ($('.docs_content_command')[index]) {
             $('.docs_content_command')[index].children[0].style.background = 'linear-gradient(45deg, rgba(121,75,139,1) 0%, rgba(134,31,43,1) 100%)';
             $('.docs_content_command')[index].children[1].style.background = 'rgb(236, 236, 236)';
-            $('.docs_content_command')[index].style.transform = 'translateY(-30px)';
+            $('.docs_content_command')[index].style.transform = 'translateY(-20px)';
         }
     }
 

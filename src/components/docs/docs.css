@@ -449,7 +449,7 @@ a[data-toggle="collapse"] {
 }
 
 .docs_content_command:hover, .docs_content_command:focus {
-    transform: translateY(-30px)
+    transform: translateY(-20px)
 }
 
 .command_desc p:first-child {
