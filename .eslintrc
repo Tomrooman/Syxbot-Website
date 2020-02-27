@@ -15,10 +15,7 @@
     },
     "ignorePatterns": [
         "serviceWorker.js",
-        "bundle.js",
-        "index.html",
-        "css/",
-        "img/",
+        "assets/",
         "webpack.config.js"
     ],
     "rules": {

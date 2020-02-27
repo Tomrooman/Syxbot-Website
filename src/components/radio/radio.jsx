@@ -3,6 +3,7 @@
 import React from 'react';
 import $ from 'jquery';
 import Cookies from 'universal-cookie';
+import Radios from './../../../assets/json/radios.json';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
@@ -20,7 +21,6 @@ export default class Radio extends React.Component {
             radioName: '',
             radio: cookies.get('syxbot_radio') || false
         };
-        this.createRadiosArray();
         this.handlePlay = this.handlePlay.bind(this);
         this.handlePause = this.handlePause.bind(this);
         this.handleVolumeChange = this.handleVolumeChange.bind(this);
@@ -53,38 +53,6 @@ export default class Radio extends React.Component {
             $('audio')[0].volume = 0.2;
             $('.slider')[0].value = 20;
         }
-    }
-
-    createRadiosArray() {
-        this.radios = [
-            { name: 'Nrj', image: '/img/radio/nrj.png', url: 'https://scdn.nrjaudio.fm/fr/30001/aac_64.mp3?origine=playerweb;playerid:nrj&origine=playernrj&aw_0_req.userConsent=BOvEk5hOvEk5hAKAABENC9-AAAAuFr_7__7-_9_-_f__9uj3Or_v_f__32ccL59v_h_7v-_7fi_20nV4u_1vft9yfk1-5ctDztp507iakiPHmqNeb9n9mz1e5pRP78k89r7337Ew_v8_v-b7BCON_YxE&cdn_path=audio_lbs7' },
-            { name: 'Subarashii', image: '/img/radio/subarashii.png', url: 'https://listen.radionomy.com/subarashii.mp3' },
-            { name: 'Bel RTL', image: '/img/radio/bel-rtl.png', url: 'https://belrtl.ice.infomaniak.ch/belrtl-mp3-128.mp3' },
-            { name: 'Contact', image: '/img/radio/contact.png', url: 'https://radiocontact.ice.infomaniak.ch/radiocontact-mp3-128.mp3' },
-            { name: 'Nostalgie BE', image: '/img/radio/nostalgie-be.png', url: 'https://streamingp.shoutcast.com/NostalgiePremium-mp3' },
-            { name: 'Nostalgie FR', image: '/img/radio/nostalgie-fr.png', url: 'https://scdn.nrjaudio.fm/fr/30601/aac_64.mp3?origine=playerweb;playerid:nostalgie&origine=playernostalgie&aw_0_req.userConsent=BOvHTQ8OvHTQ8AKAABENC--AAAAuhr_7__7-_9_-_f__9uj3Or_v_f__32ccL59v_h_7v-_7fi_20nV4u_1vft9yfk1-5ctDztp507iakiPHmqNeb9n9mz1e5pRP78k89r7337Ew_v8_v-b7BCON_YxEiA&cdn_path=audio_lbs8' },
-            { name: 'Classic 21', image: '/img/radio/classic21.png', url: 'https://radios.rtbf.be/classic21-128.mp3' },
-            { name: 'Pure FM', image: '/img/radio/pure-fm.png', url: 'https://radios.rtbf.be/pure-128.mp3' },
-            { name: 'Musiq\'3', image: '/img/radio/musiq3.png', url: 'https://radios.rtbf.be/musiq3-128.mp3' },
-            { name: 'VivaCité', image: '/img/radio/vivacite.png', url: 'https://radios.rtbf.be/vivabxl-128.mp3' },
-            { name: 'Fun Radio', image: '/img/radio/fun-radio.png', url: 'https://icecast.rtl.fr/fun-1-44-128' },
-            { name: 'Rire & Chansons', image: '/img/radio/rire&chansons.png', url: 'https://scdn.nrjaudio.fm/audio1/fr/30401/mp3_128.mp3?origine=fluxradios' },
-            { name: 'Virgin', image: '/img/radio/virgin.png', url: 'https://ais-live.cloud-services.paris:8443/virgin.aac?aw_0_1st.playerid=lagardereWebVirgin' },
-            { name: 'RFM', image: '/img/radio/rfm.png', url: 'https://ais-live.cloud-services.paris:8443/rfm.aac?aw_0_1st.playerid=lgrdrnwsRadiofrRFM' },
-            { name: 'RMC', image: '/img/radio/rmc.png', url: 'https://rmc.bfmtv.com/rmcinfo-mp3' },
-            { name: 'BFM Business', image: '/img/radio/bfm-business.png', url: 'https://chai5she.cdn.dvmr.fr/bfmbusiness' },
-            { name: 'Jazz', image: '/img/radio/jazz.png', url: 'https://jazzradio.ice.infomaniak.ch/jazzradio-high.mp3' },
-            { name: 'Chérie FM', image: '/img/radio/cherie-fm.png', url: 'https://scdn.nrjaudio.fm/audio1/fr/30201/mp3_128.mp3?origine=fluxradios' },
-            { name: 'Europe 1', image: '/img/radio/europe1.png', url: 'https://ais-live.cloud-services.paris:8443/europe1.mp3?aw_0_1st.playerid=lgrdrnwsRadiofrE1' },
-            { name: 'RTL', image: '/img/radio/rtl.png', url: 'https://icecast.rtl.fr/rtl-1-44-128?id=webRTL&aw_0_req.userConsent=BOvHiJgOvHiMPAHABBFRCv-AAAAstrv7__7-_9_-_f__9ujzOr_v_f__30ccL59v_B_zv-_7fi_20jV4u_1vft9yfk1-5ctDztp507iakivXmqdeZ9v_nz3_5phPr8k89r6337EwwAAAAAAAAAAA' },
-            { name: 'RTL2', image: '/img/radio/rtl2.png', url: 'https://icecast.rtl.fr/rtl2-1-44-128?listen=webDAQODAkPCwwMAg8EBAIFCQ' },
-            { name: 'Classique', image: '/img/radio/classique.png', url: 'https://radioclassique.ice.infomaniak.ch/radioclassique-high.mp3' },
-            { name: 'Skyrock', image: '/img/radio/skyrock.png', url: 'https://www.skyrock.fm/stream.php/tunein16_128mp3.mp3' },
-            { name: 'France Inter', image: '/img/radio/france-inter.png', url: 'https://direct.franceinter.fr/live/franceinter-midfi.mp3' },
-            { name: 'France Culture', image: '/img/radio/france-culture.png', url: 'https://direct.franceculture.fr/live/franceculture-midfi.mp3' },
-            { name: 'France Musique', image: '/img/radio/france-musique.png', url: 'https://direct.francemusique.fr/live/francemusique-midfi.mp3' },
-            { name: 'France Bleu', image: '/img/radio/france-bleu.png', url: 'https://direct.francebleu.fr/live/fbpicardie-midfi.mp3' }
-        ];
     }
 
     handleClick(image, url, index, radioName) {
@@ -189,12 +157,12 @@ export default class Radio extends React.Component {
                             <FontAwesomeIcon icon='caret-up' />
                         </button>
                         <div id='radio_choices' className='dropdown-menu dropdown-menu-right' aria-labelledby='dropdownMenu2'>
-                            {this.radios.map((obj, index) => {
+                            {Radios.map((obj, index) => {
                                 return (
                                     <button
                                         className='dropdown-item'
                                         value={obj.url}
-                                        image={obj.image}
+                                        image={obj.name.indexOf(' ') !== -1 ? '/assets/img/' + obj.name.toLowerCase().split(' ').join('-') + '.png' : '/assets/img/' + obj.name.toLowerCase() + '.png'}
                                         index={index}
                                         key={index}
                                         onClick={() => this.handleClick(obj.image, obj.url, index, obj.name)}
@@ -245,7 +213,7 @@ export default class Radio extends React.Component {
                         </div>
                     </div>
                     <div className='radio_icon'>
-                        <img src='/img/radio.png' alt='radio_icon' />
+                        <img src='/assets/img/radio.png' alt='radio_icon' />
                     </div>
                 </div>
             </div>

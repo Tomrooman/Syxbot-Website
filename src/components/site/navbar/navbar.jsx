@@ -19,7 +19,7 @@ export default class Navbar extends React.Component {
         return (
             <nav className='navbar navbar-expand-lg navbar-dark navbar-site'>
                 <a className='navbar-brand' href='/'>
-                    <img src='/img/Syxbot_logo.png' width='30' height='30' className='d-inline-block align-top' alt='syxbot_logo' />
+                    <img src='/assets/img/Syxbot_logo.png' width='30' height='30' className='d-inline-block align-top' alt='syxbot_logo' />
                     Syxbot
                 </a>
                 <button className='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation'>
