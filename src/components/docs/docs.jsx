@@ -3,6 +3,7 @@
 import React from 'react';
 import $ from 'jquery';
 import PropTypes from 'prop-types';
+import Commands from './../../../assets/json/commands.json';
 import Play from './play/play.jsx';
 import Contact from './contact/contact.jsx';
 import Sidebar from './sidebar/sidebar.jsx';
@@ -29,34 +30,10 @@ export default class Docs extends React.Component {
             command: goodCommand,
             page: page
         };
-        this.createCommandsArray();
         window.document.addEventListener('scroll', (e) => {
             $('.toggleSideMenu').css('transform', 'translateY(' + e.path[1].scrollY + 'px)');
             $('.radio_container').css('transform', 'translateY(' + e.path[1].scrollY + 'px)');
         });
-    }
-
-    createCommandsArray() {
-        this.commands = [
-            { name: 'Play', icon: 'headphones-alt', description: 'Rajoute une musique avec l\'URL, sélectionne une musique, recherche d\'une musique par titre, ...' },
-            { name: 'Playlist', icon: 'list-ol', description: 'Rajoute une playlist avec l\'URL, sélectionne une musique, recherche d\'une playlist par titre, ...' },
-            { name: 'Cancel', icon: 'window-close', description: 'Annule une recherche de musique ou playlist dans le cas où il ne trouverait pas de résultats.' },
-            { name: 'Go', icon: 'forward', description: 'Passe directement à la musique de la file d\'attente sélectionnée.' },
-            { name: 'Repeat', icon: 'sync-alt', description: 'Active le mode répétition pour la musique en cours d\'écoute.' },
-            { name: 'Help', icon: 'question', description: 'Affiche les commandes disponibles ou les détails d\'une commande en particulier.' },
-            { name: 'Next', icon: 'step-forward', description: 'Permet de passer à la musique suivante.' },
-            { name: 'Pause', icon: 'pause', description: 'Met la musique en pause pour la reprendre plus tard.' },
-            { name: 'Stop', icon: 'stop', description: 'Arrête la musique et supprime la file d\'attente.' },
-            { name: 'Resume', icon: 'play', description: 'Reprend la musique là où vous l\'aviez arrêtée.' },
-            { name: 'Quit', icon: 'sign-out-alt', description: 'Se déconnecte du salon vocal et supprime les musiques en file d\'attente.' },
-            { name: 'Join', icon: 'sign-in-alt', description: 'Se connecte au salon vocal sur lequel vous êtes connectés.' },
-            { name: 'Remove', icon: 'eraser', description: 'Supprime le nombre de message désiré.' },
-            { name: 'Clear', icon: 'trash-alt', description: 'Supprime tout les messages chargés du salon.' },
-            { name: 'Search', icon: 'search', description: 'Affiche la liste des résultats d\'une recherche, sélectionne un des résultats.' },
-            { name: 'Radio', icon: 'rss', description: 'Permet d\'écouter la radio en la sélectionnant par son nom.' },
-            { name: 'Current', icon: 'music', description: 'Affiche la musique en cours d\'écoute.' },
-            { name: 'Settings', icon: 'cogs', description: 'Permet de régler les notifications et le volume.' }
-        ];
     }
 
     componentDidMount() {
@@ -155,7 +132,7 @@ export default class Docs extends React.Component {
                                 </div>
                                 <div className='div_docs_content_command'>
                                     <h4><FontAwesomeIcon icon='check' /> Les commandes disponibles</h4>
-                                    {this.commands.map((obj, index) => {
+                                    {Commands.map((obj, index) => {
                                         return (
                                             <a
                                                 href={`/docs/${obj.name.toLowerCase()}`}

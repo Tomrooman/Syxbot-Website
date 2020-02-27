@@ -3,6 +3,7 @@
 import React from 'react';
 import $ from 'jquery';
 import PropTypes from 'prop-types';
+import Commands from './../../../../assets/json/commands.json';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -32,30 +33,6 @@ library.add(faForward);
 library.add(faStop);
 
 export default class Sidebar extends React.Component {
-    constructor() {
-        super();
-        this.commands = [
-            { name: 'Play', icon: 'headphones-alt' },
-            { name: 'Playlist', icon: 'list-ol' },
-            { name: 'Cancel', icon: 'window-close' },
-            { name: 'Go', icon: 'forward' },
-            { name: 'Repeat', icon: 'sync-alt' },
-            { name: 'Help', icon: 'question' },
-            { name: 'Next', icon: 'step-forward' },
-            { name: 'Pause', icon: 'pause' },
-            { name: 'Stop', icon: 'stop' },
-            { name: 'Resume', icon: 'play' },
-            { name: 'Quit', icon: 'sign-out-alt' },
-            { name: 'Join', icon: 'sign-in-alt' },
-            { name: 'Remove', icon: 'eraser' },
-            { name: 'Clear', icon: 'trash-alt' },
-            { name: 'Search', icon: 'search' },
-            { name: 'Radio', icon: 'rss' },
-            { name: 'Current', icon: 'music' },
-            { name: 'Settings', icon: 'cogs' }
-        ];
-    }
-
     handleMouseEnter(index) {
         if ($('.docs_content_command')[index]) {
             $('.docs_content_command')[index].children[0].style.background = 'linear-gradient(45deg, rgba(121,75,139,1) 0%, rgba(134,31,43,1) 100%)';
@@ -130,7 +107,7 @@ export default class Sidebar extends React.Component {
                     </a>
                     <h5 id='command_list_title'><FontAwesomeIcon icon='list-ul' />Liste des commandes</h5>
                     <li id='command_list'>
-                        {this.commands.map((obj, index) => {
+                        {Commands.map((obj, index) => {
                             return (
                                 <a
                                     href={`/docs/${obj.name.toLowerCase()}`}
