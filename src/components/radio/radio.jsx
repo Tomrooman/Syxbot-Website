@@ -25,6 +25,7 @@ export default class Radio extends React.Component {
         this.handlePause = this.handlePause.bind(this);
         this.handleVolumeChange = this.handleVolumeChange.bind(this);
         this.handleTogglePlay = this.handleTogglePlay.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount() {
@@ -55,7 +56,11 @@ export default class Radio extends React.Component {
         }
     }
 
-    handleClick(image, url, index, radioName) {
+    handleClick(e) {
+        const image = e.target.getAttribute('image');
+        const url = e.target.getAttribute('url');
+        const index = e.target.getAttribute('key');
+        const radioName = e.target.getAttribute('name');
         this.setRadioSourceAndInfos(image, url, index, radioName, $('audio')[0].volume);
         this.setRadioCookie(true, index, $('audio')[0].volume, radioName);
         $('audio')[0].play();
@@ -161,11 +166,11 @@ export default class Radio extends React.Component {
                                 return (
                                     <button
                                         className='dropdown-item'
-                                        value={obj.url}
-                                        image={obj.name.indexOf(' ') !== -1 ? '/assets/img/' + obj.name.toLowerCase().split(' ').join('-') + '.png' : '/assets/img/' + obj.name.toLowerCase() + '.png'}
-                                        index={index}
+                                        url={obj.url}
+                                        image={`/assets/img/radio/${obj.name.toLowerCase()}.png`}
                                         key={index}
-                                        onClick={() => this.handleClick(obj.image, obj.url, index, obj.name)}
+                                        name={obj.name}
+                                        onClick={this.handleClick}
                                     >
                                         {obj.name}
                                     </button>
