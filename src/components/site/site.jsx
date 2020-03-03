@@ -1,8 +1,8 @@
 'use strict';
 
 import React from 'react';
-import Cookies from 'universal-cookie';
-import PropTypes from 'prop-types';
+import { withCookies, Cookies } from 'react-cookie';
+import PropTypes, { instanceOf } from 'prop-types';
 // import VoiceRecognition from './voiceRecognition.jsx';
 import FormData from 'form-data';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -13,20 +13,21 @@ import Axios from 'axios';
 import $ from 'jquery';
 import './site.css';
 import Navbar from './navbar/navbar.jsx';
+import Dofus from './dofus/dofus.jsx';
+import Controls from './controls/controls.jsx';
 
 library.add(faAssistiveListeningSystems);
 library.add(faBookOpen);
 
-const cookies = new Cookies();
-
-export default class Site extends React.Component {
-    constructor() {
-        super();
+class Site extends React.Component {
+    constructor(props) {
+        super(props);
+        const { cookies } = props;
         this.generateRandomString = this.generateRandomString.bind(this);
         this.disconnect = this.disconnect.bind(this);
         this.state = {
             randStr: false,
-            user: cookies.get('syxbot') || false,
+            user: cookies.get('syxbot', { path: '/' }) || false,
             page: false
         };
         window.document.addEventListener('scroll', (e) => {
@@ -36,25 +37,32 @@ export default class Site extends React.Component {
 
     componentDidMount() {
         const fragment = new URLSearchParams(window.location.search);
+        let content = false;
         if (fragment.has('code')) {
             this.connectUser(fragment);
         }
         else if (this.state.user) {
             this.verifyTokenExpiration();
         }
-        else if (this.props.page !== '/') {
-            window.location.href = Config.OAuth.redirect_url;
-        }
         else {
             this.generateRandomString();
+        }
+        if (this.props.page === 'dofus') {
+            content = <Dofus user={this.state.user} urlArg={this.props.urlArg} />;
+        }
+        else if (this.props.page === 'controls') {
+            content = <Controls user={this.state.user} />;
+        }
+        if (content) {
+            this.setState({
+                page: content
+            });
         }
     }
 
     verifyTokenExpiration() {
         const diffH = Math.floor((this.state.user.expire_at - (Date.now() / 1000)) / 3600);
-        console.log((this.state.user.expire_at - (Date.now() / 1000)) / 3600);
-        console.log('Difference : ', diffH);
-        if (diffH <= 0) {
+        if (diffH <= 10) {
             Axios.post('/api/token/get', { userId: this.state.user.id })
                 .then(res => {
                     const data = new FormData();
@@ -106,18 +114,29 @@ export default class Site extends React.Component {
                         };
                         this.updateTokenAPI(tokenObj);
                     });
+            })
+            .catch(() => {
+                setTimeout(() => {
+                    window.location.href = Config.OAuth.redirect_url;
+                }, 1000);
             });
     }
 
     updateTokenAPI(tokenObj) {
         Axios.post('/api/token/update', tokenObj)
             .then(() => {
+                const { cookies } = this.props;
+                const oneDay = 1000 * 60 * 60 * 24;
+                const expireDate = new Date(Date.now() + (oneDay * 10));
                 cookies.set('syxbot', {
                     username: tokenObj.username,
                     discriminator: tokenObj.discriminator,
                     id: tokenObj.userId,
                     token_type: tokenObj.token_type,
                     expire_at: (Date.now() / 1000) + tokenObj.expires_in
+                }, {
+                    path: '/',
+                    expires: expireDate
                 });
                 setTimeout(() => {
                     window.location.href = Config.OAuth.redirect_url;
@@ -129,7 +148,8 @@ export default class Site extends React.Component {
         Axios.post('/api/token/remove', { userId: this.state.user.id })
             .then(remove => {
                 if (remove) {
-                    cookies.remove('syxbot');
+                    const { cookies } = this.props;
+                    cookies.remove('syxbot', { path: '/' });
                     this.setState({
                         user: false
                     });
@@ -233,5 +253,9 @@ export default class Site extends React.Component {
 }
 
 Site.propTypes = {
-    page: PropTypes.string.isRequired
+    page: PropTypes.string.isRequired,
+    urlArg: PropTypes.string.isRequired,
+    cookies: instanceOf(Cookies).isRequired
 };
+
+export default withCookies(Site);

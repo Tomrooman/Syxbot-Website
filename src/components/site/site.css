@@ -88,6 +88,11 @@
     color : white;
 }
 
+.nav-link img {
+    max-height: 20px;
+    width: auto;
+}
+
 .navbar-brand {
     margin-right : 1rem;
 }

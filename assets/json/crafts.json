@@ -1,0 +1,279 @@
+[
+    {
+        "category": "Abreuvoir",
+        "Bulbig brozeur": {
+            "Essence de bulbig brozeur": 1,
+            "Fluide glacial": 1,
+            "Tatouage de mauvais garçon": 2,
+            "Bout de blop reinette": 1,
+            "Peau de dragoeuf guerrier": 1,
+            "Efficacité": 50,
+            "Utilisations": 2500
+        }
+    },
+    {
+        "category": "Baffeur",
+        "Gelée royale": {
+            "Essence de gelée royale": 1,
+            "Coque endommagée": 2,
+            "Carapace rouge": 2,
+            "Queue de scordion bleu": 1,
+            "Patte de corbac": 1,
+            "Poils de yokai firefoux": 1,
+            "Efficacité": 90,
+            "Utilisations": 1200
+        },
+        "Nelween": {
+            "Essence de nelween": 1,
+            "Griffe de robionicle": 2,
+            "Carapace jaune": 2,
+            "Queue de scordion bleu": 1,
+            "Poil de renarbo": 1,
+            "Poils de maho firefoux": 1,
+            "Efficacité": 50,
+            "Utilisations": 2400
+        },
+        "Rat blanc": {
+            "Essence de rat blanc": 1,
+            "Charniere cassee": 2,
+            "Carapace rouge": 2,
+            "Ecailles d'ouroboulos": 1,
+            "Poil de renarbo": 1,
+            "Poils de soryo firefoux": 1,
+            "Carpelle de brouture": 1,
+            "Efficacité": 120,
+            "Utilisations": 1500
+        }
+    },
+    {
+        "category": "Caresseur",
+        "Royalmouth": {
+            "Essence de royalmouth": 1,
+            "Miroir de dopeul": 2,
+            "Defense du sanglier": 2,
+            "Glande d'arak-hai": 1,
+            "Peau de serpentin": 1,
+            "Fleur de gloutovore": 1,
+            "Moustaches de cactoblongo": 1,
+            "Efficacité": 120,
+            "Utilisations": 1500
+        },
+        "Wa wobot": {
+            "Essence de wa wobot": 1,
+            "Miroir de dopeul": 2,
+            "Groin de sanglier": 2,
+            "Glande d'arak-hai": 1,
+            "Souris verte": 1,
+            "Trukikol mort": 1,
+            "Efficacité": 90,
+            "Utilisations": 1200
+        },
+        "Craqueleur légendaire": {
+            "Essence de craqueleur légendaire": 1,
+            "Miroir de dopeul": 2,
+            "Poils du milimulou": 2,
+            "Glande d'arak-hai": 1,
+            "Aile de bourdard": 1,
+            "Feuille de fourbasse": 1,
+            "Efficacité": 90,
+            "Utilisations": 1200
+        }
+    },
+    {
+        "category": "Clef",
+        "Donjon dragoeuf": {
+            "Pierre d'aerotrugobur le malveillant": 1,
+            "Pierre d'aqualikros l'impitoyable": 1,
+            "Pierre d'ignerkocropos l'affame": 1,
+            "Pierre de terraburkal le perfide": 1
+        },
+        "Dramak": {
+            "Etain": 5,
+            "Oreille de rhinoferoce": 1,
+            "Dent de molette": 1,
+            "Plume de gobvious": 1,
+            "Patte de bouledogre": 1,
+            "Edelweiss": 5,
+            "Bois d'if": 5,
+            "Seigle": 5
+        },
+        "Antre du korriandre": {
+            "Ecorce d'abrazif": 1,
+            "Lamelle de dramanite": 1,
+            "Volve de fistulor": 1,
+            "Volve de fongeur": 1,
+            "Bois d'orme": 10,
+            "Dolomite": 10,
+            "Etoffe de rat bougri": 1,
+            "Pince de crabe hijacob": 1
+        },
+        "Malléfisk": {
+            "Pièce de koffrefor": 1,
+            "Or": 10,
+            "Ficelle en lin": 10,
+            "Corne de berserkoffre": 1,
+            "Langue de mimikado": 1,
+            "Corde de boursoin": 1,
+            "Antenne de trésantène": 1
+        },
+        "Mansot": {
+            "Plume du timansot": 1,
+            "Poil de barbe du shamansot": 1,
+            "Peau de mansobese": 1,
+            "Duvet de mamansot": 1,
+            "Queue du fu mansot": 1,
+            "Bois de noisetier": 10,
+            "Argent": 10,
+            "Pince de crabe hijacob": 1
+        },
+        "Royalmouth": {
+            "Poil de chachachovage": 1,
+            "Plume de gélikan": 1,
+            "Oreille de bouftonmouth": 1,
+            "Laine de boufmouth légendaire": 1,
+            "Corne de boufmouth de guerre": 1,
+            "Laine de boufmouth": 1,
+            "Silicate": 10,
+            "Bois de bambou": 10
+        },
+        "Sanctuaire dragoeuf": {
+            "Fragment de coquille d'aerohouctor le guerrier": 1,
+            "Fragment de coquille de terrakoubiak le guerrier": 1,
+            "Fragment de coquille d'ignelicrobur le guerrier": 1,
+            "Fragment de coquille d'aquabralak le guerrier": 1,
+            "Oeuf de dragoeuf blanc": 1
+        }
+    },
+    {
+        "category": "Dragofesse",
+        "Dragofesse de dramak": {
+            "Essence de dramak": 1,
+            "Moustaches de tiwabbit": 2,
+            "Bulbe passaoh": 2,
+            "Oreille de foufayteur": 1,
+            "Bourgeon de pirolienne": 1,
+            "Poils de koalak indigo": 1
+        }
+    },
+    {
+        "category": "Essence",
+        "Bulbig brozeur": {
+            "Ecorce magique de bulbig brozeur": 1,
+            "Racine de bulbig brozeur": 10
+        },
+        "Craqueleur légendaire": {
+            "Pierre du craqueleur légendaire": 10,
+            "Mega pierre du craqueleur légendaire": 1
+        },
+        "Gelée royale": {
+            "Gelée bleutée royale": 1,
+            "Gelée citron royale": 1,
+            "Gelée fraise royale": 1,
+            "Gelée menthe royale": 1
+        },
+        "Nelween": {
+            "Fiole de fumee de nelween": 1,
+            "Duvet de nelween": 10
+        },
+        "Pounicheur": {
+            "Glande du pounicheur": 10
+        },
+        "Kanniboul": {
+            "Carniflore": 10,
+            "Cagoule du kanniboul ébil": 1
+        }
+    },
+    {
+        "category": "Foudroyeur",
+        "Pounicheur": {
+            "Essence de pounicheur": 1,
+            "Trident casse": 2,
+            "Pousses de bulbambou": 2,
+            "Oreilles de croc gland": 1,
+            "Peau de kitsou nufeu": 1,
+            "Crinière de troollaraj": 1,
+            "Queue d'ecumouth": 1,
+            "Efficacité": 70,
+            "Utilisations": 15000
+        }
+    },
+    {
+        "category": "Mangeoire",
+        "Kanniboul": {
+            "Essence de kanniboul ebil": 1,
+            "Poils de barbe du bwork mage": 2,
+            "Lamelle de champa rouge": 2,
+            "Plume de gélikan": 1,
+            "Peau de krambwork": 1,
+            "Queue du mulou": 1,
+            "Efficacité": 90,
+            "Utilisations": 6000
+        },
+        "Korriandre": {
+            "Essence de korriandre": 1,
+            "Slip de bwork archer": 2,
+            "Lamelle de champa marron": 2,
+            "Etoffe de rat bougri": 1,
+            "Oreille de medibwork": 1,
+            "Queue du mulou": 1,
+            "Souche de l'abrakleur clair": 1,
+            "Os de fantôme pandore": 1,
+            "Efficacité": 150,
+            "Utilisations": 9000
+        }
+    },
+    {
+        "category": "Potion",
+        "Bonta": {
+            "Riz": 6,
+            "Pépite": 1
+        },
+        "Rappel": {
+            "Sauge": 4,
+            "Eau potable": 1
+        },
+        "Destination": {
+            "Pince du crabe": 1,
+            "Gland": 1,
+            "Eau potable": 1
+        }
+    },
+    {
+        "category": "Viande",
+        "Boudin noir": {
+            "Viande macérée": 1,
+            "Malt": 1,
+            "Sang de scorbute": 1
+        },
+        "Grillade brakmarienne": {
+            "Viande saignante": 1,
+            "Seigle": 1,
+            "Cendres éternelles": 1
+        },
+        "Marinade sucrée salée": {
+            "Viande persillée": 1,
+            "Seigle": 1,
+            "Cerise": 1
+        },
+        "Terrine bontarienne": {
+            "Viande sanguinolente": 1,
+            "Houblon": 1,
+            "Graisse gélatineuse": 1
+        },
+        "Pemmican haricots": {
+            "Viande sèchée": 1,
+            "Lin": 1,
+            "Haricot": 1
+        },
+        "Poêlée paysanne": {
+            "Viande exsudative": 1,
+            "Lin": 1,
+            "Aubergine": 1
+        },
+        "Potaufeu gouteux": {
+            "Viande rassie": 1,
+            "Houblon": 1,
+            "Dose de jus goutu": 1
+        }
+    }
+]

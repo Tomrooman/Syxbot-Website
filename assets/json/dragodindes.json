@@ -1,0 +1,332 @@
+[
+    {
+        "name": "Amande",
+        "duration": 48,
+        "parchment": "Parchemin doré"
+    },
+    {
+        "name": "Amande et Dorée",
+        "duration": 60,
+        "parchment": "Petit parchemin de sagesse"
+    },
+    {
+        "name": "Amande et Indigo",
+        "duration": 84,
+        "parchment": "Petit parchemin de chance"
+    },
+    {
+        "name": "Rousse",
+        "duration": 48,
+        "parchment": "Parchemin doré"
+    },
+    {
+        "name": "Indigo",
+        "duration": 72,
+        "parchment": "Petit parchemin de chance"
+    },
+    {
+        "name": "Indigo et Rousse",
+        "duration": 84,
+        "parchment": "Petit parchemin de vitalité"
+    },
+    {
+        "name": "Dorée",
+        "duration": 48,
+        "parchment": "Petit parchemin de sagesse"
+    },
+    {
+        "name": "Ebène",
+        "duration": 72,
+        "parchment": "Petit parchemin de agilite"
+    },
+    {
+        "name": "Amande et Ebène",
+        "duration": 84,
+        "parchment": "Petit parchemin de agilite"
+    },
+    {
+        "name": "Amande et Rousse",
+        "duration": 60,
+        "parchment": "Petit parchemin de vitalité"
+    },
+    {
+        "name": "Ebène et Indigo",
+        "duration": 84,
+        "parchment": "Petit parchemin de chance"
+    },
+    {
+        "name": "Ebène et Rousse",
+        "duration": 84,
+        "parchment": "Petit parchemin de vitalité"
+    },
+    {
+        "name": "Dorée et Rousse",
+        "duration": 60,
+        "parchment": "Petit parchemin de sagesse"
+    },
+    {
+        "name": "Dorée et Indigo",
+        "duration": 84,
+        "parchment": "Petit parchemin de sagesse"
+    },
+    {
+        "name": "Dorée et Ebène",
+        "duration": 84,
+        "parchment": "Petit parchemin de sagesse"
+    },
+    {
+        "name": "Pourpre",
+        "duration": 96,
+        "parchment": "Petit parchemin de force"
+    },
+    {
+        "name": "Orchidée",
+        "duration": 96,
+        "parchment": "Petit parchemin de intelligence"
+    },
+    {
+        "name": "Orchidée et Pourpre",
+        "duration": 108,
+        "parchment": "Parchemin de intelligence"
+    },
+    {
+        "name": "Ebène et Orchidée",
+        "duration": 108,
+        "parchment": "Parchemin de agilite"
+    },
+    {
+        "name": "Indigo et Pourpre",
+        "duration": 108,
+        "parchment": "Parchemin de chance"
+    },
+    {
+        "name": "Amande et Orchidée",
+        "duration": 108,
+        "parchment": "Parchemin de vitalité"
+    },
+    {
+        "name": "Orchidée et Rousse",
+        "duration": 108,
+        "parchment": "Parchemin de intelligence"
+    },
+    {
+        "name": "Dorée et Orchidée",
+        "duration": 108,
+        "parchment": "Parchemin de sagesse"
+    },
+    {
+        "name": "Indigo et Orchidée",
+        "duration": 108,
+        "parchment": "Parchemin de chance"
+    },
+    {
+        "name": "Amande et Pourpre",
+        "duration": 108,
+        "parchment": "Parchemin de force"
+    },
+    {
+        "name": "Pourpre et Rousse",
+        "duration": 108,
+        "parchment": "Parchemin de force"
+    },
+    {
+        "name": "Dorée et Pourpre",
+        "duration": 108,
+        "parchment": "Parchemin de sagesse"
+    },
+    {
+        "name": "Ebène et Pourpre",
+        "duration": 108,
+        "parchment": "Parchemin de agilite"
+    },
+    {
+        "name": "Ivoire",
+        "duration": 120,
+        "parchment": "Grand parchemin de chance"
+    },
+    {
+        "name": "Turquoise",
+        "duration": 120,
+        "parchment": "Grand parchemin de agilite"
+    },
+    {
+        "name": "Ivoire et Turquoise",
+        "duration": 132,
+        "parchment": "Grand parchemin de agilite"
+    },
+    {
+        "name": "Ivoire et Pourpre",
+        "duration": 132,
+        "parchment": "Grand parchemin de force"
+    },
+    {
+        "name": "Turquoise et Orchidée",
+        "duration": 132,
+        "parchment": "Grand parchemin de intelligence"
+    },
+    {
+        "name": "Amande et Turquoise",
+        "duration": 132,
+        "parchment": "Grand parchemin de vitalité"
+    },
+    {
+        "name": "Turquoise et Rousse",
+        "duration": 132,
+        "parchment": "Grand parchemin de vitalité"
+    },
+    {
+        "name": "Dorée et Turquoise",
+        "duration": 132,
+        "parchment": "Grand parchemin de sagesse"
+    },
+    {
+        "name": "Indigo et Turquoise",
+        "duration": 132,
+        "parchment": "Grand parchemin de chance"
+    },
+    {
+        "name": "Ebène et Turquoise",
+        "duration": 132,
+        "parchment": "Grand parchemin de agilite"
+    },
+    {
+        "name": "Turquoise et Pourpre",
+        "duration": 132,
+        "parchment": "Grand parchemin de force"
+    },
+    {
+        "name": "Amande et Ivoire",
+        "duration": 132,
+        "parchment": "Grand parchemin de chance"
+    },
+    {
+        "name": "Ivoire et Rousse",
+        "duration": 132,
+        "parchment": "Grand parchemin de vitalité"
+    },
+    {
+        "name": "Dorée et Ivoire",
+        "duration": 132,
+        "parchment": "Grand parchemin de sagesse"
+    },
+    {
+        "name": "Indigo et Ivoire",
+        "duration": 132,
+        "parchment": "Grand parchemin de chance"
+    },
+    {
+        "name": "Ebène et Ivoire",
+        "duration": 132,
+        "parchment": "Grand parchemin de agilite"
+    },
+    {
+        "name": "Ivoire et Orchidée",
+        "duration": 132,
+        "parchment": "Grand parchemin de intelligence"
+    },
+    {
+        "name": "Emeraude",
+        "duration": 144,
+        "parchment": "Puissant parchemin de force"
+    },
+    {
+        "name": "Prune",
+        "duration": 144,
+        "parchment": "Puissant parchemin de intelligence"
+    },
+    {
+        "name": "Amande et Emeraude",
+        "duration": 156,
+        "parchment": "Puissant parchemin de vitalité"
+    },
+    {
+        "name": "Emeraude et Rousse",
+        "duration": 156,
+        "parchment": "Puissant parchemin de vitalité"
+    },
+    {
+        "name": "Dorée et Emeraude",
+        "duration": 156,
+        "parchment": "Puissant parchemin de sagesse"
+    },
+    {
+        "name": "Emeraude et Indigo",
+        "duration": 156,
+        "parchment": "Puissant parchemin de chance"
+    },
+    {
+        "name": "Ebène et Emeraude",
+        "duration": 156,
+        "parchment": "Puissant parchemin de force"
+    },
+    {
+        "name": "Emeraude et Orchidée",
+        "duration": 156,
+        "parchment": "Puissant parchemin de intelligence"
+    },
+    {
+        "name": "Emeraude et Pourpre",
+        "duration": 156,
+        "parchment": "Puissant parchemin de force"
+    },
+    {
+        "name": "Emeraude et Ivoire",
+        "duration": 156,
+        "parchment": "Puissant parchemin de chance"
+    },
+    {
+        "name": "Emeraude et Turquoise",
+        "duration": 156,
+        "parchment": "Puissant parchemin de agilite"
+    },
+    {
+        "name": "Prune et Amande",
+        "duration": 156,
+        "parchment": "Puissant parchemin de vitalité"
+    },
+    {
+        "name": "Prune et Rousse",
+        "duration": 156,
+        "parchment": "Puissant parchemin de vitalité"
+    },
+    {
+        "name": "Prune et Dorée",
+        "duration": 156,
+        "parchment": "Puissant parchemin de sagesse"
+    },
+    {
+        "name": "Prune et Indigo",
+        "duration": 156,
+        "parchment": "Puissant parchemin de chance"
+    },
+    {
+        "name": "Prune et Ebène",
+        "duration": 156,
+        "parchment": "Puissant parchemin de agilite"
+    },
+    {
+        "name": "Prune et Orchidée",
+        "duration": 156,
+        "parchment": "Puissant parchemin de intelligence"
+    },
+    {
+        "name": "Prune et Pourpre",
+        "duration": 156,
+        "parchment": "Puissant parchemin de force"
+    },
+    {
+        "name": "Prune et Ivoire",
+        "duration": 156,
+        "parchment": "Puissant parchemin de chance"
+    },
+    {
+        "name": "Prune et Turquoise",
+        "duration": 156,
+        "parchment": "Puissant parchemin de agilite"
+    },
+    {
+        "name": "Prune et Emeraude",
+        "duration": 156,
+        "parchment": "Puissant parchemin de intelligence"
+    }
+]

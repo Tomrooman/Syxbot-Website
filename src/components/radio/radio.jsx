@@ -2,24 +2,25 @@
 
 import React from 'react';
 import $ from 'jquery';
-import Cookies from 'universal-cookie';
+import { instanceOf } from 'prop-types';
+import { withCookies, Cookies } from 'react-cookie';
 import Radios from './../../../assets/json/radios.json';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import './radio.css';
+
 library.add(faCaretUp);
 
-const cookies = new Cookies();
-
-export default class Radio extends React.Component {
-    constructor() {
-        super();
+class Radio extends React.Component {
+    constructor(props) {
+        super(props);
+        const { cookies } = props;
         this.state = {
             dropdown_title: 'Radios disponibles',
             index: '',
             radioName: '',
-            radio: cookies.get('syxbot_radio') || false
+            radio: cookies.get('syxbot_radio', { path: '/' }) || false
         };
         this.handlePlay = this.handlePlay.bind(this);
         this.handlePause = this.handlePause.bind(this);
@@ -34,7 +35,7 @@ export default class Radio extends React.Component {
             const index = this.state.radio.index;
             const playArg = this.state.radio.play;
             const imagePath = $('#radio_choices')[0].children[index].getAttribute('image');
-            const radioUrl = $('#radio_choices')[0].children[index].value;
+            const radioUrl = $('#radio_choices')[0].children[index].getAttribute('url');
             const radioName = this.state.radio.name;
             const volume = this.state.radio.volume;
             this.setRadioSourceAndInfos(imagePath, radioUrl, index, radioName, volume);
@@ -59,7 +60,7 @@ export default class Radio extends React.Component {
     handleClick(e) {
         const image = e.target.getAttribute('image');
         const url = e.target.getAttribute('url');
-        const index = e.target.getAttribute('key');
+        const index = e.target.getAttribute('index');
         const radioName = e.target.getAttribute('name');
         this.setRadioSourceAndInfos(image, url, index, radioName, $('audio')[0].volume);
         this.setRadioCookie(true, index, $('audio')[0].volume, radioName);
@@ -118,13 +119,19 @@ export default class Radio extends React.Component {
     }
 
     setRadioCookie(play, index, volume, name) {
-        const radioCookie = cookies.get('syxbot_radio');
+        const { cookies } = this.props;
+        const radioCookie = cookies.get('syxbot_radio', { path: '/' });
         if (!radioCookie || (radioCookie && (radioCookie.play !== play || radioCookie.index !== index || radioCookie.volume !== volume || radioCookie.name !== name))) {
+            const oneDay = 1000 * 60 * 60 * 24;
+            const expireDate = new Date(Date.now() + (oneDay * 10));
             cookies.set('syxbot_radio', {
                 play: play,
                 index: index,
                 volume: volume,
                 name: name
+            }, {
+                path: '/',
+                expires: expireDate
             });
             this.setState({
                 radio: {
@@ -169,6 +176,7 @@ export default class Radio extends React.Component {
                                         url={obj.url}
                                         image={`/assets/img/radio/${obj.name.toLowerCase()}.png`}
                                         key={index}
+                                        index={index}
                                         name={obj.name}
                                         onClick={this.handleClick}
                                     >
@@ -211,7 +219,7 @@ export default class Radio extends React.Component {
                             <img src='#' alt='radio_img' />
                         </div>
                         {this.state.radioName ?
-                            this.state.dropdown_title === 'Chargement' ? <span>Chargement  <div className='custom-spinner-radio' /></span> : this.state.radioName :
+                            this.state.dropdown_title === 'Chargement' ? <div className='custom-spinner-radio' /> : this.state.radioName :
                             'Aucune radio en écoute'}
                         <div className='radio_click_text'>
                             Cliquez pour ouvrir le menu
@@ -225,3 +233,9 @@ export default class Radio extends React.Component {
         );
     }
 }
+
+Radio.propTypes = {
+    cookies: instanceOf(Cookies).isRequired
+};
+
+export default withCookies(Radio);

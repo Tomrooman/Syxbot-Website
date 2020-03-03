@@ -25,7 +25,7 @@ export default class Router extends React.Component {
         }
         else {
             this.setState({
-                page: <Site page={page} />
+                page: <Site page={page} urlArg={pageArg} />
             });
         }
     }

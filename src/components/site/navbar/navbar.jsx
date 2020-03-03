@@ -30,10 +30,12 @@ export default class Navbar extends React.Component {
                         <li className={this.props.page === '/' ? 'nav-item active' : 'nav-item'}>
                             <a className='nav-link' href='/'><FontAwesomeIcon icon='home' /> Accueil</a>
                         </li>
-                        {this.props.user ?
-                            <li className={this.props.page === 'controls' ? 'nav-item active' : 'nav-item'}>
-                                <a className='nav-link' href='/controls'><FontAwesomeIcon icon='gamepad' /> Contrôler le bot</a>
-                            </li> : ''}
+                        <li className={this.props.page === 'controls' ? 'nav-item active' : 'nav-item'}>
+                            <a className='nav-link' href='/controls'><FontAwesomeIcon icon='gamepad' /> Contrôler le bot</a>
+                        </li>
+                        <li className={this.props.page === 'dofus' ? 'nav-item active' : 'nav-item'}>
+                            <a className='nav-link' href='/dofus'><img src='/assets/img/dofus.png' alt='dofus_icon' /> Dofus</a>
+                        </li>
                     </ul>
                 </div>
                 <div className='form-inline my-2 my-lg-0'>
