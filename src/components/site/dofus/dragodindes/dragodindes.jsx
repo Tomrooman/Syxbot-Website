@@ -58,21 +58,19 @@ export default class Dragodindes extends React.Component {
     updateDragodindesAPI(url, paramsObj) {
         Axios.post(url, paramsObj)
             .then(res => {
-                if (res.data && res.data.length) {
-                    this.setState({
-                        dragodindes: res.data.sort((a, b) => a.name.localeCompare(b.name)),
-                        showedDragodindes: res.data.sort((a, b) => a.name.localeCompare(b.name))
-                    });
-                }
+                this.setState({
+                    dragodindes: res.data.sort((a, b) => a.name.localeCompare(b.name)),
+                    showedDragodindes: res.data.sort((a, b) => a.name.localeCompare(b.name))
+                });
             });
     }
 
-    handleAddModalDrago(name, duration, selected) {
+    handleAddModalDrago(name, duration, generation, selected) {
         let dragodindes = this.state.selectedDrago;
         let JSONselected = '';
         if (!selected) {
             JSONselected = this.setDragoJSON(dragoJSON, name);
-            dragodindes.push({ name: name, duration: duration });
+            dragodindes.push({ name: name, duration: duration, generation: generation });
         }
         else {
             dragodindes = this.removeDragodindeFromArray(name, dragodindes);
@@ -157,7 +155,7 @@ export default class Dragodindes extends React.Component {
         }
     }
 
-    handleSelectMyDragodindes(name, duration, selected) {
+    handleSelectMyDragodindes(name, duration, generation, selected) {
         const dragodindes = this.state.showedDragodindes;
         let selectedDrago = this.state.selectedDrago;
         dragodindes.map(drago => {
@@ -174,7 +172,7 @@ export default class Dragodindes extends React.Component {
             });
         }
         else {
-            selectedDrago.push({ name: name, duration: duration });
+            selectedDrago.push({ name: name, duration: duration, generation: generation });
         }
         this.setState({
             showedDragodindes: dragodindes.sort((a, b) => a.name.localeCompare(b.name)),
@@ -311,7 +309,7 @@ export default class Dragodindes extends React.Component {
                                                 <Tooltip title={drago.selected ? 'Retirer de la sélection' : 'Sélectionner pour la suppression'} placement='top'>
                                                     <span
                                                         className='icon-cross'
-                                                        onClick={() => this.handleSelectMyDragodindes(drago.name, drago.duration, drago.selected || false)}
+                                                        onClick={() => this.handleSelectMyDragodindes(drago.name, drago.duration, drago.generation, drago.selected || false)}
                                                     >
                                                         <FontAwesomeIcon icon='times-circle' />
                                                     </span>

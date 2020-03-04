@@ -35,7 +35,7 @@ export default class DragodindesModal extends React.Component {
                                                 <div
                                                     className={drago.selected ? 'drago-line-selected' : 'drago-line'}
                                                     key={index}
-                                                    onClick={() => this.props.handleAddModalDrago(drago.name, drago.duration, drago.selected)}
+                                                    onClick={() => this.props.handleAddModalDrago(drago.name, drago.duration, drago.generation, drago.selected)}
                                                 >
                                                     {drago.selected ?
                                                         <span>

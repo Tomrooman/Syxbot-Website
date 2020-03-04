@@ -133,14 +133,13 @@ class Site extends React.Component {
                     discriminator: tokenObj.discriminator,
                     id: tokenObj.userId,
                     token_type: tokenObj.token_type,
-                    expire_at: (Date.now() / 1000) + tokenObj.expires_in
+                    expire_at: (Date.now() / 1000) + tokenObj.expires_in,
+                    countdown: true
                 }, {
                     path: '/',
                     expires: expireDate
                 });
-                setTimeout(() => {
-                    window.location.href = Config.OAuth.redirect_url;
-                }, 1000);
+                window.location.href = Config.OAuth.redirect_url;
             });
     }
 
@@ -150,10 +149,7 @@ class Site extends React.Component {
                 if (remove) {
                     const { cookies } = this.props;
                     cookies.remove('syxbot', { path: '/' });
-                    this.setState({
-                        user: false
-                    });
-                    this.generateRandomString();
+                    window.location.reload();
                 }
             });
     }
