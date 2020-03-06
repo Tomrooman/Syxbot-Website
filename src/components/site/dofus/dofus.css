@@ -76,7 +76,7 @@ input {
     min-width: 390px;
 }
 
-.add-drago-list {
+.add-drago-list, .automate-list {
     max-height: 70vh;
     margin-top : 16px;
     overflow-y: auto;
@@ -84,16 +84,88 @@ input {
     border-radius: 5px;
 }
 
+.automate-list .automate-line img {
+    width : 50px;
+    height: auto;
+}
+
+.add-drago-list .drago-line img {
+    width: 50px;
+    height: auto;
+    opacity: 0.6;
+}
+
+.fecondator-last-div h4, .fecondator-infos h4 {
+    font-family: 'Bree Serif', serif;
+}
+
+.add-drago-list .drago-line:hover img {
+    opacity : 1;
+}
+
+.fecondator-last-dragodinde img, .fecondator-last-infos, .fecondator-last-div, .fecondator-infos {
+    display: inline-block;
+    /* vertical-align: middle; */
+}
+
+.fecondator-last-infos .label, .fecondator-infos-content .label {
+    margin-bottom : 0;
+    margin-top : 10px;
+    text-align: center;
+    color: rgb(0, 0, 0);
+}
+
+.fecondator-last-infos .value, .fecondator-infos-content .value {
+    margin-bottom : 5px;
+    text-align: center;
+    color: rgb(65, 65, 65);
+}
+
+.fecondator-last-infos, .fecondator-infos, .fecondator-infos-content {
+    vertical-align: middle;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.fecondator-infos {
+    height: auto;
+}
+
+.fecondator-last-dragodinde img {
+    max-width: 150px;
+    width: auto;
+    height: auto;
+}
+
+.fecondator-last-div, .fecondator-infos {
+    padding-top : 10px;
+    padding-left: 0;
+    padding-right: 0;
+    border-radius: 5px;
+    /* margin-left: auto;
+    margin-right: auto; */
+    background: white;
+    border : 1px solid rgba(168, 168, 168, 0.733);
+    box-shadow: 0px 0px 2px rgba(145, 145, 145, 0.733);
+    margin: 10px;
+}
+
+.fecondator-last-dragodinde p {
+    margin-bottom : 10px;
+}
+
 .fecondator-last-dragodinde {
-    border : 1px solid rgba(92, 92, 92, 0.733);
     border-radius : 10px;
     margin-left : auto;
     margin-right : auto;
-    box-shadow: 0px 0px 5px rgba(92, 92, 92, 0.733);
     margin-bottom : 2rem;
     padding-left: 0;
     padding-right: 0;
     max-width: 830px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .principal-dragodindes-div {
@@ -102,33 +174,71 @@ input {
     margin-left : auto;
     margin-right : auto;
     box-shadow: 0px 0px 5px rgba(92, 92, 92, 0.733);
-    margin-bottom : 2rem;
+    margin-bottom : 7rem;
     padding-left: 0;
     padding-right: 0;
     max-width: 830px;
 }
 
 .drago-line {
-    padding-top : 10px;
-    padding-bottom : 10px;
+    padding-top : 5px;
+    padding-bottom : 5px;
     padding-right: 10px;
+    background : white;
+    padding-left: 10px;
+    border-left: 1px solid rgba(29, 29, 29, 0);
+    border-right: 1px solid rgba(29, 29, 29, 0);
     border-bottom : 1px solid rgb(184, 184, 184);
     border-top : 1px solid rgba(0, 128, 0, 0);
     transition: all 0.2s;
     cursor: pointer;
 }
 
-.my-drago-line {
-    padding-top : 10px;
-    padding-bottom : 10px;
-    padding-left: 10px;
+.automate-line {
+    padding-top : 5px;
+    padding-bottom : 5px;
     padding-right: 10px;
+    background : white;
+    padding-left: 10px;
+    border-left: 1px solid rgba(29, 29, 29, 0);
+    border-right: 1px solid rgba(29, 29, 29, 0);
+    border-bottom : 1px solid rgb(184, 184, 184);
+    border-top : 1px solid rgba(0, 128, 0, 0);
+    transition: all 0.2s;
+}
+
+.automate-line .last {
+    background : rgb(166, 190, 201);
+    border: 1px solid rgb(24, 100, 134);
+}
+
+.automate-line .last p {
+    color : rgb(21, 72, 95) !important;
+}
+
+.last-modal-title, .used-modal-title {
+    margin-bottom : 10px;
+    margin-top : 10px;
+}
+
+.last-modal-title {
+    margin-top : 2rem;
+}
+
+.my-drago-line {
+    padding-top : 5px;
+    padding-bottom : 5px;
+    padding-right: 10px;
+    border-left: 1px solid rgba(29, 29, 29, 0);
+    border-right: 1px solid rgba(29, 29, 29, 0);
     border-bottom : 1px solid rgb(184, 184, 184);
     border-top : 1px solid rgba(0, 128, 0, 0);
     transition: all 0.2s;
     vertical-align: middle;
     color: rgb(39, 39, 39);
     margin-bottom : 0px;
+    background : rgb(255, 255, 255);
+    position: relative;
 }
 
 .fecondator-line:last-child {
@@ -137,8 +247,8 @@ input {
 }
 
 .fecondator-line {
-    padding-top : 10px;
-    padding-bottom : 10px;
+    padding-top : 5px;
+    padding-bottom : 5px;
     padding-left: 10px;
     padding-right: 10px;
     border-bottom : 1px solid rgb(184, 184, 184);
@@ -147,6 +257,7 @@ input {
     vertical-align: middle;
     color: rgb(39, 39, 39);
     margin-bottom : 0px;
+    background: white;
 }
 
 .fecondator-line p {
@@ -192,6 +303,13 @@ input {
 
 .fecondator-name {
     text-align: left;
+    padding : 0;
+}
+
+.fecondator-name img, .my-dragodindes-name img {
+    width : 60px;
+    height: auto;
+    opacity : 1;
 }
 
 .fecondator-name p , .fecondator-name img {
@@ -202,12 +320,12 @@ input {
     font-size: 0.9rem;
 }
 
-.my-drago-line-selected {
-    background : rgb(201, 166, 166);
-    border: 1px solid rgb(107, 20, 17);
+.my-drago-line-used {
+    background : rgb(150, 150, 150);
+    border: 1px solid rgb(41, 41, 41);
     transition: all 0.2s;
-    padding-top : 10px;
-    padding-bottom : 10px;
+    padding-top : 5px;
+    padding-bottom : 5px;
     padding-right: 10px;
     border-bottom : 1px solid grey;
     transition: all 0.2s;
@@ -216,26 +334,38 @@ input {
     margin-bottom : 0px;
 }
 
+.my-drago-line-used .my-dragodindes-name p {
+    color : rgb(14, 14, 14);
+}
+
+.my-drago-line-selected {
+    background : rgb(201, 166, 166);
+    border: 1px solid rgb(107, 20, 17);
+    transition: all 0.2s;
+    padding-top : 5px;
+    padding-bottom : 5px;
+    padding-right: 10px;
+    border-bottom : 1px solid grey;
+    transition: all 0.2s;
+    vertical-align: middle;
+    color: rgb(39, 39, 39);
+    margin-bottom : 0px;
+}
+
+.my-drago-line-selected .my-dragodindes-name, .my-drago-line-last .my-dragodindes-name, .my-drago-line .my-dragodindes-name, .my-drago-line-used .my-dragodindes-name {
+    padding-left: 10px !important;
+}
+
 .my-drago-line-selected .my-dragodindes-name p {
     color : rgb(107, 20, 17);
 }
 
-.my-drago-line-selected .my-dragodindes-name:before {
-    content: '';
-    display: inline-block;
-    width: 0;
-    height: 0;
-    vertical-align: middle;
-    border-color: rgb(107, 20, 17);
-    border-style: solid;
-    border-width: 5px;
-    border-radius: 50%;
-    transition: all 0.2s;
-    margin-left: 10px;
-    margin-right : 10px;
+.my-dragodindes-container div:last-child {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
-.my-drago-fecond-message {
+.my-drago-fecond-message, .my-drago-used-message {
     font-size: 0.8rem;
 }
 
@@ -243,8 +373,8 @@ input {
     background : rgb(166, 190, 201);
     border: 1px solid rgb(24, 100, 134);
     transition: all 0.2s;
-    padding-top : 10px;
-    padding-bottom : 10px;
+    padding-top : 5px;
+    padding-bottom : 5px;
     padding-right: 10px;
     border-bottom : 1px solid grey;
     transition: all 0.2s;
@@ -255,18 +385,6 @@ input {
 
 .my-drago-line-last .my-dragodindes-name p {
     color : rgb(21, 72, 95) !important;
-}
-
-.my-drago-line-last .my-dragodindes-name:before {
-    content: '';
-    display: inline-block;
-    width: 0;
-    height: 0;
-    vertical-align: middle;
-    border-color: transparent transparent transparent rgba(23, 36, 80, 0);
-    border-style: solid;
-    border-width: 15px;
-    transition: all 0.2s;
 }
 
 .my-drago-line-selected:last-child {
@@ -283,12 +401,23 @@ input {
     font-size: 1.3rem;
 }
 
-.icon-heart, .icon-cross {
+.icon-heart, .icon-cross, .icon-used {
     cursor: pointer;
 }
 
-.icon-heart {
+.icon-heart, .icon-used {
     margin-right : 15px;
+}
+
+.icon-used svg {
+    color: rgba(76, 110, 42, 0.6);
+    transition: all .1s;
+}
+
+.icon-used svg:hover {
+    color: rgb(76, 110, 42);
+    transform: scale(1.5, 1.5);
+    transition: all .1s;
 }
 
 .icon-heart svg {
@@ -331,27 +460,21 @@ input {
     color : rgb(7, 83, 7);
     border: 1px solid green;
     background : rgb(166, 201, 166) !important;
-    padding-top : 10px;
-    padding-bottom : 10px;
+    padding-top : 5px;
+    padding-bottom : 5px;
+    padding-left:10px;
     padding-right: 10px;
     transition: all 0.2s;
     cursor: pointer;
 }
 
-.drago-line-selected:hover {
-    border: 1px solid green;
+.drago-line-selected img {
+    width: 50px;
+    height: auto;
 }
 
-.drago-line-selected:before {
-    content: '';
-    display: inline-block;
-    width: 0;
-    height: 0;
-    vertical-align: middle;
-    border-color: transparent transparent transparent rgba(23, 80, 37, 0);
-    border-style: solid;
-    border-width: 5px;
-    transition: all 0.2s;
+.drago-line-selected:hover {
+    border: 1px solid green;
 }
 
 .drago-line:hover {
@@ -361,31 +484,14 @@ input {
     border: 1px solid green;
 }
 
-.drago-line:before {
-    content: '';
-    display: inline-block;
-    width: 0;
-    height: 0;
-    vertical-align: middle;
-    border-color: transparent transparent transparent rgba(23, 80, 37, 0);
-    border-style: solid;
-    border-width: 5px;
-    transition: all 0.2s;
-}
-
 .drago-line .add-drago-check-over {
     opacity : 0;
-    margin-right : 5px;
+    /* margin-right : 5px; */
 }
 
 .drago-line:hover .add-drago-check-over {
     color : rgb(7, 83, 7);
     opacity : .5;
-}
-
-.drago-line:hover:before {
-    border-color: transparent transparent transparent rgba(23, 80, 37, 0);
-    transition: all 0.2s;
 }
 
 .my-drago-line:first-child, .fecondator-line:first-child {
@@ -402,47 +508,11 @@ input {
     border-bottom : hidden;
 }
 
-.drago-line {
-    background : white;
-}
-
-.my-drago-line {
-    background : rgb(240, 240, 240);
-    padding-left: 0;
-    z-index: 7;
-    position: relative;
-}
-
-.my-drago-line, .my-dragodindes-name, .my-drago-line-selected {
-    padding-left: 0;
-}
-
 .my-drago-line:hover {
     /* background : rgba(105, 75, 141, 0.247) !important; */
     transition: all 0.2s;
     box-shadow: 0px 0px 4px rgb(17, 17, 17);
-    z-index: 10;
-}
-
-.my-drago-line .my-dragodindes-name:before {
-    content: '';
-    display: inline-block;
-    width: 0;
-    height: 0;
-    vertical-align: middle;
-    border: 5px solid rgba(59, 23, 80, 0);
-    transform: scale(2, 2);
-    border-radius: 50%;
-    transition: all 0.2s;
-    margin-left: 10px;
-    margin-right: 10px;
-}
-
-.my-drago-line:hover .my-dragodindes-name:before {
-    border : 5px solid rgba(62, 23, 80, 1);
-    border-radius: 50%;
-    transform: scale(1, 1);
-    transition: all 0.2s;
+    z-index: 2;
 }
 
 .my-dragodindes-name p {
@@ -703,9 +773,16 @@ input:focus {
 }
 
 .craft-title, .infos-title {
-    background-color : rgb(61, 61, 61);
-    border-bottom : 1px solid rgba(92, 92, 92, 0.733);
-    border-top : 1px solid rgba(92, 92, 92, 0.733);
+    /* background-color : rgb(61, 61, 61); */
+    color: rgb(29, 29, 29);
+    letter-spacing : 5px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom : 15px;
+    /* border-botrgb(36, 36, 36)id rgba(92, 92, 92, 0.733);
+    border-top : 1px solid rgba(92, 92, 92, 0.733); */
+    font-family: 'Bree Serif', serif;
+    /* font-family: 'Rakkas', cursive; */
 }
 
 .category:hover {

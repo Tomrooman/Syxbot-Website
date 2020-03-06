@@ -212,7 +212,7 @@ class Radio extends React.Component {
                 </div>
                 <div
                     className='radio_floating'
-                    onClick={() => this.showMenu()}
+                    onClick={this.showMenu}
                 >
                     <div className='radio_name'>
                         <div className='radio_png'>

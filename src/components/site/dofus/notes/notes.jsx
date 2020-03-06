@@ -4,7 +4,7 @@ import React from 'react';
 import Axios from 'axios';
 import _ from 'lodash';
 import $ from 'jquery';
-import NotesModal from './modal/modal.jsx';
+import NotesModal from './modal.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 
