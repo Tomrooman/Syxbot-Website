@@ -48,8 +48,8 @@ export default class Notes extends React.Component {
         });
     }
 
-    handleKeyPress(e, title, content) {
-        if (e.key === 'Enter') {
+    handleClick(title, content) {
+        if (this.state.input !== content) {
             this.updateNoteAPI('/api/dofus/notes/update', {
                 userId: this.state.user.id,
                 title: title,
@@ -147,9 +147,6 @@ export default class Notes extends React.Component {
                 </h2>
                 <div className='notes-btn col-sm-12 text-center'>
                     <button onClick={() => this.showModal('new')}>Ajouter une note</button>
-                    <a href='/dofus'>
-                        <button>Retour au menu</button>
-                    </a>
                 </div>
                 <div className='container col-10 notes-container row'>
                     {this.state.notes && this.state.notes.length ?
@@ -167,14 +164,20 @@ export default class Notes extends React.Component {
                                         </span>
                                     </h4>
                                     {this.state.showInput === note.title && this.state.showContent === note.content ?
-                                        <textarea
-                                            className='infos-input'
-                                            type='text'
-                                            rows='3'
-                                            autoFocus
-                                            onKeyPress={(e) => this.handleKeyPress(e, note.title, note.content)}
-                                            onChange={this.handleChange}
-                                        /> :
+                                        <>
+                                            <textarea
+                                                className='infos-input'
+                                                type='text'
+                                                rows='3'
+                                                autoFocus
+                                                onChange={this.handleChange}
+                                            />
+                                            <button
+                                                onClick={() => this.handleClick(note.title, note.content)}
+                                            >
+                                                Valider
+                                            </button>
+                                        </> :
                                         <p>{note.content}</p>}
                                 </div>
                             );

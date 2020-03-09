@@ -5,37 +5,8 @@
     }
 }
 
-.top-infos {
-    position : absolute;
-    width : 80%;
-    margin-left : 10%;
-    background-color : rgba(49, 49, 49, 0.733);
-    box-shadow: 0px 0px 5px rgba(92, 92, 92, 0.733);
-    color : rgb(206, 194, 193);
-    border : 1px solid rgba(92, 92, 92, 0.733);
-    border-bottom-right-radius: 20px;
-    border-bottom-left-radius: 20px;
-}
-
-.top-infos h4 {
-    color : rgb(206, 194, 193);
-    background-color: rgb(24, 24, 24);
-    padding-top : 0.5rem;
-    padding-bottom : 0.5rem;
-}
-
 .fecond-now {
     color : rgb(64, 143, 163);
-}
-
-.btn-add:hover {
-    color : rgb(64, 163, 64) !important;
-    background-color: rgba(55, 63, 46, 0.733) !important;
-}
-
-.btn-remove:hover {
-    color : rgb(185, 57, 52) !important;
-    background-color: rgba(71, 47, 47, 0.733) !important;
 }
 
 .craft-category-name {
@@ -62,10 +33,6 @@
     margin-left: auto;
 }
 
-.top-infos p {
-    padding-top : 0.5rem;
-}
-
 input {
     background-color: rgb(34, 34, 34);
     color : rgb(167, 63, 60);
@@ -73,7 +40,10 @@ input {
 }
 
 .principal-container {
+    height: 90.5vh;
+    overflow-y: auto;
     min-width: 390px;
+    width : 100%;
 }
 
 .add-drago-list, .automate-list {
@@ -328,7 +298,6 @@ input {
     padding-bottom : 5px;
     padding-right: 10px;
     border-bottom : 1px solid grey;
-    transition: all 0.2s;
     vertical-align: middle;
     color: rgb(39, 39, 39);
     margin-bottom : 0px;
@@ -552,69 +521,40 @@ input:focus {
     outline: none;
 }
 
-.btn {
-    padding-top : 1rem;
-    padding-bottom : 1rem;
-    width : 100%;
-    font-size : 1.2rem;
-    border-radius : 20px;
-    background-color : rgb(49, 49, 49);
-    box-shadow: 0px 0px 5px rgba(92, 92, 92, 0.733);
-    color : rgb(206, 194, 193);
-    border-bottom : 1px solid rgba(92, 92, 92, 0.733);
-    border-left : 1px solid rgba(92, 92, 92, 0.733);
-    border-right : 1px solid rgba(92, 92, 92, 0.733);
-}
-
-.btn-infos {
-    box-shadow: 0px 0px 5px rgba(92, 92, 92, 0.733);
-    border-top : 1px solid rgba(92, 92, 92, 0.733);
-    border-radius : 20px;
-}
-
-.btn-home-return {
-    color : rgb(64, 143, 163);
-}
-
-.btn-home-return:hover {
-    color : rgb(64, 143, 163) !important;
-    background-color : rgb(41, 54, 58) !important;
-}
-
-.btn:hover {
-    transition: all 0.2s ease-in-out;
-    letter-spacing: 0.3rem;
-    color : rgb(185, 57, 52);
-    background-color: rgba(63, 46, 46, 0.733);
-}
-
-.btn-add {
-    color : rgb(64, 163, 64);
-}
-
-.btn-remove {
-    color : rgb(185, 57, 52);
-}
-
 .home-menu {
-    position: absolute;
-    width : 80%;
-    margin-left: 10%;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 5rem;
+}
+
+.dofus-menu-choice {
+    border: 1px solid rgb(128, 128, 128);
+    color : rgb(61, 61, 61);
+    margin-left: 2.5rem;
+    margin-right: 2.5rem;
+    width: 250px;
+    margin-top : 2.5rem;
+    margin-bottom: 2.5rem;
+    padding: 1rem;
+    font-family: 'Bree Serif', serif;
+    box-shadow: 0px 0px 3px black;
+    font-size: 1.5rem;
+    border-radius: 5px;
+}
+
+.dofus-menu-choice:hover {
+    color : rgb(29, 29, 29);
+    transform: scale(1.2);
 }
 
 .infos-input {
     margin-top : 0.5rem;
     margin-bottom : 0.5rem;
     width : 90%;
-}
-
-.btn-home {
-    border-top : 1px solid rgba(92, 92, 92, 0.733);
-    border-radius : 20px;
-}
-
-.btn:focus {
-    box-shadow: none;
 }
 
 .add-infos-div {
@@ -651,7 +591,7 @@ input:focus {
 }
 
 .one_infos {
-    border : 1px solid rgba(92, 92, 92, 0.733);
+    border : 1px solid rgb(192, 192, 192);
     cursor: pointer;
     height : 100%;
     margin-top : 0.5rem;
@@ -661,9 +601,9 @@ input:focus {
     max-width: 310px;
     margin-left: auto;
     margin-right: auto;
-    color : rgb(185, 57, 52);
-    background-color : rgba(49, 49, 49, 0.733);
-    box-shadow: 0px 0px 5px rgba(92, 92, 92, 0.733);
+    color : rgb(29, 29, 29);
+    background-color : white;
+    box-shadow: 0px 0px 2px rgba(92, 92, 92, 0.733);
 }
 
 .infos-remove-svg {
@@ -671,6 +611,12 @@ input:focus {
     right: 0;
     margin-right: 10px;
     color: rgb(145, 23, 23);
+    transition: all .2s;
+}
+
+.infos-remove-svg:hover {
+    transition: all .2s;
+    transform: scale(1.5);
 }
 
 .loading-notes-message {
@@ -694,6 +640,8 @@ input:focus {
 .notes-container {
     margin-left: auto;
     margin-right: auto;
+    display: flex;
+    justify-content: center;
 }
 
 .notes-btn {
@@ -710,7 +658,6 @@ input:focus {
 
 .one_infos:hover {
     transition : all 0.2s ease-in-out;
-    box-shadow: 0px 0px 30px rgb(148, 92, 90);
 }
 
 .one_infos h4 {
@@ -720,8 +667,8 @@ input:focus {
     padding-right: 0.3rem;
     border-top-left-radius : 10px;
     border-top-right-radius : 10px;
-    color : rgb(206, 194, 193);
-    background-color: rgb(24, 24, 24);
+    /* color : rgb(206, 194, 193); */
+    /* background-color: rgb(24, 24, 24); */
     width : 100%;
 }
 
@@ -731,6 +678,7 @@ input:focus {
     padding-left: 0.3rem;
     padding-right: 0.3rem;
     word-break : break-all;
+    background: white;
 }
 
 .parcho-div {

@@ -291,9 +291,6 @@ export default class Dragodindes extends React.Component {
                     <a href='/dofus/fecondator'>
                         <button>Fécondator</button>
                     </a>
-                    <a href='/dofus'>
-                        <button>Retour au menu</button>
-                    </a>
                 </div>
                 {this.state.dragodindes.length ?
                     <div className='text-center principal-dragodindes-div col-sm-11 col-md-10 col-lg-8 col-xl-6'>

@@ -27,6 +27,7 @@ export default class Fecondator extends React.Component {
             },
             show: false,
             accouchDate: [],
+            finishTime: false,
             lateCountdown: false,
             last: false,
             wait: true,
@@ -51,7 +52,8 @@ export default class Fecondator extends React.Component {
                     const now = Date.now();
                     let ddFecond = res.data.filter(d => d.last.status);
                     ddFecond = ddFecond && ddFecond[0] ? ddFecond[0] : false;
-                    let sortedDragodindes = _.reverse(_.sortBy(res.data.filter(d => !d.last.status && !d.used), 'duration', 'asc'));
+                    const filteredDrago = res.data.filter(d => !d.last.status && !d.used);
+                    let sortedDragodindes = filteredDrago.length ? _.reverse(_.sortBy(filteredDrago, 'duration', 'asc')) : false;
                     sortedDragodindes = this.calculateTime(now, ddFecond, sortedDragodindes);
                     this.countdown(sortedDragodindes);
                     this.setDidMountState(now, ddFecond, sortedDragodindes);
@@ -63,6 +65,7 @@ export default class Fecondator extends React.Component {
                 }
             })
             .catch(e => {
+                console.log('error : ', e.message);
                 this.setState({
                     wait: false
                 });
@@ -79,9 +82,9 @@ export default class Fecondator extends React.Component {
             wait: false
         }, () => {
             if (ddFecond && this.state.user.countdown) {
-                setInterval(() => {
-                    if (this.state.user.countdown) {
-                        this.interval = this.countdown(this.calculateTime(Date.now(), ddFecond, sortedDragodindes));
+                this.interval = setInterval(() => {
+                    if (this.state.user.countdown && (sortedDragodindes || ddFecond)) {
+                        this.countdown(this.calculateTime(Date.now(), ddFecond, sortedDragodindes));
                     }
                 }, 1000);
             }
@@ -90,41 +93,36 @@ export default class Fecondator extends React.Component {
 
     countdown(dragodindes) {
         let ended = false;
-        $('.fecondator-line').map((index, line) => {
-            const fecondTimeDiv = $(line.children[1])[0].children;
-            if (fecondTimeDiv.length === 2) {
-                const dragoName = $(line.children[0])[0].children[1].innerHTML.trim();
-                const countdownContent = fecondTimeDiv[0].children[0];
-                const findDrago = _.find(dragodindes, { name: dragoName });
-                if (countdownContent.innerHTML.substr(0, 10) !== 'Maintenant') {
-                    if (findDrago.end.time.substr(0, 10) !== 'Maintenant') {
-                        countdownContent.innerHTML = findDrago.end.time;
-                    }
-                    else {
-                        // Countdown ended
-                        ended = true;
-                        // $(line.children[1])[0].innerHTML = '';
-                        // const div = document.createElement('div');
-                        // div.className = 'fecondator-time-now';
-                        // const p = document.createElement('p');
-                        // p.innerHTML = 'Maintenant';
-                        // div.appendChild(p);
-                        // $(line.children[1])[0].append(div);
+        if ($('.fecondator-line').length) {
+            $('.fecondator-line').map((index, line) => {
+                const fecondTimeDiv = $(line.children[1])[0].children;
+                if (fecondTimeDiv.length === 2) {
+                    const dragoName = $(line.children[0])[0].children[1].innerHTML.trim();
+                    const countdownContent = fecondTimeDiv[0].children[0];
+                    const findDrago = _.find(dragodindes, { name: dragoName });
+                    if (countdownContent.innerHTML.substr(0, 10) !== 'Maintenant') {
+                        if (findDrago.end.time.substr(0, 10) !== 'Maintenant') {
+                            countdownContent.innerHTML = findDrago.end.time;
+                        }
+                        else {
+                            // Countdown ended
+                            ended = true;
+                        }
                     }
                 }
+            });
+            if (ended) {
+                clearInterval(this.interval);
+                this.getDataAndSetState();
             }
-        });
-        if (ended) {
-            console.log('Ended with countdown');
-            this.getDataAndSetState();
         }
     }
 
     getAccouchDate(now, last, dragodindes) {
-        let date = dateFormat(now + (dragodindes[0].duration * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
+        let date = dragodindes.length ? dateFormat(now + (dragodindes[0].duration * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss') : false;
         if (last) {
             const hoursDiff = Math.floor((now - Date.parse(last.last.date)) / (1000 * 60 * 60));
-            if (hoursDiff >= last.duration - dragodindes[0].duration) {
+            if (dragodindes.length && hoursDiff >= last.duration - dragodindes[0].duration) {
                 date = dateFormat(Date.now() + (dragodindes[0].duration * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
             }
             else {
@@ -135,24 +133,60 @@ export default class Fecondator extends React.Component {
     }
 
     calculateTime(now, last, dragodindes) {
+        let setDrago = false;
         const baseDate = last ? Date.parse(last.last.date) : now;
         const hoursLate = last ? Math.floor((now - baseDate) / (1000 * 60 * 60)) : 0;
         let secondDiff = last ? Math.floor((now - baseDate) / 1000) : 0;
         secondDiff = last ? secondDiff - Math.floor(secondDiff / 60) * 60 : 0;
         let minDiff = last ? Math.floor((now - baseDate) / (1000 * 60)) : 0;
         minDiff = last ? minDiff - (Math.floor(minDiff / 60) * 60) : 0;
-        if (last) {
+        if (last && dragodindes && hoursLate >= last.duration - dragodindes[0].duration) {
             this.getLateCountdown(secondDiff, minDiff, hoursLate, last, dragodindes);
         }
         minDiff = 60 - minDiff;
         secondDiff = 60 - secondDiff;
-        const setDrago = this.setDragodindes(baseDate, last, dragodindes, hoursLate, minDiff, secondDiff);
+        if (dragodindes) {
+            setDrago = this.setDragodindes(baseDate, last, dragodindes, hoursLate, minDiff, secondDiff);
+        }
+        else if (last && hoursLate <= last.duration && !dragodindes) {
+            this.setFinishTime(baseDate, now, last, hoursLate);
+        }
         return setDrago;
     }
 
+    setFinishTime(baseDate, now, last, hoursLate) {
+        if (hoursLate < last.duration) {
+            const endDate = (baseDate + (last.duration * 60 * 60 * 1000) - now);
+            const endHours = Math.floor(endDate / (1000 * 60 * 60));
+            let endMin = Math.floor(endDate / (1000 * 60));
+            let endSec = Math.floor(endDate / 1000);
+            endMin -= Math.floor(endMin / 60) * 60;
+            endSec -= Math.floor(endSec / 60) * 60;
+            if (!this.state.finishTime) {
+                this.setState({
+                    finishTime: this.setLateTimeRemaining(endHours, endMin, endSec)
+                });
+            }
+            else {
+                $('.finish-countdown')[0].innerHTML = this.setLateTimeRemaining(endHours, endMin, endSec);
+            }
+        }
+        else {
+            this.setState({
+                finishTime: 'Maintenant'
+            });
+        }
+    }
+
     getLateCountdown(secondDiff, minDiff, hoursLate, last, dragodindes) {
-        if (hoursLate >= last.duration - dragodindes[0].duration) {
-            const goodHours = hoursLate - (last.duration - dragodindes[0].duration);
+        if (last) {
+            let goodHours = '';
+            if (dragodindes && hoursLate >= last.duration - dragodindes[0].duration) {
+                goodHours = hoursLate - (last.duration - dragodindes[0].duration);
+            }
+            else if (!dragodindes && hoursLate >= last.duration) {
+                goodHours = hoursLate - last.duration;
+            }
             const stringDuration = this.setLateTimeRemaining(goodHours, minDiff, secondDiff);
             if (!this.state.lateCountdown) {
                 this.setState({
@@ -207,8 +241,8 @@ export default class Fecondator extends React.Component {
     }
 
     setLateTimeRemaining(hours, minutes, seconds) {
-        const goodMinutes = (minutes > 0 && minutes < 10 ? '0' + minutes + 'M' : minutes + 'M');
-        const goodSeconds = (seconds > 0 && seconds < 10 ? '0' + seconds + 'S' : seconds + 'S');
+        const goodMinutes = (minutes >= 0 && minutes < 10 ? '0' + minutes + 'M' : minutes + 'M');
+        const goodSeconds = (seconds >= 0 && seconds < 10 ? '0' + seconds + 'S' : seconds + 'S');
         return hours > 0 ? hours + 'H' + goodMinutes + goodSeconds : goodMinutes + goodSeconds;
     }
 
@@ -271,6 +305,7 @@ export default class Fecondator extends React.Component {
             })
         ]).then(() => {
             this.handleClose();
+            clearInterval(this.interval);
             this.getDataAndSetState();
         }).catch(() => {
             setTimeout(() => {
@@ -310,9 +345,6 @@ export default class Fecondator extends React.Component {
                     <a href='/dofus/dragodindes'>
                         <button>Mes dragodindes</button>
                     </a>
-                    <a href='/dofus'>
-                        <button>Retour au menu</button>
-                    </a>
                 </div>
                 <div className='text-center fecondator-last-dragodinde col-sm-11 col-md-10 col-lg-9 col-xl-8'>
                     {this.state.last ?
@@ -335,6 +367,11 @@ export default class Fecondator extends React.Component {
                                 <>
                                     <p className='label'>Retard</p>
                                     <p className='late-countdown value'>{this.state.lateCountdown}</p>
+                                </> : ''}
+                            {this.state.finishTime ?
+                                <>
+                                    <p className='label'>Dans</p>
+                                    <p className='finish-countdown value'>{this.state.finishTime}</p>
                                 </> : ''}
                         </div>
                     </div>
