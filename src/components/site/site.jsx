@@ -6,7 +6,7 @@ import PropTypes, { instanceOf } from 'prop-types';
 // import VoiceRecognition from './voiceRecognition.jsx';
 import FormData from 'form-data';
 import { library } from '@fortawesome/fontawesome-svg-core';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Sidebar from './sidebar/sidebar.jsx';
 import { faAssistiveListeningSystems, faBookOpen } from '@fortawesome/free-solid-svg-icons';
 import Config from './../../../config.json';
@@ -59,16 +59,6 @@ class Site extends React.Component {
             this.setState({
                 page: content
             });
-        }
-        this.setSidebarHeight(content, this.props.page);
-    }
-
-    setSidebarHeight(content, page) {
-        if (!content) {
-            $('#website-sidebar').css('display', 'none');
-        }
-        else if (page === 'controls') {
-            $('#website-sidebar').css('height', '90.5vh');
         }
     }
 
@@ -192,11 +182,32 @@ class Site extends React.Component {
                         urlArg={this.props.urlArg}
                     />
                     <div className='website-container'>
-                        <Sidebar command={this.props.page} urlArg={this.props.urlArg} />
+                        <Sidebar command={this.props.page} urlArg={this.props.urlArg} user={this.state.user} />
                         {this.state.page ?
                             this.state.page :
                             <div className='home-container'>
-                                <h1 className='page-title'>Site en construction</h1>
+                                <div className='home-top-infos'>
+                                    <h1 className='page-title'>Site en construction</h1>
+                                    <div className='docs_panel'>
+                                        <p className='h5'>Bienvenue sur le site de syxbot</p>
+                                        <p>N'hésitez pas à me contacter pour toute(s) question(s), idée(s) de modification(s) ou si vous avez des compétences front-end et que vous souhaitez mettre vos compétences à profit sur ce site.</p>
+                                        <p className='formOrMail'>Utilisez le formulaire ou contactez moi à cette adresse : syxbot@hotmail.com</p>
+                                        <a href='/docs/contact'>
+                                            <button
+                                                className='contact-btn'
+                                                onMouseEnter={this.handleMouseEnterContactBtn}
+                                                onMouseLeave={this.handleMouseLeaveContactBtn}
+                                            >
+                                                Me contacter
+                                            </button>
+                                        </a>
+                                        <span className='sidebar-add-bot-btn'>
+                                            <a href={Config.OAuth.add_url}>
+                                                <FontAwesomeIcon icon='plus-circle' /> Ajouter le bot
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
                                 <div className='home-infos-container col-12 row'>
                                     <div className='card col-10 col-sm-7 col-md-5 col-lg-5 col-xl-3'>
                                         <img src='/assets/img/voice-recognition.jpg' className='card-img-top' alt='voice_image' />

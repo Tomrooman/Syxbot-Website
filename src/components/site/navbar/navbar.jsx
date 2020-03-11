@@ -44,7 +44,7 @@ export default class Navbar extends React.Component {
                                         href='/dofus/notes'
                                         className={this.props.urlArg === 'notes' ? 'dropdown-item active' : 'dropdown-item'}
                                     >
-                                        Mes notes {!this.props.user ? <span className='dofus-need-connection'>connexion nécessaire</span> : ''}
+                                        Mes notes {!this.props.user ? <span className='dofus-need-connection'><p>(connexion nécessaire)</p></span> : ''}
                                     </a>
                                     <a
                                         href='/dofus/craft'
@@ -68,13 +68,13 @@ export default class Navbar extends React.Component {
                                         href='/dofus/dragodindes'
                                         className={this.props.urlArg === 'dragodindes' ? 'dropdown-item active' : 'dropdown-item'}
                                     >
-                                        Mes dragodindes {!this.props.user ? <span className='dofus-need-connection'>connexion nécessaire</span> : ''}
+                                        Mes dragodindes {!this.props.user ? <span className='dofus-need-connection'><p>(connexion nécessaire)</p></span> : ''}
                                     </a>
                                     <a
                                         href='/dofus/fecondator'
                                         className={this.props.urlArg === 'fecondator' ? 'dropdown-item active' : 'dropdown-item'}
                                     >
-                                        Fécondator {!this.props.user ? <span className='dofus-need-connection'>connexion nécessaire</span> : ''}
+                                        Fécondator {!this.props.user ? <span className='dofus-need-connection'><p>(connexion nécessaire)</p></span> : ''}
                                     </a>
                                 </div>
                             </div>
@@ -109,7 +109,8 @@ export default class Navbar extends React.Component {
                             </div> :
                             <a href={`${Config.OAuth.connection_url}&state=${this.props.randStr}`}>
                                 <button className='connect-btn'>
-                                    <FontAwesomeIcon icon={['fab', 'discord']} /> Se connecter
+                                    <FontAwesomeIcon icon={['fab', 'discord']} />
+                                    <p>Se connecter</p>
                                 </button>
                             </a>
                     }

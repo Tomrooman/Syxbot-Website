@@ -14,8 +14,15 @@
     padding-left : 4rem;
 }
 
+.dofus-need-connection p {
+    color: rgb(175, 50, 50) !important;
+    font-family: 'Bree Serif', serif;
+    margin : 0;
+    font-size: 0.8rem;
+}
+
 .dofus-need-connection {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color :rgb(175, 50, 50);
 }
 

@@ -119,7 +119,8 @@ export default class Docs extends React.Component {
                             <div className='docs_content'>
                                 <div className='docs_panel'>
                                     <p className='h5'>Bienvenue sur la docs de syxbot</p>
-                                    <p>N'hésitez pas à me contacter pour toute(s) question(s), idée(s) de modification(s), etc ...</p>
+                                    <p>N'hésitez pas à me contacter pour toute(s) question(s), idée(s) de modification(s) ou si vous avez des compétences front-end et que vous souhaitez mettre vos compétences à profit sur ce site.</p>
+                                    <p className='formOrMail'>Utilisez le formulaire ou contactez moi à cette adresse : syxbot@hotmail.com</p>
                                     <a href='/docs/contact'>
                                         <button
                                             className='contact-btn'

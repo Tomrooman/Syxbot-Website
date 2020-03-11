@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Notes from './notes/notes.jsx';
 import Dragodindes from './dragodindes/dragodindes.jsx';
 import Fecondator from './fecondator/fecondator.jsx';
+import Craft from './craft/craft.jsx';
 import Config from './../../../../config.json';
 
 import './dofus.css';
@@ -21,6 +22,9 @@ export default class Dofus extends React.Component {
         }
         else if (this.props.urlArg === 'fecondator' && this.props.user) {
             content = <Fecondator user={this.props.user} />;
+        }
+        else if (this.props.urlArg === 'craft') {
+            content = <Craft user={this.props.user} />;
         }
         else {
             window.location.href = Config.OAuth.redirect_url;
