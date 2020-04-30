@@ -1,3 +1,7 @@
+:root {
+    --navbar-item-padding: .2rem;
+}
+
 .navbar-site ul li.active > a, a[aria-expanded="true"] {
     color: inherit;
     /* background: inherit; */
@@ -338,8 +342,8 @@
 .nav-link {
     vertical-align: middle;
     /* margin-top : 5px; */
-    padding-top : 0.5rem;
-    padding-bottom : 0.5rem;
+    padding-top : var(--navbar-item-padding);
+    padding-bottom : var(--navbar-item-padding);
     padding-left: 1rem;
     padding-right: 1rem;
     text-align: center;
@@ -350,9 +354,10 @@
 }
 
 .nav-item p {
-    font-family: 'Bree Serif', serif;
+    /* font-family: 'Bree Serif', serif; */
     margin : 0;
-    color :rgb(197, 197, 197);
+    font-size: 1rem;
+    color :rgb(230, 230, 230);
 }
 
 .navbar-nav {
@@ -391,8 +396,8 @@
     /* box-shadow : inset 0px 0px 10px rgba(255, 255, 255, 0.459); */
     /* background: linear-gradient(180deg, rgb(80, 80, 80) 0%, rgb(32, 32, 32) 100%); */
     /* border: 1px solid rgb(75, 18, 18); */
-    background: rgb(61, 61, 61);
-    border-bottom : 5px solid rgb(168, 168, 168);
+    background: rgb(53, 53, 53);
+    border-bottom : 5px solid rgb(147, 92, 184);
     color : white;
 }
 
@@ -447,7 +452,8 @@
 }
 
 .navbar {
-    background: linear-gradient(180deg, rgb(10, 10, 10) 0%, rgb(32, 32, 32) 100%);
+    /* background: linear-gradient(180deg, rgb(10, 10, 10) 0%, rgb(32, 32, 32) 100%); */
+    background: #20232A;
 }
 
 .username {
@@ -491,7 +497,7 @@
     padding-right : 25px; */
     border-left: 1px solid rgb(63, 63, 63);
     border-right: 1px solid rgb(63, 63, 63);
-    padding : 0.5rem 1rem;
+    padding : var(--navbar-item-padding) 1rem;
     text-align: center;
     vertical-align: middle;
 }
@@ -515,8 +521,8 @@
     cursor: pointer;
     color: white;
     /* margin-right: 10px; */
-    padding-top : .5rem;
-    padding-bottom : .5rem;
+    padding-top : var(--navbar-item-padding);
+    padding-bottom : var(--navbar-item-padding);
     padding-left: 1rem;
     padding-right : 1rem;
 }
@@ -527,7 +533,7 @@
 }
 
 .dofus-dropdown-list .dropdown-item:hover {
-    background: linear-gradient(45deg, rgba(121,75,139,0.3) 0%, rgba(134,31,43,0.3) 100%);
+    background: lightblue;
 }
 
 .dofus-dropdown img {
@@ -535,12 +541,27 @@
 }
 
 .dofus-dropdown-list .dropdown-item:hover {
-    border-radius: 5px;
+    background: #20232A;
+    color: rgb(214, 214, 214);
+    transition : all .1s;
+}
+
+.dofus-dropdown-list {
+    border-left: 2px solid #20232A;
+    border-right: 2px solid #20232A;
+    border-bottom: 2px solid #20232A;
+}
+
+.dofus-dropdown-list a:last-child {
+    border-bottom : hidden;
 }
 
 .dofus-dropdown-list a {
+    color: #20232A;
+    background: rgb(233, 233, 233);
     padding-top : 9px;
     padding-bottom : 9px;
+    border-bottom : 1px solid grey;
 }
 
 .dofus-dropdown:after {
@@ -629,7 +650,7 @@
     color: #fff;
     border: none;
     cursor: pointer;
-    padding-top : 0.5rem;
+    padding-top : 0.1rem;
     padding-bottom : 0.5rem;
     padding-left: 1rem;
     padding-right : 1rem;

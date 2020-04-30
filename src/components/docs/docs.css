@@ -146,20 +146,40 @@ a[data-toggle="collapse"] {
     transform: translateY(-50%);
 }
 
-.website-btn:hover {
+.website-btn:hover, .website-add-bot-btn:hover {
+    transition: all 0.2s;
     letter-spacing: 2px;
-    width : 90%;
-    transition: all 0.3s;
-}
-
-.website-btn a {
-    width : 100%;
+    color: white;
 }
 
 .website-btn {
-    transition: all 0.3s;
-    padding-top : 12px;
-    padding-bottom : 12px;
+    transition: all 0.2s;
+    padding-top : 9px;
+    padding-bottom : 9px;
+    color : #fff;
+    opacity: 0.9;
+    text-align: center;
+    width: 80%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom : 5px;
+    border-radius: 5px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(0deg, rgb(75, 85, 139) 0%, rgb(95, 63, 122) 100%);
+    border-bottom : 5px solid rgb(34, 40, 77);
+    box-shadow: 1px 1px 3px rgb(108, 98, 165);
+}
+
+.website-add-bot-btn {
+    padding: 10px;
+    border-bottom: 5px solid rgb(27, 75, 32);
+    box-shadow: 1px 1px 3px black;
+    background: rgb(47, 129, 55);
+    z-index: 1;
+    transition: all 0.2s;
+    padding-top : 9px;
+    padding-bottom : 9px;
     color : #fff;
     opacity: 0.9;
     text-align: center;
@@ -168,10 +188,6 @@ a[data-toggle="collapse"] {
     margin-left : auto;
     margin-right : auto;
     font-weight: bold;
-    color: #fff;
-    background: linear-gradient(0deg, rgb(75, 85, 139) 0%, rgb(95, 63, 122) 100%);
-    border-bottom : 5px solid rgb(34, 40, 77);
-    box-shadow: 1px 1px 3px rgb(108, 98, 165);
 }
 
 .toggleSideMenu {

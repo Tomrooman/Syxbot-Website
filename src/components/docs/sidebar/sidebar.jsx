@@ -3,13 +3,14 @@
 import React from 'react';
 import $ from 'jquery';
 import PropTypes from 'prop-types';
+import Config from './../../../../config.json';
 import Commands from './../../../../assets/json/commands.json';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
     faBookmark, faListUl, faHome, faPenFancy, faPause, faListOl, faHeadphonesAlt, faWindowClose, faQuestion,
     faStepForward, faTrashAlt, faRss, faPlay, faSyncAlt, faEraser, faSignOutAlt, faSearch, faForward, faStop,
-    faSignInAlt
+    faSignInAlt, faReply
 } from '@fortawesome/free-solid-svg-icons';
 library.add(faBookmark);
 library.add(faListUl);
@@ -31,6 +32,7 @@ library.add(faSignInAlt);
 library.add(faSearch);
 library.add(faForward);
 library.add(faStop);
+library.add(faReply);
 
 export default class Sidebar extends React.Component {
     handleMouseEnter(index) {
@@ -101,9 +103,14 @@ export default class Sidebar extends React.Component {
                         </a>
                     </li>
                     <a href='/'>
-                        <h6 className='website-btn'>
-                            Accéder au site
-                        </h6>
+                        <div className='website-btn'>
+                            <FontAwesomeIcon icon='reply' /> Accéder au site
+                        </div>
+                    </a>
+                    <a href={Config.OAuth.add_url}>
+                        <div className='website-add-bot-btn'>
+                            <FontAwesomeIcon icon='plus-circle' /> Ajouter le bot
+                        </div>
                     </a>
                     <h5 id='command_list_title'><FontAwesomeIcon icon='list-ul' />Liste des commandes</h5>
                     <li id='command_list'>

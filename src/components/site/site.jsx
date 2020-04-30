@@ -235,7 +235,7 @@ class Site extends React.Component {
                                         <img src='/assets/img/dofus.jpg' className='card-img-top' alt='dofus_image' />
                                         <div className='card-body'>
                                             <h5 className='card-title'>Dofus</h5>
-                                            <p className='card-text'>Certains outils vous aideront, par exemple pour l'élevage de dragodindes, en vous disant à quel moment utilisé une dragodinde pour qu'elles accouchent toutes en même temps.</p>
+                                            <p className='card-text'>Certains outils vous aideront, par exemple pour l'élevage de dragodindes, en vous disant à quel moment utilisé vos dragodindes pour qu'elles accouchent toutes en même temps.</p>
                                         </div>
                                         <ul className='list-group list-group-flush'>
                                             <a href='/dofus/notes'>
