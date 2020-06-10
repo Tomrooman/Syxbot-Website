@@ -7,6 +7,7 @@ import PropTypes, { instanceOf } from 'prop-types';
 import FormData from 'form-data';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Sidebar from './sidebar/sidebar.jsx';
 import { faAssistiveListeningSystems, faBookOpen } from '@fortawesome/free-solid-svg-icons';
 import Config from './../../../config.json';
 import Axios from 'axios';
@@ -31,6 +32,7 @@ class Site extends React.Component {
             page: false
         };
         window.document.addEventListener('scroll', (e) => {
+            $('.toggleSideMenuWeb').css('transform', 'translateY(' + e.path[1].scrollY + 'px)');
             $('.radio_container').css('transform', 'translateY(' + e.path[1].scrollY + 'px)');
         });
     }
@@ -133,14 +135,13 @@ class Site extends React.Component {
                     discriminator: tokenObj.discriminator,
                     id: tokenObj.userId,
                     token_type: tokenObj.token_type,
-                    expire_at: (Date.now() / 1000) + tokenObj.expires_in
+                    expire_at: (Date.now() / 1000) + tokenObj.expires_in,
+                    countdown: true
                 }, {
                     path: '/',
                     expires: expireDate
                 });
-                setTimeout(() => {
-                    window.location.href = Config.OAuth.redirect_url;
-                }, 1000);
+                window.location.href = Config.OAuth.redirect_url;
             });
     }
 
@@ -150,10 +151,7 @@ class Site extends React.Component {
                 if (remove) {
                     const { cookies } = this.props;
                     cookies.remove('syxbot', { path: '/' });
-                    this.setState({
-                        user: false
-                    });
-                    this.generateRandomString();
+                    window.location.reload();
                 }
             });
     }
@@ -175,65 +173,95 @@ class Site extends React.Component {
     render() {
         if (this.state && (this.state.randStr || this.state.user)) {
             return (
-                <div className='website-container'>
+                <>
                     <Navbar
                         randStr={this.state.randStr}
                         user={this.state.user}
                         disconnect={this.disconnect}
                         page={this.props.page}
+                        urlArg={this.props.urlArg}
                     />
-                    {this.state.page ?
-                        this.state.page :
-                        <div className='home-container'>
-                            <div className='home-infos-container col-12 row'>
-                                <div className='home-infos col-10 offset-1 col-lg-5 offset-lg-0'>
-                                    <div className='infos-top-color infos-recognition-title col-12'>
-                                        <h4>Reconnaissance vocale</h4>
-                                    </div>
-                                    <div className='col-12'>
-                                        <div className='home-infos-svg-div col-12 text-center'>
-                                            <FontAwesomeIcon icon='assistive-listening-systems' />
-                                        </div>
-                                        <div className='home-infos-text col-12 col-md-8 offset-md-2 col-lg-12 offset-lg-0 text-center text-md-left'>
-                                            {this.state.user ?
-                                                <p>Maintenant que vous êtes connectés, vous pouvez utilisé la reconnaissance vocale pour demander à Syxbot d'éffectuer certaines commandes.</p> :
-                                                <p>Une fois que vous serez connectés gràce à vos identifiants discord, vous pourrez utilisé la reconnaissance vocale pour demander à Syxbot d'éffectuer certaines commandes.</p>}
-                                        </div>
-                                        {this.state.user ?
-                                            <a href='/controls'>
-                                                <div className='col-12 col-sm-8 offset-sm-2 col-md-8 offset-md-2 text-center infos-connect-btn'>
-                                                    <FontAwesomeIcon icon='gamepad' /> Contrôler le bot
-                                                </div>
-                                            </a> :
-                                            <a href={`${Config.OAuth.connection_url}&state=${this.state.randStr}`}>
-                                                <div className='col-12 col-sm-8 offset-sm-2 col-md-8 offset-md-2 text-center infos-connect-btn'>
-                                                    <FontAwesomeIcon icon={['fab', 'discord']} /> Se connecter
-                                                </div>
-                                            </a>}
-                                    </div>
-                                </div>
-                                <div className='home-infos col-10 offset-1 col-lg-5'>
-                                    <div className='infos-top-color infos-infos-title col-12'>
-                                        <h4>Informations</h4>
-                                    </div>
-                                    <div className='col-12'>
-                                        <div className='home-infos-svg-div col-12 text-center'>
-                                            <FontAwesomeIcon icon='book-open' />
-                                        </div>
-                                        <div className='home-infos-text col-12 col-md-8 offset-md-2 col-lg-12 offset-lg-0 text-center text-md-left'>
-                                            <p>Une documentation est disponible, n'hésitez pas à la consulter si vous souhaitez avoir plus d'informations sur certaines commandes.</p>
-                                        </div>
-                                        <a href='/docs'>
-                                            <div className='col-12 col-sm-8 offset-sm-2 col-md-8 offset-md-2 text-center infos-docs-btn'>
-                                                <FontAwesomeIcon icon='book' /> Documentation
-                                            </div>
+                    <div className='website-container'>
+                        <Sidebar command={this.props.page} urlArg={this.props.urlArg} user={this.state.user} />
+                        {this.state.page ?
+                            this.state.page :
+                            <div className='home-container'>
+                                <div className='home-top-infos'>
+                                    <h1 className='page-title'>Site en construction</h1>
+                                    <div className='docs_panel'>
+                                        <p className='h5'>Bienvenue sur le site de syxbot</p>
+                                        <p>N'hésitez pas à me contacter pour toute(s) question(s), idée(s) de modification(s) ou si vous avez des compétences front-end et que vous souhaitez mettre vos compétences à profit sur ce site.</p>
+                                        <p className='formOrMail'>Utilisez le formulaire ou contactez moi à cette adresse : syxbot@hotmail.com</p>
+                                        <a href='/docs/contact'>
+                                            <button
+                                                className='contact-btn'
+                                                onMouseEnter={this.handleMouseEnterContactBtn}
+                                                onMouseLeave={this.handleMouseLeaveContactBtn}
+                                            >
+                                                Me contacter
+                                            </button>
                                         </a>
+                                        <span className='sidebar-add-bot-btn'>
+                                            <a href={Config.OAuth.add_url}>
+                                                <FontAwesomeIcon icon='plus-circle' /> Ajouter le bot
+                                            </a>
+                                        </span>
                                     </div>
                                 </div>
-                            </div>
-                        </div>}
-                </div>
-            );
+                                <div className='home-infos-container col-12 row'>
+                                    <div className='card col-10 col-sm-7 col-md-5 col-lg-5 col-xl-3'>
+                                        <img src='/assets/img/voice-recognition.jpg' className='card-img-top' alt='voice_image' />
+                                        <div className='card-body'>
+                                            <h5 className='card-title'>Reconnaissance vocale</h5>
+                                            {this.state.user ?
+                                                <p className='card-text'>Maintenant que vous êtes connectés, vous pouvez utilisé la reconnaissance vocale pour demander à Syxbot d'éffectuer certaines commandes.</p> :
+                                                <p className='card-text'>Une fois que vous serez connectés gràce à vos identifiants discord, vous pourrez utilisé la reconnaissance vocale pour demander à Syxbot d'éffectuer certaines commandes.</p>}
+                                            {this.state.user ?
+                                                <a href='/controls' className='btn-home-control'>Contrôler le bot</a> :
+                                                <a href={`${Config.OAuth.connection_url}&state=${this.state.randStr}`} className='btn-home-control'>Se connecter</a>}
+                                        </div>
+                                    </div>
+                                    <div className='card col-10 col-sm-7 col-md-5 col-lg-5 col-xl-3'>
+                                        <img src='/assets/img/book.jpg' className='card-img-top' alt='doc_image' />
+                                        <div className='card-body'>
+                                            <h5 className='card-title'>Documentation</h5>
+                                            <p className='card-text'>Une documentation est disponible, n'hésitez pas à la consulter si vous souhaitez avoir plus d'informations sur certaines commandes.</p>
+                                        </div>
+                                        <div className='card-body'>
+                                            <a href='/docs' className='btn-home-doc'>Voir la doc</a>
+                                        </div>
+                                    </div>
+                                    <div className='card col-10 col-sm-7 col-md-5 col-lg-5 col-xl-3'>
+                                        <img src='/assets/img/dofus.jpg' className='card-img-top' alt='dofus_image' />
+                                        <div className='card-body'>
+                                            <h5 className='card-title'>Dofus</h5>
+                                            <p className='card-text'>Certains outils vous aideront, par exemple pour l'élevage de dragodindes, en vous disant à quel moment utilisé vos dragodindes pour qu'elles accouchent toutes en même temps.</p>
+                                        </div>
+                                        <ul className='list-group list-group-flush'>
+                                            <a href='/dofus/notes'>
+                                                <li className='list-group-item'>Mes notes</li>
+                                            </a>
+                                            <a href='/dofus/craft'>
+                                                <li className='list-group-item'>Crafts</li>
+                                            </a>
+                                            <a href='/dofus/parchment'>
+                                                <li className='list-group-item'>Parchemins</li>
+                                            </a>
+                                            <a href='/dofus/gestation'>
+                                                <li className='list-group-item'>Temps de gestation</li>
+                                            </a>
+                                            <a href='/dofus/dragodindes'>
+                                                <li className='list-group-item'>Mes dragodindes</li>
+                                            </a>
+                                            <a href='/dofus/fecondator'>
+                                                <li className='list-group-item'>Fécondator</li>
+                                            </a>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>}
+                    </div>
+                </>);
         }
         else {
             return (

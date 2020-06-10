@@ -28,35 +28,77 @@ export default class Navbar extends React.Component {
                 <div className='collapse navbar-collapse' id='navbarSupportedContent'>
                     <ul className='navbar-nav mr-auto'>
                         <li className={this.props.page === '/' ? 'nav-item active' : 'nav-item'}>
-                            <a className='nav-link' href='/'><FontAwesomeIcon icon='home' /> Accueil</a>
+                            <a className='nav-link' href='/'><FontAwesomeIcon icon='home' /><p> Accueil </p></a>
                         </li>
                         <li className={this.props.page === 'controls' ? 'nav-item active' : 'nav-item'}>
-                            <a className='nav-link' href='/controls'><FontAwesomeIcon icon='gamepad' /> Contrôler le bot</a>
+                            <a className='nav-link' href='/controls'><FontAwesomeIcon icon='gamepad' /> <p> Contrôler le bot </p></a>
                         </li>
                         <li className={this.props.page === 'dofus' ? 'nav-item active' : 'nav-item'}>
-                            <a className='nav-link' href='/dofus'><img src='/assets/img/dofus.png' alt='dofus_icon' /> Dofus</a>
+                            <div className='dropdown'>
+                                <button className='dofus-dropdown dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                                    <img src='/assets/img/dofus.png' alt='dofus_icon' />
+                                    <p>Dofus</p>
+                                </button>
+                                <div className='dropdown-menu dropdown-menu-left dofus-dropdown-list' aria-labelledby='dropdownMenuButton'>
+                                    <a
+                                        href='/dofus/notes'
+                                        className={this.props.urlArg === 'notes' ? 'dropdown-item active' : 'dropdown-item'}
+                                    >
+                                        Mes notes {!this.props.user ? <span className='dofus-need-connection'><p>(connexion nécessaire)</p></span> : ''}
+                                    </a>
+                                    <a
+                                        href='/dofus/craft'
+                                        className={this.props.urlArg === 'craft' ? 'dropdown-item active' : 'dropdown-item'}
+                                    >
+                                        Crafts
+                                    </a>
+                                    <a
+                                        href='/dofus/parchment'
+                                        className={this.props.urlArg === 'parchment' ? 'dropdown-item active' : 'dropdown-item'}
+                                    >
+                                        Parchemins
+                                    </a>
+                                    <a
+                                        href='/dofus/gestation'
+                                        className={this.props.urlArg === 'gestation' ? 'dropdown-item active' : 'dropdown-item'}
+                                    >
+                                        Temps de gestation
+                                    </a>
+                                    <a
+                                        href='/dofus/dragodindes'
+                                        className={this.props.urlArg === 'dragodindes' ? 'dropdown-item active' : 'dropdown-item'}
+                                    >
+                                        Mes dragodindes {!this.props.user ? <span className='dofus-need-connection'><p>(connexion nécessaire)</p></span> : ''}
+                                    </a>
+                                    <a
+                                        href='/dofus/fecondator'
+                                        className={this.props.urlArg === 'fecondator' ? 'dropdown-item active' : 'dropdown-item'}
+                                    >
+                                        Fécondator {!this.props.user ? <span className='dofus-need-connection'><p>(connexion nécessaire)</p></span> : ''}
+                                    </a>
+                                </div>
+                            </div>
                         </li>
                     </ul>
                 </div>
                 <div className='form-inline my-2 my-lg-0'>
-                    <a href='/docs'>
-                        <button className='docs-btn'>
-                            <FontAwesomeIcon icon='book' /> Documentation
-                        </button>
-                    </a>
                     {
                         this.props.user ?
                             <div className='dropdown'>
-                                <button className='user-dropdown dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
-                                    <span className='username'>
-                                        <FontAwesomeIcon icon='user-circle' /> {this.props.user.username}
-                                    </span>
-                                    <span className='discriminator'>
-                                        #{this.props.user.discriminator}
-                                    </span>
-                                </button>
+                                <div className='user-dropdown dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                                    <div className='user-dropdown-nav'>
+                                        <FontAwesomeIcon icon='user-circle' />
+                                        <p>
+                                            <span className='username'>
+                                                {this.props.user.username}
+                                            </span>
+                                            <span className='discriminator'>
+                                                #{this.props.user.discriminator}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
                                 <div className='dropdown-menu dropdown-menu-right user-dropdown-list' aria-labelledby='dropdownMenuButton'>
-                                    {/* <a className='dropdown-item' href='#'>Action</a> */}
                                     <p
                                         className='dropdown-item dropdown-disconnect'
                                         onClick={() => this.props.disconnect()}
@@ -67,7 +109,8 @@ export default class Navbar extends React.Component {
                             </div> :
                             <a href={`${Config.OAuth.connection_url}&state=${this.props.randStr}`}>
                                 <button className='connect-btn'>
-                                    <FontAwesomeIcon icon={['fab', 'discord']} /> Se connecter
+                                    <FontAwesomeIcon icon={['fab', 'discord']} />
+                                    <p>Se connecter</p>
                                 </button>
                             </a>
                     }
@@ -87,5 +130,6 @@ Navbar.propTypes = {
         PropTypes.object.isRequired,
         PropTypes.bool.isRequired
     ]),
-    disconnect: PropTypes.func.isRequired
+    disconnect: PropTypes.func.isRequired,
+    urlArg: PropTypes.string.isRequired
 };

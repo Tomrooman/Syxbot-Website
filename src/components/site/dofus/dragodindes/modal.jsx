@@ -35,16 +35,19 @@ export default class DragodindesModal extends React.Component {
                                                 <div
                                                     className={drago.selected ? 'drago-line-selected' : 'drago-line'}
                                                     key={index}
-                                                    onClick={() => this.props.handleAddModalDrago(drago.name, drago.duration, drago.selected)}
+                                                    onClick={() => this.props.handleAddModalDrago(drago.name, drago.duration, drago.generation, drago.selected)}
                                                 >
                                                     {drago.selected ?
                                                         <span>
-                                                            <FontAwesomeIcon icon='check' /> {drago.name}
+                                                            <FontAwesomeIcon icon='check' />
+                                                            <img src={'/assets/img/dragodindes/' + drago.name.toLowerCase().split(' ').join('-') + '.png'} alt='dd_icon' />
+                                                            {drago.name}
                                                         </span> :
                                                         <>
                                                             <span className='add-drago-check-over'>
                                                                 <FontAwesomeIcon icon='check' />
                                                             </span>
+                                                            <img src={'/assets/img/dragodindes/' + drago.name.toLowerCase().split(' ').join('-') + '.png'} alt='dd_icon' />
                                                             {drago.name}
                                                         </>}
                                                 </div>
@@ -119,7 +122,7 @@ export default class DragodindesModal extends React.Component {
                 </div>
             );
         }
-        else {
+        else if (this.props.show && this.props.title === 'Retirer la fécondation ?') {
             return (
                 <div>
                     <Modal
@@ -152,6 +155,77 @@ export default class DragodindesModal extends React.Component {
                     </Modal>
                 </div>
             );
+        }
+        else if (this.props.show && this.props.title === 'Définir comme déjà utilisée ?') {
+            return (
+                <div>
+                    <Modal
+                        isOpen={this.props.show}
+                        toggle={this.props.handleClose}
+                    >
+                        <span className='notes-modal-title col-12'>
+                            <ModalHeader>
+                                {this.props.title}
+                            </ModalHeader>
+                        </span>
+                        <ModalFooter>
+                            <span className='col-6 text-left'>
+                                <button
+                                    className='notes-modal-create-btn'
+                                    onClick={() => this.props.handleCallAPI('/api/dofus/dragodindes/used/update')}
+                                >
+                                    Définir comme déjà utilisée
+                                </button>
+                            </span>
+                            <span className='col-6 text-right'>
+                                <button
+                                    className='notes-modal-close-btn'
+                                    onClick={this.props.handleClose}
+                                >
+                                    Annuler
+                                </button>
+                            </span>
+                        </ModalFooter>
+                    </Modal>
+                </div>
+            );
+        }
+        else if (this.props.show && this.props.title === 'Définir comme disponible ?') {
+            return (
+                <div>
+                    <Modal
+                        isOpen={this.props.show}
+                        toggle={this.props.handleClose}
+                    >
+                        <span className='notes-modal-title col-12'>
+                            <ModalHeader>
+                                {this.props.title}
+                            </ModalHeader>
+                        </span>
+                        <ModalFooter>
+                            <span className='col-6 text-left'>
+                                <button
+                                    className='notes-modal-create-btn'
+                                    onClick={() => this.props.handleCallAPI('/api/dofus/dragodindes/used/remove')}
+                                >
+                                    Définir comme disponisble
+                                </button>
+                            </span>
+                            <span className='col-6 text-right'>
+                                <button
+                                    className='notes-modal-close-btn'
+                                    onClick={this.props.handleClose}
+                                >
+                                    Annuler
+                                </button>
+                            </span>
+                        </ModalFooter>
+                    </Modal>
+                </div>
+            );
+        }
+        else {
+            return (<></>);
         }
     }
 }

@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import Notes from './notes/notes.jsx';
 import Dragodindes from './dragodindes/dragodindes.jsx';
 import Fecondator from './fecondator/fecondator.jsx';
+import Craft from './craft/craft.jsx';
+import Config from './../../../../config.json';
 
 import './dofus.css';
 
@@ -21,50 +23,28 @@ export default class Dofus extends React.Component {
         else if (this.props.urlArg === 'fecondator' && this.props.user) {
             content = <Fecondator user={this.props.user} />;
         }
+        else if (this.props.urlArg === 'craft') {
+            content = <Craft user={this.props.user} />;
+        }
+        else {
+            window.location.href = Config.OAuth.redirect_url;
+        }
         this.state = {
             content: content
         };
     }
 
-    setContent(param) {
-        this.setState({
-            content: param
-        });
-    }
-
     render() {
-        if (this.state) {
+        if (this.state.content) {
             return (
-                this.state.content ?
-                    this.state.content :
-                    <>
-                        <div className='top-infos' />
-                        <div className='principal-container home-menu'>
-                            <a href='/dofus/notes'>
-                                <button className='btn btn-infos'>
-                                    Mes notes {!this.props.user ? <div className='dofus-need-connection'>connexion nécessaire</div> : ''}
-                                </button>
-                            </a>
-                            <button className='btn btn-craft'>Crafts</button>
-                            <button className='btn btn-parchemin'>Parchemins</button>
-                            <button className='btn btn-gestation'>Gestation des dragodindes</button>
-                            <a href='/dofus/dragodindes'>
-                                <button className='btn btn-mydd'>
-                                    Mes dragodindes {!this.props.user ? <div className='dofus-need-connection'>connexion nécessaire</div> : ''}
-                                </button>
-                            </a>
-                            <a href='/dofus/fecondator'>
-                                <button className='btn btn-fecondation-calculator'>
-                                    Fécondator {!this.props.user ? <div className='dofus-need-connection'>connexion nécessaire</div> : ''}
-                                </button>
-                            </a>
-                        </div>
-                    </>
+                this.state.content
             );
         }
-        return (
-            <></>
-        );
+        else {
+            return (
+                <></>
+            );
+        }
     }
 }
 

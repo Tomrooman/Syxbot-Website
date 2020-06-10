@@ -4,15 +4,17 @@ import React from 'react';
 import Axios from 'axios';
 import _ from 'lodash';
 import dragoJSON from './../../../../../assets/json/dragodindes.json';
-import DragodindesModal from './modal/modal.jsx';
+import DragodindesModal from './modal.jsx';
 import { Tooltip } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faHeart, faHeartBroken } from '@fortawesome/free-solid-svg-icons';
+import { faHeart, faHeartBroken, faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 
 library.add(faHeart);
 library.add(faHeartBroken);
+library.add(faToggleOff);
+library.add(faToggleOn);
 
 export default class Dragodindes extends React.Component {
     constructor(props) {
@@ -24,6 +26,7 @@ export default class Dragodindes extends React.Component {
             selectedDrago: [],
             wait: true,
             show: false,
+            action: 'default',
             title: '',
             input: false,
             dragoJSON: dragoJSON.sort((a, b) => a.name.localeCompare(b.name))
@@ -58,21 +61,20 @@ export default class Dragodindes extends React.Component {
     updateDragodindesAPI(url, paramsObj) {
         Axios.post(url, paramsObj)
             .then(res => {
-                if (res.data && res.data.length) {
-                    this.setState({
-                        dragodindes: res.data.sort((a, b) => a.name.localeCompare(b.name)),
-                        showedDragodindes: res.data.sort((a, b) => a.name.localeCompare(b.name))
-                    });
-                }
+                this.setState({
+                    dragodindes: res.data.sort((a, b) => a.name.localeCompare(b.name)),
+                    showedDragodindes: res.data.sort((a, b) => a.name.localeCompare(b.name)),
+                    action: 'default'
+                });
             });
     }
 
-    handleAddModalDrago(name, duration, selected) {
+    handleAddModalDrago(name, duration, generation, selected) {
         let dragodindes = this.state.selectedDrago;
         let JSONselected = '';
         if (!selected) {
             JSONselected = this.setDragoJSON(dragoJSON, name);
-            dragodindes.push({ name: name, duration: duration });
+            dragodindes.push({ name: name, duration: duration, generation: generation });
         }
         else {
             dragodindes = this.removeDragodindeFromArray(name, dragodindes);
@@ -157,7 +159,7 @@ export default class Dragodindes extends React.Component {
         }
     }
 
-    handleSelectMyDragodindes(name, duration, selected) {
+    handleSelectMyDragodindes(name, duration, generation, selected) {
         const dragodindes = this.state.showedDragodindes;
         let selectedDrago = this.state.selectedDrago;
         dragodindes.map(drago => {
@@ -174,12 +176,28 @@ export default class Dragodindes extends React.Component {
             });
         }
         else {
-            selectedDrago.push({ name: name, duration: duration });
+            selectedDrago.push({ name: name, duration: duration, generation: generation });
         }
+        const action = selectedDrago.length === 0 ? 'default' : 'remove';
         this.setState({
             showedDragodindes: dragodindes.sort((a, b) => a.name.localeCompare(b.name)),
-            selectedDrago: selectedDrago
+            selectedDrago: selectedDrago,
+            action: action
         });
+    }
+
+    handleUnusedDragodindes(drago) {
+        const selected = this.state.selectedDrago;
+        selected.push({ name: drago.name });
+        this.setState({
+            selectedDrago: selected
+        });
+        if (!drago.used) {
+            this.showModal('unused');
+        }
+        else {
+            this.showModal('remove-unused');
+        }
     }
 
     handleLastDragodinde(drago) {
@@ -207,9 +225,25 @@ export default class Dragodindes extends React.Component {
     }
 
     showModal(choice) {
+        let goodTitle = '';
+        if (choice === 'new') {
+            goodTitle = 'Ajouter des dragodindes';
+        }
+        else if (choice === 'last') {
+            goodTitle = 'Définir comme fécondée ?';
+        }
+        else if (choice === 'remove-last') {
+            goodTitle = 'Retirer la fécondation ?';
+        }
+        else if (choice === 'unused') {
+            goodTitle = 'Définir comme déjà utilisée ?';
+        }
+        else if (choice === 'remove-unused') {
+            goodTitle = 'Définir comme disponible ?';
+        }
         this.setState({
             show: true,
-            title: choice === 'new' ? 'Ajouter des dragodindes' : choice === 'last' ? 'Définir comme fécondée ?' : 'Retirer la fécondation ?'
+            title: goodTitle
         });
     }
 
@@ -228,40 +262,34 @@ export default class Dragodindes extends React.Component {
                 />
                 <h2 className='craft-title text-center'>Mes dragodindes</h2>
                 <div className='notes-btn col-sm-12 text-center'>
-                    {this.state.selectedDrago.length && !this.state.show ?
-                        <>
-                            <button
-                                className='my-dragodindes-add-btn'
-                                disabled
-                            >
-                                Ajouter des dragodindes
-                            </button>
-                            <button
-                                className='my-dragodindes-remove-btn'
-                                onClick={() => this.handleCallAPI('/api/dofus/dragodindes/remove')}
-                            >
-                                Supprimer la sélection
-                            </button>
-                        </> :
-                        <>
-                            <button
-                                className='my-dragodindes-add-btn'
-                                onClick={() => this.showModal('new')}
-                            >
-                                Ajouter des dragodindes
-                            </button>
-                            <button
-                                className='my-dragodindes-remove-btn'
-                                disabled
-                            >
-                                Supprimer la sélection
-                            </button>
-                        </>}
+                    {!this.state.selectedDrago.length ?
+                        <button
+                            className='my-dragodindes-add-btn'
+                            onClick={() => this.showModal('new')}
+                        >
+                            Ajouter des dragodindes
+                        </button> :
+                        <button
+                            className='my-dragodindes-add-btn'
+                            disabled
+                        >
+                            Ajouter des dragodindes
+                        </button>}
+                    {this.state.action === 'remove' ?
+                        <button
+                            className='my-dragodindes-add-btn'
+                            onClick={() => this.handleCallAPI('/api/dofus/dragodindes/remove')}
+                        >
+                            Supprimer la sélection
+                        </button> :
+                        <button
+                            className='my-dragodindes-add-btn'
+                            disabled
+                        >
+                            Supprimer la sélection
+                        </button>}
                     <a href='/dofus/fecondator'>
                         <button>Fécondator</button>
-                    </a>
-                    <a href='/dofus'>
-                        <button>Retour au menu</button>
                     </a>
                 </div>
                 {this.state.dragodindes.length ?
@@ -276,15 +304,40 @@ export default class Dragodindes extends React.Component {
                                 this.state.showedDragodindes.map((drago, index) => {
                                     return (
                                         <div
-                                            className={drago.selected ? 'my-drago-line-selected' : drago.last.status ? 'my-drago-line-last' : 'my-drago-line'}
+                                            className={drago.selected ? 'my-drago-line-selected' : drago.last.status ? 'my-drago-line-last' : drago.used ? 'my-drago-line-used' : 'my-drago-line'}
                                             key={index}
                                         >
-                                            <div className='my-dragodindes-name col-9 col-sm-10'>
+                                            <div className='my-dragodindes-name col-9'>
+                                                <img src={'/assets/img/dragodindes/' + drago.name.toLowerCase().split(' ').join('-') + '.png'} alt='dd_icon' />
                                                 {drago.last.status ?
-                                                    <p>{drago.name}<span className='my-drago-fecond-message'> - Fécondée</span></p> :
-                                                    <p>{drago.name}</p>}
+                                                    <p>{drago.name}<span className='my-drago-fecond-message'> - Fécondée</span></p> : drago.used ?
+                                                        <p>{drago.name}<span className='my-drago-used-message'> - Utilisée</span></p> :
+                                                        <p>{drago.name}</p>}
                                             </div>
-                                            <div className='my-dragodindes-icons col-3 col-sm-2'>
+                                            <div className='my-dragodindes-icons col-3'>
+                                                {!drago.used && this.state.action !== 'remove' ?
+                                                    <Tooltip
+                                                        title='Définir comme déjà utilisée'
+                                                        placement='top'
+                                                    >
+                                                        <span
+                                                            className='icon-used'
+                                                            onClick={() => this.handleUnusedDragodindes(drago)}
+                                                        >
+                                                            <FontAwesomeIcon icon='toggle-off' />
+                                                        </span>
+                                                    </Tooltip> : drago.used && this.state.action !== 'remove' ?
+                                                        <Tooltip
+                                                            title='Définir comme disponible'
+                                                            placement='top'
+                                                        >
+                                                            <span
+                                                                className='icon-used'
+                                                                onClick={() => this.handleUnusedDragodindes(drago)}
+                                                            >
+                                                                <FontAwesomeIcon icon='toggle-on' />
+                                                            </span>
+                                                        </Tooltip> : ''}
                                                 {(!this.state.selectedDrago.length || this.state.show) && !drago.last.status ?
                                                     <Tooltip
                                                         title='Définir comme la dernière dragodinde fécondée'
@@ -308,14 +361,15 @@ export default class Dragodindes extends React.Component {
                                                                 <FontAwesomeIcon icon='heart-broken' />
                                                             </span>
                                                         </Tooltip> : ''}
-                                                <Tooltip title={drago.selected ? 'Retirer de la sélection' : 'Sélectionner pour la suppression'} placement='top'>
-                                                    <span
-                                                        className='icon-cross'
-                                                        onClick={() => this.handleSelectMyDragodindes(drago.name, drago.duration, drago.selected || false)}
-                                                    >
-                                                        <FontAwesomeIcon icon='times-circle' />
-                                                    </span>
-                                                </Tooltip>
+                                                {this.state.action !== 'unused' ?
+                                                    <Tooltip title={drago.selected ? 'Retirer de la sélection' : 'Sélectionner pour la suppression'} placement='top'>
+                                                        <span
+                                                            className='icon-cross'
+                                                            onClick={() => this.handleSelectMyDragodindes(drago.name, drago.duration, drago.generation, drago.selected || false)}
+                                                        >
+                                                            <FontAwesomeIcon icon='times-circle' />
+                                                        </span>
+                                                    </Tooltip> : ''}
                                             </div>
                                         </div>
                                     );
