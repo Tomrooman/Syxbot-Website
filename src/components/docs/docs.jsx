@@ -11,6 +11,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faMusic, faCogs } from '@fortawesome/free-solid-svg-icons';
 import './docs.css';
+
 library.add(faCheck);
 library.add(faMusic);
 library.add(faCogs);

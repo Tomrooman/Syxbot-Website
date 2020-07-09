@@ -1,6 +1,6 @@
 'use strict';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import _ from 'lodash';
 import $ from 'jquery';
@@ -8,192 +8,171 @@ import NotesModal from './modal.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 
-export default class Notes extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            showInput: false,
-            showContent: false,
-            removeNote: {},
-            wait: true,
-            input: false,
-            notes: [],
-            show: false,
-            title: '',
-            note_title: '',
-            content: '',
-            user: this.props.user
-        };
-        this.handleChange = this.handleChange.bind(this);
-        this.handleChangeModal = this.handleChangeModal.bind(this);
-        this.handleCreateNote = this.handleCreateNote.bind(this);
-        this.handleRemoveNote = this.handleRemoveNote.bind(this);
-        this.handleClose = this.handleClose.bind(this);
-    }
+const Notes = (props) => {
+    const [showInput, setShowInput] = useState(false);
+    const [showContent, setShowContent] = useState(false);
+    const [removeNote, setRemoveNote] = useState({});
+    const [wait, setWait] = useState(true);
+    const [input, setInput] = useState(false);
+    const [notes, setNotes] = useState([]);
+    const [show, setShow] = useState(false);
+    const [title, setTitle] = useState('');
+    const [noteTitle, setNoteTitle] = useState('');
+    const [content, setContent] = useState('');
+    const [user] = useState(props.user);
 
-    componentDidMount() {
-        Axios.post('/api/dofus/notes', { userId: this.state.user.id })
-            .then(res => {
-                this.setState({
-                    notes: _.orderBy(res.data, 'title', 'asc'),
-                    wait: false
+    useEffect(() => {
+        if (wait) {
+            Axios.post('/api/dofus/notes', { userId: user.id })
+                .then(res => {
+                    setNotes(_.orderBy(res.data, 'title', 'asc'));
+                    setWait(false);
                 });
-            });
-    }
+        }
+    });
 
-    handleClose() {
-        this.setState({
-            show: false,
-            title: ''
-        });
-    }
+    const handleClose = () => {
+        setShow(false);
+        setTitle('');
+    };
 
-    handleClick(title, content) {
-        if (this.state.input !== content) {
-            this.updateNoteAPI('/api/dofus/notes/update', {
-                userId: this.state.user.id,
-                title: title,
-                oldContent: content,
-                newContent: this.state.input
+    const handleClick = (newTitle, oldContent) => {
+        if (input !== content) {
+            updateNoteAPI('/api/dofus/notes/update', {
+                userId: user.id,
+                title: newTitle,
+                oldContent: oldContent,
+                newContent: input
             });
         }
-    }
+    };
 
-    updateNoteAPI(url, paramsObj) {
+    const updateNoteAPI = (url, paramsObj) => {
         Axios.post(url, paramsObj)
             .then(res => {
-                this.setState({
-                    notes: _.orderBy(res.data, 'title', 'asc'),
-                    showInput: false,
-                    showcontent: false
-                });
+                setNotes(_.orderBy(res.data, 'title', 'asc'));
+                setShowInput(false);
+                setShowContent(false);
             });
-    }
+    };
 
-    handleChange(e) {
-        this.setState({
-            input: e.target.value
-        });
-    }
+    const handleChange = (e) => {
+        setInput(e.target.value);
+    };
 
-    handleChangeModal(e) {
-        const modal = e.target.tagName === 'INPUT' ? 'note_title' : 'content';
-        this.setState({
-            [modal]: e.target.value
-        });
-    }
-
-    handleCreateNote() {
-        if (this.state.note_title && this.state.content) {
-            this.updateNoteAPI('/api/dofus/notes/create', {
-                userId: this.state.user.id,
-                title: this.state.note_title,
-                content: this.state.content
-            });
-            this.handleClose();
+    const handleChangeModal = (e) => {
+        if (e.target.tagName === 'INPUT') {
+            setNoteTitle(e.target.value);
         }
-    }
+        else {
+            setContent(e.target.value);
+        }
+    };
 
-    handleRemoveNote() {
-        this.updateNoteAPI('/api/dofus/notes/remove', {
-            userId: this.state.user.id,
-            title: this.state.removeNote.title,
-            content: this.state.removeNote.content
+    const handleCreateNote = () => {
+        if (noteTitle && content) {
+            updateNoteAPI('/api/dofus/notes/create', {
+                userId: user.id,
+                title: noteTitle,
+                content: content
+            });
+            handleClose();
+        }
+    };
+
+    const handleRemoveNote = () => {
+        updateNoteAPI('/api/dofus/notes/remove', {
+            userId: user.id,
+            title: removeNote.title,
+            content: removeNote.content
         });
-        this.handleClose();
-    }
+        handleClose();
+    };
 
-    handleModifyInfos(e, title, content) {
+    const handleModifyInfos = (e, newTitle, newContent) => {
         if (e.target.tagName === 'svg' || e.target.tagName === 'SPAN' || e.target.tagName === 'path') {
-            this.showModal('remove', { title: title, content: content });
+            showModal('remove', { title: newTitle, content: newContent });
         }
         else if (e.target.type !== 'textarea') {
-            this.setState({
-                input: content,
-                showInput: this.state.showInput === title ? false : title,
-                showContent: this.state.showContent === content ? false : content
-            }, () => {
-                if ($('textarea')[0]) {
-                    $('textarea')[0].value = this.state.input;
-                }
-            });
+            setInput(newContent);
+            setShowInput(showInput === newTitle ? false : newTitle);
+            setShowContent(showContent === newContent ? false : newContent);
+            if ($('textarea')[0]) {
+                $('textarea')[0].value = input;
+            }
         }
-    }
+    };
 
-    showModal(choice, noteObj = {}) {
-        this.setState({
-            show: true,
-            note_title: '',
-            content: '',
-            removeNote: noteObj,
-            title: choice === 'new' ? 'Créer une note' : 'Supprimer la note'
-        });
-    }
+    const showModal = (choice, noteObj = {}) => {
+        setShow(true);
+        setNoteTitle('');
+        setContent('');
+        setRemoveNote(noteObj);
+        setTitle(choice === 'new' ? 'Créer une note' : 'Supprimer la note');
+    };
 
-    render() {
-        return (
-            <div className='principal-container'>
-                <NotesModal
-                    handleClose={this.handleClose}
-                    handleChangeModal={this.handleChangeModal}
-                    handleCreateNote={this.handleCreateNote}
-                    handleRemoveNote={this.handleRemoveNote}
-                    show={this.state.show}
-                    title={this.state.title}
-                    removeNote={this.state.removeNote}
-                />
-                <h2 className='infos-title text-center'>
-                    Mes notes
-                </h2>
-                <div className='notes-btn col-sm-12 text-center'>
-                    <button onClick={() => this.showModal('new')}>Ajouter une note</button>
-                </div>
-                <div className='container col-10 notes-container row'>
-                    {this.state.notes && this.state.notes.length ?
-                        this.state.notes.map((note, index) => {
-                            return (
-                                <div
-                                    className='one_infos text-center col-sm-12 col-md-5 col-lg-5'
-                                    onClick={(e) => this.handleModifyInfos(e, note.title, note.content)}
-                                    key={index}
-                                >
-                                    <h4>
-                                        {note.title}
-                                        <span className='infos-remove-svg'>
-                                            <FontAwesomeIcon icon='times-circle' />
-                                        </span>
-                                    </h4>
-                                    {this.state.showInput === note.title && this.state.showContent === note.content ?
-                                        <>
-                                            <textarea
-                                                className='infos-input'
-                                                type='text'
-                                                rows='3'
-                                                autoFocus
-                                                onChange={this.handleChange}
-                                            />
-                                            <button
-                                                onClick={() => this.handleClick(note.title, note.content)}
-                                            >
-                                                Valider
-                                            </button>
-                                        </> :
-                                        <p>{note.content}</p>}
-                                </div>
-                            );
-                        }) :
-                        this.state.wait ?
-                            <div className='text-center loading-notes-message'>
-                                <h1>Chargement des notes <span className='custom-spinner-notes' /></h1>
-                            </div> :
-                            <div className='text-center no-notes-message'>
-                                <h1>Pas de notes actuellement</h1>
-                            </div>}
-                </div>
+    return (
+        <div className='principal-container'>
+            <NotesModal
+                handleClose={handleClose}
+                handleChangeModal={handleChangeModal}
+                handleCreateNote={handleCreateNote}
+                handleRemoveNote={handleRemoveNote}
+                show={show}
+                title={title}
+                removeNote={removeNote}
+            />
+            <h2 className='infos-title text-center'>
+                Mes notes
+            </h2>
+            <div className='notes-btn col-sm-12 text-center'>
+                <button onClick={() => showModal('new')}>Ajouter une note</button>
             </div>
-        );
-    }
-}
+            <div className='container col-10 notes-container row'>
+                {notes && notes.length ?
+                    notes.map((note, index) => {
+                        return (
+                            <div
+                                className='one_infos text-center col-sm-12 col-md-5 col-lg-5'
+                                onClick={(e) => handleModifyInfos(e, note.title, note.content)}
+                                key={index}
+                            >
+                                <h4>
+                                    {note.title}
+                                    <span className='infos-remove-svg'>
+                                        <FontAwesomeIcon icon='times-circle' />
+                                    </span>
+                                </h4>
+                                {showInput === note.title && showContent === note.content ?
+                                    <>
+                                        <textarea
+                                            className='infos-input'
+                                            type='text'
+                                            rows='3'
+                                            autoFocus
+                                            onChange={handleChange}
+                                        />
+                                        <button
+                                            onClick={() => handleClick(note.title, note.content)}
+                                        >
+                                            Valider
+                                        </button>
+                                    </> :
+                                    <p>{note.content}</p>}
+                            </div>
+                        );
+                    }) :
+                    wait ?
+                        <div className='text-center loading-notes-message'>
+                            <h1>Chargement des notes <span className='custom-spinner-notes' /></h1>
+                        </div> :
+                        <div className='text-center no-notes-message'>
+                            <h1>Pas de notes actuellement</h1>
+                        </div>}
+            </div>
+        </div>
+    );
+};
 
 Notes.propTypes = {
     user: PropTypes.oneOfType([
@@ -201,3 +180,5 @@ Notes.propTypes = {
         PropTypes.bool.isRequired
     ])
 };
+
+export default Notes;

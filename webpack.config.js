@@ -1,4 +1,5 @@
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
@@ -60,6 +61,9 @@ module.exports = {
         new HtmlWebPackPlugin({
             template: './src/index.html',
             filename: 'index.html'
+        }),
+        new webpack.DefinePlugin({
+            '__REACT_DEVTOOLS_GLOBAL_HOOK__': '({ isDisabled: true })'
         })
     ]
 };

@@ -10,8 +10,9 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import {
     faBookmark, faListUl, faHome, faPenFancy, faPause, faListOl, faHeadphonesAlt, faWindowClose, faQuestion,
     faStepForward, faTrashAlt, faRss, faPlay, faSyncAlt, faEraser, faSignOutAlt, faSearch, faForward, faStop,
-    faSignInAlt, faReply
+    faSignInAlt, faReply, faPlusCircle
 } from '@fortawesome/free-solid-svg-icons';
+
 library.add(faBookmark);
 library.add(faListUl);
 library.add(faHome);
@@ -33,6 +34,7 @@ library.add(faSearch);
 library.add(faForward);
 library.add(faStop);
 library.add(faReply);
+library.add(faPlusCircle);
 
 export default class Sidebar extends React.Component {
     handleMouseEnter(index) {
