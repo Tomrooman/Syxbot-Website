@@ -17,7 +17,6 @@ const Navbar = (props) => {
     return (
         <nav className='navbar navbar-expand-lg navbar-dark navbar-site'>
             <a className='navbar-brand' href='/'>
-                <img src='/assets/img/Syxbot_logo.png' width='30' height='30' className='d-inline-block align-top' alt='syxbot_logo' />
                 Syxbot
             </a>
             <button className='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation'>
@@ -26,7 +25,7 @@ const Navbar = (props) => {
             <div className='collapse navbar-collapse' id='navbarSupportedContent'>
                 <ul className='navbar-nav mr-auto'>
                     <li className={props.page === '/' ? 'nav-item active' : 'nav-item'}>
-                        <a className='nav-link' href='/'><FontAwesomeIcon icon='home' /><p> Accueil </p></a>
+                        <a className='nav-link' href='/'><p> Accueil </p></a>
                     </li>
                     <li className={props.page === 'dofus' ? 'nav-item active' : 'nav-item'}>
                         <div className='dropdown'>

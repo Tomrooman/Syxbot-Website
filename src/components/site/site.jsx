@@ -7,7 +7,7 @@ import PropTypes, { instanceOf } from 'prop-types';
 import FormData from 'form-data';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAssistiveListeningSystems, faBookOpen } from '@fortawesome/free-solid-svg-icons';
+import { faAssistiveListeningSystems, faBookOpen, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import Config from './../../../config.json';
 import Axios from 'axios';
 import $ from 'jquery';
@@ -17,6 +17,7 @@ import Dofus from './dofus/dofus.jsx';
 
 library.add(faAssistiveListeningSystems);
 library.add(faBookOpen);
+library.add(faPlusCircle);
 
 const Site = (props) => {
     const [randStr, setRandStr] = useState(false);

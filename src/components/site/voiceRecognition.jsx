@@ -57,7 +57,7 @@ const VoiceRecognition = () => {
                 document.getElementById('final').innerHTML = finalText;
             };
         }
-    }
+    };
 
     return (
         <div className='microphone'>
