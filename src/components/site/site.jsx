@@ -28,7 +28,6 @@ const Site = (props) => {
     useEffect(() => {
         if (!loaded) {
             window.document.addEventListener('scroll', (e) => {
-                $('.toggleSideMenuWeb').css('transform', 'translateY(' + e.path[1].scrollY + 'px)');
                 $('.radio_container').css('transform', 'translateY(' + e.path[1].scrollY + 'px)');
             });
             const fragment = new URLSearchParams(window.location.search);
@@ -178,7 +177,7 @@ const Site = (props) => {
                                             Me contacter
                                         </button>
                                     </a>
-                                    <span className='sidebar-add-bot-btn'>
+                                    <span className='add-bot-btn'>
                                         <a href={Config.OAuth.add_url}>
                                             <FontAwesomeIcon icon='plus-circle' /> Ajouter le bot
                                         </a>
