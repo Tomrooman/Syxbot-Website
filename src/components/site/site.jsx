@@ -27,10 +27,6 @@ const Site = (props) => {
 
     useEffect(() => {
         if (!loaded) {
-            Axios.get('/api/test')
-                .then(res => {
-                    console.log('respond data : ', res.data);
-                });
             window.document.addEventListener('scroll', (e) => {
                 $('.radio_container').css('transform', 'translateY(' + e.path[1].scrollY + 'px)');
             });
