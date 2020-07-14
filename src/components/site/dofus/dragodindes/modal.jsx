@@ -103,7 +103,7 @@ const DragodindesModal = (props) => {
                         <span className='col-6 text-left'>
                             <button
                                 className='notes-modal-create-btn'
-                                onClick={() => props.handleCallAPI('/api/dofus/dragodindes/last/update')}
+                                onClick={() => props.handleCallAPI('/api/dofus/dragodindes/status/last/update')}
                             >
                                 Confirmer
                             </button>
@@ -137,7 +137,7 @@ const DragodindesModal = (props) => {
                         <span className='col-6 text-left'>
                             <button
                                 className='notes-modal-create-btn'
-                                onClick={() => props.handleCallAPI('/api/dofus/dragodindes/last/remove')}
+                                onClick={() => props.handleCallAPI('/api/dofus/dragodindes/status/last/remove')}
                             >
                                 Retirer la fécondation
                             </button>
@@ -171,7 +171,7 @@ const DragodindesModal = (props) => {
                         <span className='col-6 text-left'>
                             <button
                                 className='notes-modal-create-btn'
-                                onClick={() => props.handleCallAPI('/api/dofus/dragodindes/used/update')}
+                                onClick={() => props.handleCallAPI('/api/dofus/dragodindes/status/used/update')}
                             >
                                 Définir comme déjà utilisée
                             </button>
@@ -205,9 +205,9 @@ const DragodindesModal = (props) => {
                         <span className='col-6 text-left'>
                             <button
                                 className='notes-modal-create-btn'
-                                onClick={() => props.handleCallAPI('/api/dofus/dragodindes/used/remove')}
+                                onClick={() => props.handleCallAPI('/api/dofus/dragodindes/status/used/remove')}
                             >
-                                Définir comme disponisble
+                                Définir comme disponible
                             </button>
                         </span>
                         <span className='col-6 text-right'>

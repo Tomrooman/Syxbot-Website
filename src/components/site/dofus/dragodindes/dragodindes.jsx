@@ -8,13 +8,15 @@ import DragodindesModal from './modal.jsx';
 import { Tooltip } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faHeart, faHeartBroken, faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons';
+import { faHeart, faHeartBroken, faToggleOff, faToggleOn, faCheck, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 
 library.add(faHeart);
 library.add(faHeartBroken);
 library.add(faToggleOff);
 library.add(faToggleOn);
+library.add(faCheck);
+library.add(faTimesCircle);
 
 const Dragodindes = (props) => {
     const [user] = useState(props.user);
@@ -22,6 +24,7 @@ const Dragodindes = (props) => {
     const [showedDragodindes, setShowedDragodindes] = useState([]);
     const [selectedDrago, setSelectedDrago] = useState([]);
     const [wait, setWait] = useState(true);
+    const [loaded, setLoaded] = useState(false);
     const [show, setShow] = useState(false);
     const [action, setAction] = useState('default');
     const [title, setTitle] = useState('');
@@ -29,27 +32,27 @@ const Dragodindes = (props) => {
     const [dragoJSONConst, setDragoJSONConst] = useState(dragoJSON.sort((a, b) => a.name.localeCompare(b.name)));
 
     useEffect(() => {
-        if (wait) {
-            Axios.post('/api/dofus/dragodindes', {
-                userId: user.id
-            })
-                .then(res => {
-                    if (res.data && res.data.length) {
-                        setDragodindes(res.data.sort((a, b) => a.name.localeCompare(b.name)));
-                        setShowedDragodindes(res.data.sort((a, b) => a.name.localeCompare(b.name)));
-                    }
-                    setWait(false);
+        if (wait && !loaded) {
+            const getDragodindesAPI = async () => {
+                const res = await Axios.post('/api/dofus/dragodindes', {
+                    userId: user.id
                 });
+                if (res.data && res.data.length) {
+                    setDragodindes(res.data.sort((a, b) => a.name.localeCompare(b.name)));
+                    setShowedDragodindes(res.data.sort((a, b) => a.name.localeCompare(b.name)));
+                }
+                setWait(false);
+            };
+            getDragodindesAPI();
+            setLoaded(true);
         }
     });
 
-    const updateDragodindesAPI = (url, paramsObj) => {
-        Axios.post(url, paramsObj)
-            .then(res => {
-                setDragodindes(res.data.sort((a, b) => a.name.localeCompare(b.name)));
-                setShowedDragodindes(res.data.sort((a, b) => a.name.localeCompare(b.name)));
-                setAction('default');
-            });
+    const updateDragodindesAPI = async (url, paramsObj) => {
+        const res = await Axios.post(url, paramsObj);
+        setDragodindes(res.data.sort((a, b) => a.name.localeCompare(b.name)));
+        setShowedDragodindes(res.data.sort((a, b) => a.name.localeCompare(b.name)));
+        setAction('default');
     };
 
     const handleAddModalDrago = (name, duration, generation, selected) => {
@@ -126,7 +129,7 @@ const Dragodindes = (props) => {
         setInput(e.target.value === '' ? false : e.target.value.toLowerCase());
     };
 
-    const handleCallAPI = (url) => {
+    const handleCallAPI = url => {
         if (selectedDrago.length) {
             updateDragodindesAPI(url, {
                 userId: user.id,
@@ -137,9 +140,9 @@ const Dragodindes = (props) => {
     };
 
     const handleSelectMyDragodindes = (name, duration, generation, selected) => {
-        const localDragodindes = showedDragodindes;
-        let localSelectedDrago = selectedDrago;
-        localDragodindes.map(drago => {
+        const _showedDragodindes = showedDragodindes;
+        let _selectedDrago = selectedDrago;
+        _showedDragodindes.map(drago => {
             if (drago.name === name) {
                 drago.selected = !selected;
             }
@@ -147,17 +150,18 @@ const Dragodindes = (props) => {
         if (selected) {
             selectedDrago.map((drago, index) => {
                 if (drago.name === name) {
-                    delete localSelectedDrago[index];
-                    localSelectedDrago = _.compact(localSelectedDrago);
+                    delete _selectedDrago[index];
+                    _selectedDrago = _.compact(_selectedDrago);
                 }
             });
         }
         else {
-            localSelectedDrago.push({ name: name, duration: duration, generation: generation });
+            _selectedDrago.push({ name: name, duration: duration, generation: generation });
+            _selectedDrago = _.compact(_selectedDrago);
         }
-        setShowedDragodindes(localDragodindes.sort((a, b) => a.name.localeCompare(b.name)));
-        setSelectedDrago(localSelectedDrago);
-        setAction(localSelectedDrago.length === 0 ? 'default' : 'remove');
+        setSelectedDrago(_selectedDrago);
+        setShowedDragodindes(_showedDragodindes.sort((a, b) => a.name.localeCompare(b.name)));
+        setAction(_selectedDrago.length === 0 ? 'default' : 'remove');
     };
 
     const handleUnusedDragodindes = (drago) => {
@@ -330,7 +334,7 @@ const Dragodindes = (props) => {
                                                 <Tooltip title={drago.selected ? 'Retirer de la sélection' : 'Sélectionner pour la suppression'} placement='top'>
                                                     <span
                                                         className='icon-cross'
-                                                        onClick={() => handleSelectMyDragodindes(drago.name, drago.duration, drago.generation, drago.selected || false)}
+                                                        onClick={() => handleSelectMyDragodindes(drago.name, drago.duration, drago.generation, drago.selected)}
                                                     >
                                                         <FontAwesomeIcon icon='times-circle' />
                                                     </span>
@@ -349,10 +353,10 @@ const Dragodindes = (props) => {
                 wait ?
                     <div className='text-center loading-notes-message'>
                         <h1>Chargement des dragodindes <span className='custom-spinner-notes' /></h1>
-                    </div> :
-                    <div className='text-center no-notes-message'>
-                        <h1>Pas de dragodindes actuellement</h1>
-                    </div>}
+                    </div> : !wait && loaded ?
+                        <div className='text-center no-notes-message'>
+                            <h1>Pas de dragodindes actuellement</h1>
+                        </div> : <></>}
         </div>
     );
 };
