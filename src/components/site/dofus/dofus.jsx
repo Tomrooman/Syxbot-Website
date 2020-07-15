@@ -1,6 +1,6 @@
 'use strict';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Notes from './notes/notes.jsx';
 import Dragodindes from './dragodindes/dragodindes.jsx';
@@ -10,43 +10,42 @@ import Config from './../../../../config.json';
 
 import './dofus.css';
 
-export default class Dofus extends React.Component {
-    constructor(props) {
-        super(props);
-        let content = false;
-        if (this.props.urlArg === 'notes' && this.props.user) {
-            content = <Notes user={this.props.user} />;
-        }
-        else if (this.props.urlArg === 'dragodindes' && this.props.user) {
-            content = <Dragodindes user={this.props.user} />;
-        }
-        else if (this.props.urlArg === 'fecondator' && this.props.user) {
-            content = <Fecondator user={this.props.user} />;
-        }
-        else if (this.props.urlArg === 'craft') {
-            content = <Craft user={this.props.user} />;
-        }
-        else {
-            window.location.href = Config.OAuth.redirect_url;
-        }
-        this.state = {
-            content: content
-        };
-    }
+const Dofus = (props) => {
+    const [content, setContent] = useState(false);
+    const [loaded, setLoaded] = useState(false);
 
-    render() {
-        if (this.state.content) {
-            return (
-                this.state.content
-            );
+    useEffect(() => {
+        if (!loaded) {
+            if (props.urlArg === 'notes' && props.user) {
+                setContent(<Notes user={props.user} />);
+            }
+            else if (props.urlArg === 'dragodindes' && props.user) {
+                setContent(<Dragodindes user={props.user} />);
+            }
+            else if (props.urlArg === 'fecondator' && props.user) {
+                setContent(<Fecondator user={props.user} />);
+            }
+            else if (props.urlArg === 'craft') {
+                setContent(<Craft user={props.user} />);
+            }
+            else {
+                window.location.href = Config.OAuth.redirect_url;
+            }
+            setLoaded(true);
         }
-        else {
-            return (
-                <></>
-            );
-        }
+    });
+
+    if (content) {
+        return (
+            content
+        );
     }
-}
+    else {
+        return (
+            <></>
+        );
+    }
+};
 
 Dofus.propTypes = {
     user: PropTypes.oneOfType([
@@ -55,3 +54,5 @@ Dofus.propTypes = {
     ]),
     urlArg: PropTypes.string.isRequired
 };
+
+export default Dofus;

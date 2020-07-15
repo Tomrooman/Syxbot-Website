@@ -4,13 +4,15 @@ import React, { useState, useEffect } from 'react';
 import $ from 'jquery';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-import Radios from './../../../assets/json/radios.json';
+import Radios from '~/assets/json/radios.json';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
+import { faCaretUp, faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
 import './radio.css';
 
 library.add(faCaretUp);
+library.add(faPlay);
+library.add(faPause);
 
 const Radio = (props) => {
     const [dropdownTitle, setDropdownTitle] = useState('Radios disponibles');
