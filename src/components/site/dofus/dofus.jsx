@@ -35,16 +35,9 @@ const Dofus = (props) => {
         }
     });
 
-    if (content) {
-        return (
-            content
-        );
-    }
-    else {
-        return (
-            <></>
-        );
-    }
+    return (
+        content || <></>
+    );
 };
 
 Dofus.propTypes = {
