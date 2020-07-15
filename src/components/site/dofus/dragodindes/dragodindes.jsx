@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import _ from 'lodash';
-import dragoJSON from './../../../../../assets/json/dragodindes.json';
+import dragoJSON from '~/assets/json/dragodindes.json';
 import DragodindesModal from './modal.jsx';
 import { Tooltip } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -129,7 +129,7 @@ const Dragodindes = (props) => {
         setInput(e.target.value === '' ? false : e.target.value.toLowerCase());
     };
 
-    const handleCallAPI = url => {
+    const handleCallAPI = (url) => {
         if (selectedDrago.length) {
             updateDragodindesAPI(url, {
                 userId: user.id,

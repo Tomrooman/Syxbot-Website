@@ -6,7 +6,7 @@
   "scripts": {
     "eslint": "eslint ./",
     "start": "webpack-dev-server --https --open --mode development",
-    "build": "webpack --mode production"
+    "build": "rimraf dist && webpack --mode production"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.29",
@@ -21,7 +21,8 @@
     "react-cookie": "^4.0.3",
     "react-dom": "^16.13.1",
     "react-scripts": "^3.4.1",
-    "reactstrap": "^8.5.1"
+    "reactstrap": "^8.5.1",
+    "rimraf": "^3.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.10.4",
@@ -31,6 +32,7 @@
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-emotion": "^10.0.33",
+    "babel-plugin-root-import": "^6.5.0",
     "copy-webpack-plugin": "^6.0.3",
     "css-loader": "^3.6.0",
     "eslint": "^7.4.0",

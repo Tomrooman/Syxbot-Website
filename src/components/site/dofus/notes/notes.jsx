@@ -20,14 +20,19 @@ const Notes = (props) => {
     const [noteTitle, setNoteTitle] = useState('');
     const [content, setContent] = useState('');
     const [user] = useState(props.user);
+    const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
-        if (wait) {
-            Axios.post('/api/dofus/notes', { userId: user.id })
-                .then(res => {
+        if (wait && !loaded) {
+            const getNotesAPI = async () => {
+                const res = await Axios.post('/api/dofus/notes', { userId: user.id });
+                if (res.data) {
                     setNotes(_.orderBy(res.data, 'title', 'asc'));
-                    setWait(false);
-                });
+                }
+                setWait(false);
+            };
+            getNotesAPI();
+            setLoaded(true);
         }
     });
 
@@ -47,13 +52,13 @@ const Notes = (props) => {
         }
     };
 
-    const updateNoteAPI = (url, paramsObj) => {
-        Axios.post(url, paramsObj)
-            .then(res => {
-                setNotes(_.orderBy(res.data, 'title', 'asc'));
-                setShowInput(false);
-                setShowContent(false);
-            });
+    const updateNoteAPI = async (url, paramsObj) => {
+        const res = await Axios.post(url, paramsObj);
+        if (res.data) {
+            setNotes(_.orderBy(res.data, 'title', 'asc'));
+        }
+        setShowInput(false);
+        setShowContent(false);
     };
 
     const handleChange = (e) => {
@@ -166,9 +171,10 @@ const Notes = (props) => {
                         <div className='text-center loading-notes-message'>
                             <h1>Chargement des notes <span className='custom-spinner-notes' /></h1>
                         </div> :
-                        <div className='text-center no-notes-message'>
-                            <h1>Pas de notes actuellement</h1>
-                        </div>}
+                        !wait && loaded ?
+                            <div className='text-center no-notes-message'>
+                                <h1>Pas de notes actuellement</h1>
+                            </div> : <></>}
             </div>
         </div>
     );
