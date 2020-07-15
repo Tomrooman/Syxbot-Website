@@ -6,13 +6,6 @@
             {
                 "regenerator": true
             }
-        ],
-        [
-            "babel-plugin-root-import",
-            {
-                "rootPathPrefix": "~",
-                "rootPathSuffix": "./"
-            }
         ]
     ],
     "presets": [
