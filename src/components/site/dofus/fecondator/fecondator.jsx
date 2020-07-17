@@ -25,46 +25,44 @@ const Fecondator = (props) => {
     const [lateCountdown, setLateCountdown] = useState(false);
     const [last, setLast] = useState(false);
     const [wait, setWait] = useState(true);
+    const [loaded, setLoaded] = useState(false);
     const interval = [{}];
 
     useEffect(() => {
-        if (wait) {
+        if (wait && !loaded) {
             getDataAndSetConst();
+            setLoaded(true);
         }
     });
 
-    const getDataAndSetConst = () => {
-        Axios.post('/api/dofus/dragodindes', {
+    const getDataAndSetConst = async () => {
+        const res = await Axios.post('/api/dofus/dragodindes', {
             userId: user.id
-        })
-            .then(res => {
-                if (res.data && res.data.length) {
-                    const now = Date.now();
-                    let ddFecond = res.data.filter(d => d.last.status);
-                    ddFecond = ddFecond && ddFecond[0] ? ddFecond[0] : false;
-                    const filteredDrago = res.data.filter(d => !d.last.status && !d.used);
-                    let sortedDragodindes = filteredDrago.length ? _.reverse(_.sortBy(filteredDrago, 'duration', 'asc')) : false;
-                    sortedDragodindes = calculateTime(now, ddFecond, sortedDragodindes);
-                    countdown(sortedDragodindes);
-                    setDragodindesConst(now, ddFecond, sortedDragodindes);
-                }
-                else if (wait) {
-                    setWait(false);
-                }
-            })
-            .catch(e => {
-                console.log('error : ', e.message);
-                setWait(false);
-            });
+        });
+        if (res.data && res.data.length) {
+            const now = Date.now();
+            let ddFecond = res.data.filter(d => d.last.status);
+            ddFecond = ddFecond && ddFecond[0] ? ddFecond[0] : false;
+            const filteredDrago = res.data.filter(d => !d.last.status && !d.used);
+            let sortedDragodindes = filteredDrago.length ? _.reverse(_.sortBy(filteredDrago, 'duration', 'asc')) : false;
+            sortedDragodindes = calculateTime(now, ddFecond, sortedDragodindes);
+            setDragodindes(sortedDragodindes);
+            setShowedDragodindes(sortedDragodindes);
+            const newAccouchDate = getAccouchDate(now, ddFecond, sortedDragodindes);
+            setAccouchDate(newAccouchDate);
+            if (ddFecond) {
+                setLast(ddFecond);
+            }
+            countdown(sortedDragodindes);
+            countDownInterval(ddFecond, sortedDragodindes);
+            setWait(false);
+        }
+        else if (wait) {
+            setWait(false);
+        }
     };
 
-    const setDragodindesConst = (now, ddFecond, sortedDragodindes) => {
-        const newAccouchDate = getAccouchDate(now, ddFecond, sortedDragodindes);
-        setDragodindes(sortedDragodindes);
-        setShowedDragodindes(sortedDragodindes);
-        setLast(ddFecond);
-        setAccouchDate(newAccouchDate);
-        setWait(false);
+    const countDownInterval = (ddFecond, sortedDragodindes) => {
         if (ddFecond && user.countdown) {
             interval[0] = setInterval(() => {
                 if (user.countdown && (sortedDragodindes || ddFecond)) {
@@ -88,7 +86,7 @@ const Fecondator = (props) => {
                             countdownContent.innerHTML = findDrago.end.time;
                         }
                         else {
-                            // Countdown ended
+                            // Dragodindes prête(s)
                             ended = true;
                         }
                     }
@@ -267,11 +265,11 @@ const Fecondator = (props) => {
 
     const handleCallAutomateAPI = () => {
         Promise.all([
-            Axios.post('/api/dofus/dragodindes/used/update', {
+            Axios.post('/api/dofus/dragodindes/status/used/update', {
                 userId: user.id,
                 dragodindes: selectedDrago.used
             }),
-            Axios.post('/api/dofus/dragodindes/last/update', {
+            Axios.post('/api/dofus/dragodindes/status/last/update', {
                 userId: user.id,
                 dragodindes: selectedDrago.last
             })

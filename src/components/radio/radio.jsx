@@ -71,6 +71,12 @@ const Radio = (props) => {
         setDropdownTitle('Chargement');
         setIndex(_index);
         setRadioName(_radioName);
+        setTimeout(() => {
+            if (dropdownTitle === 'Chargement') {
+                console.log('Recall setRadioSourceAndInfos !!!!! after timeout 4000');
+                setRadioSourceAndInfos(imagePath, radioUrl, _index, _radioName, volume);
+            }
+        }, 4000);
     };
 
     const handleVolumeChange = (e) => {

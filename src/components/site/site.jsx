@@ -48,7 +48,7 @@ const Site = (props) => {
 
     const verifyTokenExpiration = async () => {
         const diffH = Math.floor((user.expire_at - (Date.now() / 1000)) / 3600);
-        console.log('diff H : ', diffH);
+        // Max diffH => 167
         if (diffH <= 10) {
             const { data } = await Axios.post('/api/token/expiration', { userId: user.id });
             if (data) {
