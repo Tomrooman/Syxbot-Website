@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import $ from 'jquery';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-import Radios from '~/assets/json/radios.json';
+import Radios from './../../../assets/json/radios.json';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
@@ -71,6 +71,12 @@ const Radio = (props) => {
         setDropdownTitle('Chargement');
         setIndex(_index);
         setRadioName(_radioName);
+        setTimeout(() => {
+            if (dropdownTitle === 'Chargement') {
+                console.log('Recall setRadioSourceAndInfos !!!!! after timeout 4000');
+                setRadioSourceAndInfos(imagePath, radioUrl, _index, _radioName, volume);
+            }
+        }, 4000);
     };
 
     const handleVolumeChange = (e) => {
