@@ -2,10 +2,10 @@
 
 import React from 'react';
 
-export default class Gestation extends React.Component {
-    render() {
-        return (
-            <></>
-        );
-    }
-}
+const Gestation = () => {
+    return (
+        <div><h1>Gestation vide</h1></div>
+    );
+};
+
+export default Gestation;

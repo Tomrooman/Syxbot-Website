@@ -1,11 +1,13 @@
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
     output: {
         publicPath: '/',
         filename: 'bundle.js',
-        path: path.resolve(__dirname, '')
+        path: path.resolve(__dirname, 'dist')
     },
     devServer: {
         historyApiFallback: true,
@@ -19,6 +21,7 @@ module.exports = {
             }
         }
     },
+    mode: process.env.NODE_ENV,
     module: {
         rules: [
             {
@@ -60,6 +63,14 @@ module.exports = {
         new HtmlWebPackPlugin({
             template: './src/index.html',
             filename: 'index.html'
+        }),
+        new webpack.DefinePlugin({
+            '__REACT_DEVTOOLS_GLOBAL_HOOK__': '({ isDisabled: true })'
+        }),
+        new CopyPlugin({
+            patterns: [
+                { from: 'assets', to: 'assets' },
+            ],
         })
     ]
 };

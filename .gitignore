@@ -3,6 +3,7 @@ private
 config.json
 yarn.lock
 nohup.out
+dist
 package-lock.json
 .nyc_output
 coverage

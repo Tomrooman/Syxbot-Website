@@ -47,8 +47,7 @@ input {
 }
 
 .principal-container {
-    height: 90.5vh;
-    overflow-y: auto;
+    /* height: 90.5vh; */
     min-width: 390px;
     width : 100%;
 }

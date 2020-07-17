@@ -1,6 +1,6 @@
 'use strict';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import _ from 'lodash';
 import dateFormat from 'dateformat';
@@ -14,84 +14,65 @@ import PropTypes from 'prop-types';
 
 library.add(faSync);
 
-export default class Fecondator extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: this.props.user,
-            dragodindes: [],
-            showedDragodindes: [],
-            selectedDrago: {
-                used: [],
-                last: []
-            },
-            show: false,
-            accouchDate: [],
-            finishTime: false,
-            lateCountdown: false,
-            last: false,
-            wait: true,
-            input: false
-        };
-        this.interval = {};
-        this.handleChange = this.handleChange.bind(this);
-        this.handleClose = this.handleClose.bind(this);
-        this.handleCallAutomateAPI = this.handleCallAutomateAPI.bind(this);
-    }
+const Fecondator = (props) => {
+    const [user] = useState(props.user);
+    const [dragodindes, setDragodindes] = useState([]);
+    const [showedDragodindes, setShowedDragodindes] = useState([]);
+    const [selectedDrago, setSelectedDrago] = useState({ used: [], last: [] });
+    const [show, setShow] = useState(false);
+    const [accouchDate, setAccouchDate] = useState(false);
+    const [finishTime, setFinishTime] = useState(false);
+    const [lateCountdown, setLateCountdown] = useState(false);
+    const [last, setLast] = useState(false);
+    const [wait, setWait] = useState(true);
+    const [loaded, setLoaded] = useState(false);
+    const interval = [{}];
 
-    componentDidMount() {
-        this.getDataAndSetState();
-    }
+    useEffect(() => {
+        if (wait && !loaded) {
+            getDataAndSetConst();
+            setLoaded(true);
+        }
+    });
 
-    getDataAndSetState() {
-        Axios.post('/api/dofus/dragodindes', {
-            userId: this.state.user.id
-        })
-            .then(res => {
-                if (res.data && res.data.length) {
-                    const now = Date.now();
-                    let ddFecond = res.data.filter(d => d.last.status);
-                    ddFecond = ddFecond && ddFecond[0] ? ddFecond[0] : false;
-                    const filteredDrago = res.data.filter(d => !d.last.status && !d.used);
-                    let sortedDragodindes = filteredDrago.length ? _.reverse(_.sortBy(filteredDrago, 'duration', 'asc')) : false;
-                    sortedDragodindes = this.calculateTime(now, ddFecond, sortedDragodindes);
-                    this.countdown(sortedDragodindes);
-                    this.setDidMountState(now, ddFecond, sortedDragodindes);
-                }
-                else {
-                    this.setState({
-                        wait: false
-                    });
-                }
-            })
-            .catch(e => {
-                console.log('error : ', e.message);
-                this.setState({
-                    wait: false
-                });
-            });
-    }
-
-    setDidMountState(now, ddFecond, sortedDragodindes) {
-        const accouchDate = this.getAccouchDate(now, ddFecond, sortedDragodindes);
-        this.setState({
-            dragodindes: sortedDragodindes,
-            showedDragodindes: sortedDragodindes,
-            last: ddFecond,
-            accouchDate: accouchDate,
-            wait: false
-        }, () => {
-            if (ddFecond && this.state.user.countdown) {
-                this.interval = setInterval(() => {
-                    if (this.state.user.countdown && (sortedDragodindes || ddFecond)) {
-                        this.countdown(this.calculateTime(Date.now(), ddFecond, sortedDragodindes));
-                    }
-                }, 1000);
-            }
+    const getDataAndSetConst = async () => {
+        const res = await Axios.post('/api/dofus/dragodindes', {
+            userId: user.id
         });
-    }
+        if (res.data && res.data.length) {
+            const now = Date.now();
+            let ddFecond = res.data.filter(d => d.last.status);
+            ddFecond = ddFecond && ddFecond[0] ? ddFecond[0] : false;
+            const filteredDrago = res.data.filter(d => !d.last.status && !d.used);
+            let sortedDragodindes = filteredDrago.length ? _.reverse(_.sortBy(filteredDrago, 'duration', 'asc')) : false;
+            sortedDragodindes = calculateTime(now, ddFecond, sortedDragodindes);
+            setDragodindes(sortedDragodindes);
+            setShowedDragodindes(sortedDragodindes);
+            const newAccouchDate = getAccouchDate(now, ddFecond, sortedDragodindes);
+            setAccouchDate(newAccouchDate);
+            if (ddFecond) {
+                setLast(ddFecond);
+            }
+            countdown(sortedDragodindes);
+            countDownInterval(ddFecond, sortedDragodindes);
+            setWait(false);
+        }
+        else if (wait) {
+            setWait(false);
+        }
+    };
 
-    countdown(dragodindes) {
+    const countDownInterval = (ddFecond, sortedDragodindes) => {
+        if (ddFecond && user.countdown) {
+            interval[0] = setInterval(() => {
+                if (user.countdown && (sortedDragodindes || ddFecond)) {
+                    countdown(calculateTime(Date.now(), ddFecond, sortedDragodindes));
+                }
+            }, 1000);
+        }
+    };
+
+    const countdown = (timedDragodindes) => {
         let ended = false;
         if ($('.fecondator-line').length) {
             $('.fecondator-line').map((index, line) => {
@@ -99,111 +80,105 @@ export default class Fecondator extends React.Component {
                 if (fecondTimeDiv.length === 2) {
                     const dragoName = $(line.children[0])[0].children[1].innerHTML.trim();
                     const countdownContent = fecondTimeDiv[0].children[0];
-                    const findDrago = _.find(dragodindes, { name: dragoName });
+                    const findDrago = _.find(timedDragodindes, { name: dragoName });
                     if (countdownContent.innerHTML.substr(0, 10) !== 'Maintenant') {
                         if (findDrago.end.time.substr(0, 10) !== 'Maintenant') {
                             countdownContent.innerHTML = findDrago.end.time;
                         }
                         else {
-                            // Countdown ended
+                            // Dragodindes prête(s)
                             ended = true;
                         }
                     }
                 }
             });
             if (ended) {
-                clearInterval(this.interval);
-                this.getDataAndSetState();
+                clearInterval(interval[0]);
+                getDataAndSetConst();
             }
         }
-    }
+    };
 
-    getAccouchDate(now, last, dragodindes) {
-        let date = dragodindes.length ? dateFormat(now + (dragodindes[0].duration * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss') : false;
-        if (last) {
-            const hoursDiff = Math.floor((now - Date.parse(last.last.date)) / (1000 * 60 * 60));
-            if (dragodindes.length && hoursDiff >= last.duration - dragodindes[0].duration) {
-                date = dateFormat(Date.now() + (dragodindes[0].duration * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
+    const getAccouchDate = (now, ddFecond, sortedDragodindes) => {
+        let date = sortedDragodindes.length ? dateFormat(now + (sortedDragodindes[0].duration * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss') : false;
+        if (ddFecond) {
+            const hoursDiff = Math.floor((now - Date.parse(ddFecond.last.date)) / (1000 * 60 * 60));
+            if (sortedDragodindes.length && hoursDiff >= ddFecond.duration - sortedDragodindes[0].duration) {
+                date = dateFormat(Date.now() + (sortedDragodindes[0].duration * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
             }
             else {
-                date = dateFormat(Date.parse(last.last.date) + (last.duration * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
+                date = dateFormat(Date.parse(ddFecond.last.date) + (ddFecond.duration * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
             }
         }
         return date;
-    }
+    };
 
-    calculateTime(now, last, dragodindes) {
+    const calculateTime = (now, ddFecond, sortedDragodindes) => {
         let setDrago = false;
-        const baseDate = last ? Date.parse(last.last.date) : now;
-        const hoursLate = last ? Math.floor((now - baseDate) / (1000 * 60 * 60)) : 0;
-        let secondDiff = last ? Math.floor((now - baseDate) / 1000) : 0;
-        secondDiff = last ? secondDiff - Math.floor(secondDiff / 60) * 60 : 0;
-        let minDiff = last ? Math.floor((now - baseDate) / (1000 * 60)) : 0;
-        minDiff = last ? minDiff - (Math.floor(minDiff / 60) * 60) : 0;
-        if (last && dragodindes && hoursLate >= last.duration - dragodindes[0].duration) {
-            this.getLateCountdown(secondDiff, minDiff, hoursLate, last, dragodindes);
+        const baseDate = ddFecond ? Date.parse(ddFecond.last.date) : now;
+        const hoursLate = ddFecond ? Math.floor((now - baseDate) / (1000 * 60 * 60)) : 0;
+        let secondDiff = ddFecond ? Math.floor((now - baseDate) / 1000) : 0;
+        secondDiff = ddFecond ? secondDiff - Math.floor(secondDiff / 60) * 60 : 0;
+        let minDiff = ddFecond ? Math.floor((now - baseDate) / (1000 * 60)) : 0;
+        minDiff = ddFecond ? minDiff - (Math.floor(minDiff / 60) * 60) : 0;
+        if (ddFecond && sortedDragodindes && hoursLate >= ddFecond.duration - sortedDragodindes[0].duration) {
+            getLateCountdown(secondDiff, minDiff, hoursLate, ddFecond, sortedDragodindes);
         }
         minDiff = 60 - minDiff;
         secondDiff = 60 - secondDiff;
-        if (dragodindes) {
-            setDrago = this.setDragodindes(baseDate, last, dragodindes, hoursLate, minDiff, secondDiff);
+        if (sortedDragodindes) {
+            setDrago = makeDragodindesParams(baseDate, ddFecond, sortedDragodindes, hoursLate, minDiff, secondDiff);
         }
-        else if (last && hoursLate <= last.duration && !dragodindes) {
-            this.setFinishTime(baseDate, now, last, hoursLate);
+        else if (ddFecond && hoursLate <= ddFecond.duration && !sortedDragodindes) {
+            calculateFinishTime(baseDate, now, ddFecond, hoursLate);
         }
         return setDrago;
-    }
+    };
 
-    setFinishTime(baseDate, now, last, hoursLate) {
-        if (hoursLate < last.duration) {
-            const endDate = (baseDate + (last.duration * 60 * 60 * 1000) - now);
+    const calculateFinishTime = (baseDate, now, ddFecond, hoursLate) => {
+        if (hoursLate < ddFecond.duration) {
+            const endDate = (baseDate + (ddFecond.duration * 60 * 60 * 1000) - now);
             const endHours = Math.floor(endDate / (1000 * 60 * 60));
             let endMin = Math.floor(endDate / (1000 * 60));
             let endSec = Math.floor(endDate / 1000);
             endMin -= Math.floor(endMin / 60) * 60;
             endSec -= Math.floor(endSec / 60) * 60;
-            if (!this.state.finishTime) {
-                this.setState({
-                    finishTime: this.setLateTimeRemaining(endHours, endMin, endSec)
-                });
+            if (!finishTime) {
+                setFinishTime(setLateTimeRemaining(endHours, endMin, endSec));
             }
             else {
-                $('.finish-countdown')[0].innerHTML = this.setLateTimeRemaining(endHours, endMin, endSec);
+                $('.finish-countdown')[0].innerHTML = setLateTimeRemaining(endHours, endMin, endSec);
             }
         }
         else {
-            this.setState({
-                finishTime: 'Maintenant'
-            });
+            setFinishTime('Maintenant');
         }
-    }
+    };
 
-    getLateCountdown(secondDiff, minDiff, hoursLate, last, dragodindes) {
-        if (last) {
+    const getLateCountdown = (secondDiff, minDiff, hoursLate, ddFecond, sortedDragodindes) => {
+        if (ddFecond) {
             let goodHours = '';
-            if (dragodindes && hoursLate >= last.duration - dragodindes[0].duration) {
-                goodHours = hoursLate - (last.duration - dragodindes[0].duration);
+            if (sortedDragodindes && hoursLate >= ddFecond.duration - sortedDragodindes[0].duration) {
+                goodHours = hoursLate - (ddFecond.duration - sortedDragodindes[0].duration);
             }
-            else if (!dragodindes && hoursLate >= last.duration) {
-                goodHours = hoursLate - last.duration;
+            else if (!sortedDragodindes && hoursLate >= ddFecond.duration) {
+                goodHours = hoursLate - ddFecond.duration;
             }
-            const stringDuration = this.setLateTimeRemaining(goodHours, minDiff, secondDiff);
-            if (!this.state.lateCountdown) {
-                this.setState({
-                    lateCountdown: stringDuration
-                });
+            const stringDuration = setLateTimeRemaining(goodHours, minDiff, secondDiff);
+            if (!lateCountdown) {
+                setLateCountdown(stringDuration);
             }
             if ($('.late-countdown')[0]) {
                 $('.late-countdown')[0].innerHTML = stringDuration;
             }
         }
-    }
+    };
 
-    setDragodindes(baseDate, last, dragodindes, hoursDiff, minDiff, secondDiff) {
+    const makeDragodindesParams = (baseDate, ddFecond, sortedDragodindes, hoursDiff, minDiff, secondDiff) => {
         let estimatedTime = 0;
         let prevDrago = false;
         let isEnded = false;
-        dragodindes.map((drago, index) => {
+        sortedDragodindes.map((drago, index) => {
             let goodTime = '';
             let goodDate = '';
             if ((prevDrago && prevDrago.end.time.substr(0, 10) === 'Maintenant') || isEnded) {
@@ -212,22 +187,22 @@ export default class Fecondator extends React.Component {
                 goodDate = dateFormat(Date.now() + (estimatedTime * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
                 isEnded = true;
             }
-            else if (last && index === 0 && last.duration !== drago.duration && hoursDiff < last.duration - drago.duration) {
-                estimatedTime += last.duration - drago.duration;
-                goodDate = dateFormat(baseDate + ((last.duration - drago.duration) * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
-                const showedTime = this.setTimeRemaining(estimatedTime, hoursDiff, minDiff, secondDiff);
+            else if (ddFecond && index === 0 && ddFecond.duration !== drago.duration && hoursDiff < ddFecond.duration - drago.duration) {
+                estimatedTime += ddFecond.duration - drago.duration;
+                goodDate = dateFormat(baseDate + ((ddFecond.duration - drago.duration) * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
+                const showedTime = setTimeRemaining(estimatedTime, hoursDiff, minDiff, secondDiff);
                 goodTime = showedTime;
             }
-            else if ((!last && !prevDrago && index === 0) || (last && last.duration === drago.duration) || (hoursDiff >= last.duration - drago.duration)) {
+            else if ((!ddFecond && !prevDrago && index === 0) || (ddFecond && ddFecond.duration === drago.duration) || (hoursDiff >= ddFecond.duration - drago.duration)) {
                 goodTime = 'Maintenant';
-                goodDate = last && hoursDiff >= last.duration - drago.duration ? dateFormat(baseDate + (hoursDiff * 1000 * 60 * 60), 'dd/mm/yyyy HH:MM:ss') : dateFormat(baseDate, 'dd/mm/yyyy HH:MM:ss');
-                baseDate = last && hoursDiff >= last.duration - drago.duration ? baseDate + (hoursDiff * 60 * 60 * 1000) : baseDate;
+                goodDate = ddFecond && hoursDiff >= ddFecond.duration - drago.duration ? dateFormat(baseDate + (hoursDiff * 1000 * 60 * 60), 'dd/mm/yyyy HH:MM:ss') : dateFormat(baseDate, 'dd/mm/yyyy HH:MM:ss');
+                baseDate = ddFecond && hoursDiff >= ddFecond.duration - drago.duration ? baseDate + (hoursDiff * 60 * 60 * 1000) : baseDate;
             }
             else {
                 if (prevDrago.duration !== drago.duration) {
                     estimatedTime += prevDrago.duration - drago.duration;
                 }
-                const showedTime = this.setTimeRemaining(estimatedTime, hoursDiff, minDiff, secondDiff);
+                const showedTime = setTimeRemaining(estimatedTime, hoursDiff, minDiff, secondDiff);
                 goodTime = estimatedTime === 0 ? 'Maintenant' : showedTime;
                 goodDate = dateFormat(baseDate + (estimatedTime * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
             }
@@ -237,16 +212,16 @@ export default class Fecondator extends React.Component {
             };
             prevDrago = drago;
         });
-        return dragodindes;
-    }
+        return sortedDragodindes;
+    };
 
-    setLateTimeRemaining(hours, minutes, seconds) {
+    const setLateTimeRemaining = (hours, minutes, seconds) => {
         const goodMinutes = (minutes >= 0 && minutes < 10 ? '0' + minutes + 'M' : minutes + 'M');
         const goodSeconds = (seconds >= 0 && seconds < 10 ? '0' + seconds + 'S' : seconds + 'S');
         return hours > 0 ? hours + 'H' + goodMinutes + goodSeconds : goodMinutes + goodSeconds;
-    }
+    };
 
-    setTimeRemaining(duration, hours, minutes, seconds) {
+    const setTimeRemaining = (duration, hours, minutes, seconds) => {
         let goodHours = duration - hours;
         goodHours = minutes > 0 || seconds > 0 ? goodHours - 1 : goodHours;
         minutes = seconds > 0 ? minutes - 1 : minutes;
@@ -268,183 +243,170 @@ export default class Fecondator extends React.Component {
         else if (seconds === 60 && minutes !== 60) {
             return goodHours <= 0 ? stringMinutes + '00S' : goodHours + 'H' + stringMinutes + '00S';
         }
-    }
+    };
 
-    handleAutomateFecond(index) {
+    const handleAutomateFecond = (index) => {
         const used = [];
-        const last = [];
-        this.state.dragodindes.map((drago, mapIndex) => {
+        const localLast = [];
+        dragodindes.map((drago, mapIndex) => {
             if (mapIndex < index) {
                 used.push(drago);
             }
             else if (mapIndex === index) {
-                last.push(drago);
+                localLast.push(drago);
             }
         });
-        if (this.state.last) {
-            used.push(this.state.last);
+        if (last) {
+            used.push(last);
         }
-        this.setState({
-            selectedDrago: {
-                used: used,
-                last: last
-            },
-            show: true
-        });
-    }
+        setSelectedDrago({ used: used, last: localLast });
+        setShow(true);
+    };
 
-    handleCallAutomateAPI() {
+    const handleCallAutomateAPI = () => {
         Promise.all([
-            Axios.post('/api/dofus/dragodindes/used/update', {
-                userId: this.state.user.id,
-                dragodindes: this.state.selectedDrago.used
+            Axios.post('/api/dofus/dragodindes/status/used/update', {
+                userId: user.id,
+                dragodindes: selectedDrago.used
             }),
-            Axios.post('/api/dofus/dragodindes/last/update', {
-                userId: this.state.user.id,
-                dragodindes: this.state.selectedDrago.last
+            Axios.post('/api/dofus/dragodindes/status/last/update', {
+                userId: user.id,
+                dragodindes: selectedDrago.last
             })
         ]).then(() => {
-            this.handleClose();
-            clearInterval(this.interval);
-            this.getDataAndSetState();
+            handleClose();
+            clearInterval(interval[0]);
+            getDataAndSetConst();
         }).catch(() => {
             setTimeout(() => {
-                this.handleCallAutomateAPI();
+                handleCallAutomateAPI();
             }, 1500);
         });
-    }
+    };
 
-    handleClose() {
-        this.setState({
-            show: false,
-            selectedDrago: {
-                used: [],
-                last: []
-            }
-        });
-    }
+    const handleClose = () => {
+        setShow(false);
+        setSelectedDrago({ used: [], last: [] });
+    };
 
-    handleChange(e) {
-        const filtered = this.state.dragodindes.filter(d => d.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1);
-        this.setState({
-            showedDragodindes: _.reverse(_.sortBy(filtered, 'duration', 'asc'))
-        });
-    }
+    const handleChange = (e) => {
+        const filtered = dragodindes.filter(d => d.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1);
+        setShowedDragodindes(_.reverse(_.sortBy(filtered, 'duration', 'asc')));
+    };
 
-    render() {
-        return (
-            <div className='principal-container'>
-                <FecondatorModal
-                    handleClose={this.handleClose}
-                    handleCallAutomateAPI={this.handleCallAutomateAPI}
-                    show={this.state.show}
-                    dragodindes={this.state.selectedDrago}
-                />
-                <h1 className='craft-title text-center col-12 col-md-6'>Fécondator</h1>
-                <div className='notes-btn col-sm-12 text-center'>
-                    <a href='/dofus/dragodindes'>
-                        <button>Mes dragodindes</button>
-                    </a>
-                </div>
-                <div className='text-center fecondator-last-dragodinde col-sm-11 col-md-10 col-lg-9 col-xl-8'>
-                    {this.state.last ?
-                        <div className='fecondator-last-div col-9 col-sm-8 col-md-6'>
-                            <h4 className='col-12'>Dragodinde fécondée</h4>
-                            <img className='col-4' alt='dd_icon' src={'/assets/img/dragodindes/' + this.state.last.name.toLowerCase().split(' ').join('-') + '.png'} />
-                            <div className='fecondator-last-infos col-7'>
-                                <p className='label'>Nom</p>
-                                <p className='value'>{this.state.last.name}</p>
-                                <p className='label'>Fécondation</p>
-                                <p className='value'>{dateFormat(this.state.last.last.date, 'dd/mm/yyyy HH:MM:ss')}</p>
-                            </div>
-                        </div> : ''}
+    return (
+        <div className='principal-container'>
+            <FecondatorModal
+                handleClose={handleClose}
+                handleCallAutomateAPI={handleCallAutomateAPI}
+                show={show}
+                dragodindes={selectedDrago}
+            />
+            <h1 className='craft-title text-center col-12 col-md-6'>Fécondator</h1>
+            <div className='notes-btn col-sm-12 text-center'>
+                <a href='/dofus/dragodindes'>
+                    <button>Mes dragodindes</button>
+                </a>
+            </div>
+            <div className='text-center fecondator-last-dragodinde col-sm-11 col-md-10 col-lg-9 col-xl-8'>
+                {last ?
+                    <div className='fecondator-last-div col-9 col-sm-8 col-md-6'>
+                        <h4 className='col-12'>Dragodinde fécondée</h4>
+                        <img className='col-4' alt='dd_icon' src={'/assets/img/dragodindes/' + last.name.toLowerCase().split(' ').join('-') + '.png'} />
+                        <div className='fecondator-last-infos col-7'>
+                            <p className='label'>Nom</p>
+                            <p className='value'>{last.name}</p>
+                            <p className='label'>Fécondation</p>
+                            <p className='value'>{dateFormat(last.last.date, 'dd/mm/yyyy HH:MM:ss')}</p>
+                        </div>
+                    </div> : ''}
+                {accouchDate || lateCountdown || finishTime ?
                     <div className='fecondator-infos col-7 col-sm-7 col-md-5'>
                         <h4 className='col-12'>Informations</h4>
                         <div className='fecondator-infos-content col-10'>
                             <p className='label'>Accouchement</p>
-                            <p className='value'>{this.state.accouchDate}</p>
-                            {this.state.lateCountdown ?
+                            <p className='value'>{accouchDate}</p>
+                            {lateCountdown ?
                                 <>
                                     <p className='label'>Retard</p>
-                                    <p className='late-countdown value'>{this.state.lateCountdown}</p>
+                                    <p className='late-countdown value'>{lateCountdown}</p>
                                 </> : ''}
-                            {this.state.finishTime ?
+                            {finishTime ?
                                 <>
                                     <p className='label'>Dans</p>
-                                    <p className='finish-countdown value'>{this.state.finishTime}</p>
+                                    <p className='finish-countdown value'>{finishTime}</p>
                                 </> : ''}
                         </div>
-                    </div>
-                </div>
-                {this.state.dragodindes.length ?
-                    <div className='text-center principal-dragodindes-div col-sm-11 col-md-10 col-lg-8 col-xl-8'>
-                        <input
-                            className='input-parcho'
-                            placeholder='Rechercher'
-                            onChange={this.handleChange}
-                        />
-                        <div className='my-dragodindes-container'>
-                            {this.state.showedDragodindes.length ?
-                                this.state.showedDragodindes.map((drago, index) => {
-                                    return (
-                                        <div
-                                            className='fecondator-line'
-                                            key={index}
-                                        >
-                                            <div className='fecondator-name col-8'>
-                                                <img src={'/assets/img/dragodindes/' + drago.name.toLowerCase().split(' ').join('-') + '.png'} alt='dd_icon' />
-                                                <p> {drago.name}</p>
-                                            </div>
-                                            <div className='fecondator-time col-4'>
-                                                {drago.end.time.substr(0, 10) === 'Maintenant' ?
-                                                    <div className='fecondator-time-now'>
-                                                        {(this.state.showedDragodindes[index + 1] && this.state.showedDragodindes[index + 1].end.time.substr(0, 10) !== 'Maintenant') || (!this.state.showedDragodindes[index + 1]) ?
-                                                            <>
-                                                                <p className='fecondator-automate-time col-10 text-center'>Maintenant</p>
-                                                                <Tooltip
-                                                                    title='Définir comme la dernière dragodinde fécondée et définir les dragodindes précédentes comme utilisées'
-                                                                    placement='top'
-                                                                >
-                                                                    <span
-                                                                        className='fecondator-automate-icon col-2'
-                                                                        onClick={() => this.handleAutomateFecond(index)}
-                                                                    >
-                                                                        <FontAwesomeIcon icon='sync' />
-                                                                    </span>
-                                                                </Tooltip>
-                                                            </> :
-                                                            <p className='col-10 text-center'>Maintenant</p>}
-                                                    </div> :
-                                                    <>
-                                                        <div className='fecondator-time-duration'>
-                                                            <p>{drago.end.time}</p>
-                                                        </div>
-                                                        <div className='fecondator-time-date'>
-                                                            <p>{drago.end.date}</p>
-                                                        </div>
-                                                    </>}
-                                            </div>
-                                        </div>
-                                    );
-                                }) :
-                                <div className='empty-drago-line'>
-                                    <div className='my-dragodindes-name'>
-                                        <p>Aucun résultat</p>
-                                    </div>
-                                </div>}
-                        </div>
-                    </div> :
-                    this.state.wait ?
-                        <div className='text-center loading-notes-message'>
-                            <h1>Chargement des dragodindes <span className='custom-spinner-notes' /></h1>
-                        </div> :
-                        <div className='text-center no-notes-message'>
-                            <h1>Pas de dragodindes actuellement</h1>
-                        </div>}
+                    </div> : ''}
             </div>
-        );
-    }
-}
+            {dragodindes.length ?
+                <div className='text-center principal-dragodindes-div col-sm-11 col-md-10 col-lg-8 col-xl-8'>
+                    <input
+                        className='input-parcho'
+                        placeholder='Rechercher'
+                        onChange={handleChange}
+                    />
+                    <div className='my-dragodindes-container'>
+                        {showedDragodindes.length ?
+                            showedDragodindes.map((drago, index) => {
+                                return (
+                                    <div
+                                        className='fecondator-line'
+                                        key={index}
+                                    >
+                                        <div className='fecondator-name col-8'>
+                                            <img src={'/assets/img/dragodindes/' + drago.name.toLowerCase().split(' ').join('-') + '.png'} alt='dd_icon' />
+                                            <p> {drago.name}</p>
+                                        </div>
+                                        <div className='fecondator-time col-4'>
+                                            {drago.end.time.substr(0, 10) === 'Maintenant' ?
+                                                <div className='fecondator-time-now'>
+                                                    {(showedDragodindes[index + 1] && showedDragodindes[index + 1].end.time.substr(0, 10) !== 'Maintenant') || (!showedDragodindes[index + 1]) ?
+                                                        <>
+                                                            <p className='fecondator-automate-time col-10 text-center'>Maintenant</p>
+                                                            <Tooltip
+                                                                title='Définir comme la dernière dragodinde fécondée et définir les dragodindes précédentes comme utilisées'
+                                                                placement='top'
+                                                            >
+                                                                <span
+                                                                    className='fecondator-automate-icon col-2'
+                                                                    onClick={() => handleAutomateFecond(index)}
+                                                                >
+                                                                    <FontAwesomeIcon icon='sync' />
+                                                                </span>
+                                                            </Tooltip>
+                                                        </> :
+                                                        <p className='col-10 text-center'>Maintenant</p>}
+                                                </div> :
+                                                <>
+                                                    <div className='fecondator-time-duration'>
+                                                        <p>{drago.end.time}</p>
+                                                    </div>
+                                                    <div className='fecondator-time-date'>
+                                                        <p>{drago.end.date}</p>
+                                                    </div>
+                                                </>}
+                                        </div>
+                                    </div>
+                                );
+                            }) :
+                            <div className='empty-drago-line'>
+                                <div className='my-dragodindes-name'>
+                                    <p>Aucun résultat</p>
+                                </div>
+                            </div>}
+                    </div>
+                </div> :
+                wait ?
+                    <div className='text-center loading-notes-message'>
+                        <h1>Chargement des dragodindes <span className='custom-spinner-notes' /></h1>
+                    </div> :
+                    <div className='text-center no-notes-message'>
+                        <h1>Pas de dragodindes actuellement</h1>
+                    </div>}
+        </div>
+    );
+};
 
 Fecondator.propTypes = {
     user: PropTypes.oneOfType([
@@ -452,3 +414,5 @@ Fecondator.propTypes = {
         PropTypes.bool.isRequired
     ])
 };
+
+export default Fecondator;
