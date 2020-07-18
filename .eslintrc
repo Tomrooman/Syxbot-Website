@@ -16,7 +16,9 @@
     "ignorePatterns": [
         "serviceWorker.js",
         "assets/",
-        "webpack.config.js"
+        ".yarn/",
+        "webpack.config.js",
+        "dist/"
     ],
     "rules": {
         "react/jsx-indent-props": [

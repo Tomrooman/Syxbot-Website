@@ -6,7 +6,7 @@
   "scripts": {
     "eslint": "eslint ./",
     "start": "webpack-dev-server --https --open --mode development",
-    "remove-modules": "rimraf .yarn/build-state.yml .yarn/cache .yarn/install-state.gz .yarn/unplugged .pnp.js yarn.lock package-lock.json",
+    "remove-modules": "yarn rimraf .yarn/build-state.yml .yarn/cache .yarn/install-state.gz .yarn/unplugged .pnp.js yarn.lock package-lock.json",
     "build": "rimraf dist && webpack --mode production"
   },
   "dependencies": {
