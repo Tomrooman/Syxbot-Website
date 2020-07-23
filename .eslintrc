@@ -16,6 +16,7 @@
     "ignorePatterns": [
         "serviceWorker.js",
         "assets/",
+        "node_modules",
         ".yarn/",
         "webpack.config.js",
         "dist/"
