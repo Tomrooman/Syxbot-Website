@@ -8,6 +8,8 @@ package-lock.json
 .nyc_output
 coverage
 yarn-error.log
+server.key
+server.crt
 
 .yarn/*
 !.yarn/releases

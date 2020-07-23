@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "eslint": "eslint ./",
-    "start": "webpack-dev-server --https --open --mode development",
-    "remove-modules": "yarn rimraf .yarn/build-state.yml .yarn/cache .yarn/install-state.gz .yarn/unplugged .pnp.js yarn.lock package-lock.json",
-    "build": "rimraf dist && webpack --mode production"
+    "start": "webpack-dev-server --open --mode development",
+    "remove-modules": "yarn rimraf node_modules .yarn/build-state.yml .yarn/cache .yarn/install-state.gz .yarn/unplugged .pnp.js yarn.lock package-lock.json",
+    "build": "yarn rimraf dist && yarn webpack --mode production"
   },
   "dependencies": {
     "@babel/plugin-transform-runtime": "^7.10.4",
+    "@babel/runtime": "^7.10.5",
     "@fortawesome/fontawesome-svg-core": "^1.2.29",
     "@fortawesome/free-brands-svg-icons": "^5.13.1",
     "@fortawesome/free-solid-svg-icons": "^5.13.1",
@@ -18,15 +19,19 @@
     "@material-ui/core": "^4.11.0",
     "axios": "^0.19.2",
     "babel-plugin-emotion": "^10.0.33",
+    "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^6.0.3",
     "css-loader": "^3.6.0",
     "dateformat": "^3.0.3",
     "eslint-config-standard": "^14.1.1",
     "eslint-config-standard-react": "^9.2.0",
+    "eslint-import-resolver-node": "^0.3.4",
     "eslint-loader": "^4.0.2",
     "html-loader": "^1.1.0",
     "html-webpack-plugin": "^4.3.0",
     "jquery": "^3.5.1",
+    "lodash": "^4.17.19",
+    "pnp-webpack-plugin": "^1.6.4",
     "react": "^16.13.1",
     "react-cookie": "^4.0.3",
     "react-dom": "^16.13.1",
@@ -34,7 +39,9 @@
     "reactstrap": "^8.5.1",
     "rimraf": "^3.0.2",
     "style-loader": "^1.2.1",
-    "webpack-cli": "^3.3.12"
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
   },
   "devDependencies": {
     "@babel/core": "^7.10.4",
@@ -50,10 +57,8 @@
     "eslint-plugin-standard": "^4.0.1",
     "file-loader": "^6.0.0",
     "prop-types": "^15.7.2",
-    "url-loader": "^4.1.0",
-    "webpack": "^4.43.0",
-    "webpack-dev-server": "^3.11.0"
+    "url-loader": "^4.1.0"
   },
-  "author": "",
+  "author": "Tom Rooman",
   "license": "GPL-3.0-only"
 }

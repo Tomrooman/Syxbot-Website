@@ -1,5 +1,7 @@
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const PnpPlugin = require("pnp-webpack-plugin");
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const path = require('path');
 
@@ -19,18 +21,33 @@ module.exports = {
                 changeOrigin: true,
                 secure: false
             }
-        }
+        },
+        contentBase: './src',
+        compress: true,
+        clientLogLevel: 'warn',
+    },
+    node: {
+        Buffer: false,
+        process: false
     },
     mode: process.env.NODE_ENV,
     module: {
         rules: [
             {
+                enforce: 'pre',
+                test: /\.(js|jsx)$/,
+                loader: 'eslint-loader',
+                exclude: /cache/,
+                options: {
+                    cache: true
+                }
+            },
+            {
                 test: /\.(js|jsx)$/,
                 use: [
-                    { loader: 'babel-loader' },
-                    { loader: 'eslint-loader' }
+                    { loader: 'babel-loader' }
                 ],
-                exclude: /node_modules/
+                exclude: /cache/
             },
             {
                 test: /\.html$/,
@@ -59,7 +76,14 @@ module.exports = {
             }
         ]
     },
+    resolveLoader: {
+        plugins: [PnpPlugin.moduleLoader(module)]
+    },
+    resolve: {
+        plugins: [PnpPlugin],
+    },
     plugins: [
+        new CleanWebpackPlugin(),
         new HtmlWebPackPlugin({
             template: './src/index.html',
             filename: 'index.html'
