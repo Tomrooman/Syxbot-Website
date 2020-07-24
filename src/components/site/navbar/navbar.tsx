@@ -2,7 +2,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import Config from './../../../../config.json';
+import * as Config from './../../../../config.json';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt, faUserCircle, faBook } from '@fortawesome/free-solid-svg-icons';
@@ -79,7 +79,7 @@ const Navbar = (props) => {
                 {
                     props.user ?
                         <div className='dropdown'>
-                            <div className='user-dropdown dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                            <div className='user-dropdown dropdown-toggle' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
                                 <div className='user-dropdown-nav'>
                                     <FontAwesomeIcon icon='user-circle' />
                                     <p>

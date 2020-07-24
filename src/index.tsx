@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Router from './components/router/router.jsx';
+import Router from './components/router/router';
 import * as serviceWorker from './serviceWorker';
 
 

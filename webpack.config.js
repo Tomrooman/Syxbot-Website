@@ -36,25 +36,33 @@ module.exports = {
         rules: [
             {
                 test: /\.ts(x?)$/,
-                exclude: /node_modules/,
+                exclude: [
+                    /cache/,
+                    /node_modules/
+                ],
                 use: [
                     {
-                        loader: "ts-loader"
+                        loader: 'ts-loader'
                     }
                 ]
             },
             {
-                enforce: "pre",
-                test: /\.js$/,
-                loader: "source-map-loader"
+                enforce: 'pre',
+                test: /\.(ts|tsx)$/,
+                use: [
+                    {
+                        options: {
+                            eslintPath: require.resolve('eslint')
+                        },
+                        loader: require.resolve('eslint-loader')
+                    }
+                ],
+                exclude: /node_modules/
             },
             {
-                test: /\.(js|jsx)$/,
-                use: [
-                    { loader: 'babel-loader' },
-                    { loader: 'eslint-loader' }
-                ],
-                exclude: /cache/
+                enforce: 'pre',
+                test: /\.js$/,
+                loader: 'source-map-loader'
             },
             {
                 test: /\.html$/,
@@ -87,7 +95,7 @@ module.exports = {
         plugins: [PnpPlugin.moduleLoader(module)]
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js', 'jsx'],
+        extensions: ['.tsx', '.ts', '.js', '.json'],
         plugins: [PnpPlugin],
     },
     plugins: [
@@ -104,5 +112,9 @@ module.exports = {
                 { from: 'assets', to: 'assets' },
             ],
         })
-    ]
+    ],
+    externals: {
+        "react": "React",
+        "react-dom": "ReactDOM"
+    }
 };

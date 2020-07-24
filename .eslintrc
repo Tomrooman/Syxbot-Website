@@ -1,17 +1,26 @@
 {
+    "plugins": [
+        "@typescript-eslint"
+    ],
     "extends": [
         "standard",
         "standard-react",
-        "eslint:recommended"
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
     ],
     "env": {
         "browser": true,
         "es2020": true
     },
     "root": true,
-    "parser": "babel-eslint",
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "sourceType": "module"
+        "ecmaVersion": 2020,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
     },
     "ignorePatterns": [
         "serviceWorker.js",
@@ -21,6 +30,11 @@
         "webpack.config.js",
         "dist/"
     ],
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
     "rules": {
         "react/jsx-indent-props": [
             2,

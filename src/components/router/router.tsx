@@ -1,8 +1,8 @@
 'use strict';
 
 import React, { useState, useEffect } from 'react';
-import Site from './../site/site.jsx';
-import Radio from './../radio/radio.jsx';
+import Site from '../site/site';
+import Radio from '../radio/radio';
 import './scrollbar.css';
 
 const Router = () => {

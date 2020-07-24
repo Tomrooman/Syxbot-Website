@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Notes from './notes/notes.jsx';
-import Dragodindes from './dragodindes/dragodindes.jsx';
-import Fecondator from './fecondator/fecondator.jsx';
-import Craft from './craft/craft.jsx';
-import Config from './../../../../config.json';
+import Notes from './notes/notes';
+import Dragodindes from './dragodindes/dragodindes';
+import Fecondator from './fecondator/fecondator';
+import Craft from './craft/craft';
+import * as Config from './../../../../config.json';
 
 import './dofus.css';
 

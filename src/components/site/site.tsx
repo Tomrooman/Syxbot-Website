@@ -7,12 +7,12 @@ import PropTypes, { instanceOf } from 'prop-types';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAssistiveListeningSystems, faBookOpen, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-import Config from './../../../config.json';
+import * as Config from './../../../config.json';
 import Axios from 'axios';
 import $ from 'jquery';
 import './site.css';
-import Navbar from './navbar/navbar.jsx';
-import Dofus from './dofus/dofus.jsx';
+import Navbar from './navbar/navbar';
+import Dofus from './dofus/dofus';
 
 library.add(faAssistiveListeningSystems);
 library.add(faBookOpen);

@@ -2,18 +2,18 @@
 
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import $ from 'jquery';
-import NotesModal from './modal.jsx';
+import NotesModal from './modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 
 const Notes = (props) => {
     const [showInput, setShowInput] = useState(false);
     const [showContent, setShowContent] = useState(false);
-    const [removeNote, setRemoveNote] = useState({});
+    const [removeNote, setRemoveNote] = useState({ title: {}, content: {} });
     const [wait, setWait] = useState(true);
-    const [input, setInput] = useState(false);
+    const [input, setInput] = useState('');
     const [notes, setNotes] = useState([]);
     const [show, setShow] = useState(false);
     const [title, setTitle] = useState('');
@@ -108,7 +108,7 @@ const Notes = (props) => {
         }
     };
 
-    const showModal = (choice, noteObj = {}) => {
+    const showModal = (choice, noteObj = { title: {}, content: {} }) => {
         setShow(true);
         setNoteTitle('');
         setContent('');
@@ -152,8 +152,7 @@ const Notes = (props) => {
                                     <>
                                         <textarea
                                             className='infos-input'
-                                            type='text'
-                                            rows='3'
+                                            rows={3}
                                             autoFocus
                                             onChange={handleChange}
                                         />

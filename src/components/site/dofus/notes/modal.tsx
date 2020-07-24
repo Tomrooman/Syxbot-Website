@@ -27,7 +27,7 @@ const NotesModal = (props) => {
                         <div className='row'>
                             <div className='form-group col-12'>
                                 <label htmlFor='content_new'><h3>Contenu</h3></label>
-                                <textarea name='content' id='content_new' rows='3' onChange={props.handleChangeModal} type='text' className='form-control' />
+                                <textarea name='content' id='content_new' rows={3} onChange={props.handleChangeModal} className='form-control' />
                             </div>
                         </div>
 

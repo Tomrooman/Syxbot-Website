@@ -1,7 +1,7 @@
 'use strict';
 
 import React, { useState } from 'react';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 const VoiceRecognition = () => {
     const [listening, setListening] = useState(false);
