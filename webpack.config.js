@@ -11,6 +11,7 @@ module.exports = {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist')
     },
+    devtool: "inline-source-map",
     devServer: {
         historyApiFallback: true,
         https: true,
@@ -34,18 +35,24 @@ module.exports = {
     module: {
         rules: [
             {
-                enforce: 'pre',
-                test: /\.(js|jsx)$/,
-                loader: 'eslint-loader',
-                exclude: /cache/,
-                options: {
-                    cache: true
-                }
+                test: /\.ts(x?)$/,
+                exclude: /node_modules/,
+                use: [
+                    {
+                        loader: "ts-loader"
+                    }
+                ]
+            },
+            {
+                enforce: "pre",
+                test: /\.js$/,
+                loader: "source-map-loader"
             },
             {
                 test: /\.(js|jsx)$/,
                 use: [
-                    { loader: 'babel-loader' }
+                    { loader: 'babel-loader' },
+                    { loader: 'eslint-loader' }
                 ],
                 exclude: /cache/
             },
@@ -80,6 +87,7 @@ module.exports = {
         plugins: [PnpPlugin.moduleLoader(module)]
     },
     resolve: {
+        extensions: ['.tsx', '.ts', '.js', 'jsx'],
         plugins: [PnpPlugin],
     },
     plugins: [
