@@ -2,32 +2,32 @@
 
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import $ from 'jquery';
 import NotesModal from './modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PropTypes from 'prop-types';
+import PropTypes, { string } from 'prop-types';
 
-const Notes = (props) => {
-    const [showInput, setShowInput] = useState(false);
-    const [showContent, setShowContent] = useState(false);
-    const [removeNote, setRemoveNote] = useState({ title: {}, content: {} });
+const Notes = (props): React.ReactElement => {
+    const [showInput, setShowInput] = useState(undefined);
+    const [showContent, setShowContent] = useState(undefined);
+    const [removeNote, setRemoveNote] = useState({ title: string, content: string });
     const [wait, setWait] = useState(true);
-    const [input, setInput] = useState('');
-    const [notes, setNotes] = useState([]);
+    const [input, setInput] = useState(undefined);
+    const [notes, setNotes] = useState([{ title: string, content: string }]);
     const [show, setShow] = useState(false);
     const [title, setTitle] = useState('');
-    const [noteTitle, setNoteTitle] = useState('');
-    const [content, setContent] = useState('');
-    const [user] = useState(props.user);
+    const [noteTitle, setNoteTitle] = useState(undefined);
+    const [content, setContent] = useState(undefined);
+    const [user] = useState(props.user || undefined);
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
         if (wait && !loaded) {
             const getNotesAPI = async () => {
-                const res = await Axios.post('/api/dofus/notes', { userId: user.id });
-                if (res.data) {
-                    setNotes(_.orderBy(res.data, 'title', 'asc'));
+                const { data } = await Axios.post('/api/dofus/notes', { userId: user.id });
+                if (data) {
+                    setNotes(_.orderBy(data, 'title', 'asc'));
                 }
                 setWait(false);
             };
@@ -57,8 +57,8 @@ const Notes = (props) => {
         if (res.data) {
             setNotes(_.orderBy(res.data, 'title', 'asc'));
         }
-        setShowInput(false);
-        setShowContent(false);
+        setShowInput(undefined);
+        setShowContent(undefined);
     };
 
     const handleChange = (e) => {
@@ -100,18 +100,18 @@ const Notes = (props) => {
         }
         else if (e.target.type !== 'textarea') {
             setInput(newContent);
-            setShowInput(showInput === newTitle ? false : newTitle);
-            setShowContent(showContent === newContent ? false : newContent);
+            setShowInput(showInput === newTitle ? undefined : newTitle);
+            setShowContent(showContent === newContent ? undefined : newContent);
             if ($('textarea')[0]) {
-                $('textarea')[0].value = input;
+                $('textarea')[0].setAttribute('value', String(input));
             }
         }
     };
 
-    const showModal = (choice, noteObj = { title: {}, content: {} }) => {
+    const showModal = (choice, noteObj = { title: string, content: string }) => {
         setShow(true);
-        setNoteTitle('');
-        setContent('');
+        setNoteTitle(undefined);
+        setContent(undefined);
         setRemoveNote(noteObj);
         setTitle(choice === 'new' ? 'Créer une note' : 'Supprimer la note');
     };

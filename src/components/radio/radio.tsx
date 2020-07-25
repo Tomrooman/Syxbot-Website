@@ -27,8 +27,7 @@ const Radio = (props) => {
         }
         if (radio && radio.index && !loaded) {
             const playArg = radio.play;
-            const imagePath = $('#radio_choices')[0].children[radio.index].getAttribute('image');
-            const radioUrl = $('#radio_choices')[0].children[radio.index].getAttribute('url');
+            const { imagePath, radioUrl } = getRadio(radio.index);
             setLoaded(true);
             setRadioSourceAndInfos(imagePath, radioUrl, radio.index, radio.name, radio.volume);
             if (!playArg) {
@@ -37,77 +36,83 @@ const Radio = (props) => {
             }
         }
         else if (radio && radio.volume && !loaded) {
-            const volume = radio.volume;
-            $('audio')[0].volume = volume;
-            $('.slider')[0].value = volume * 100;
+            $('audio')[0].setAttribute('volume', String(radio.volume));
+            $('.slider')[0].setAttribute('value', String(radio.volume * 100));
             setLoaded(true);
         }
         else if (!loaded) {
-            $('audio')[0].volume = 0.2;
-            $('.slider')[0].value = 20;
+            $('audio')[0].setAttribute('volume', String(0.2));
+            $('.slider')[0].setAttribute('value', String(20));
             setLoaded(true);
         }
     });
 
-    const handleClick = (e) => {
-        const image = e.target.getAttribute('image');
-        const url = e.target.getAttribute('url');
-        const _index = e.target.getAttribute('index');
-        const _radioName = e.target.getAttribute('name');
-        setRadioSourceAndInfos(image, url, _index, _radioName, $('audio')[0].volume);
-        setRadioCookie(true, _index, $('audio')[0].volume, _radioName);
-        $('audio')[0].play();
+    const getRadio = (_index) => {
+        const returnedObj = {
+            imagePath: '',
+            radioUrl: ''
+        };
+        Radios.map((r, i) => {
+            if (i === _index) {
+                returnedObj.imagePath = `/assets/img/radio/${r.name.toLowerCase()}.png`;
+                returnedObj.radioUrl = r.url;
+            }
+        });
+        return returnedObj;
+    };
+
+    const handleClick = (image, _index, _radioName, url) => {
+        const _audio = $('audio')[0] as HTMLMediaElement;
+        setRadioSourceAndInfos(image, url, _index, _radioName, _audio.volume);
+        setRadioCookie(true, _index, _audio.volume, _radioName);
+        _audio.play();
     };
 
     const setRadioSourceAndInfos = (imagePath, radioUrl, _index, _radioName, volume) => {
         $('.radio_png').css('display', 'initial');
-        $('audio')[0].volume = volume;
-        $('.slider')[0].value = volume * 100;
+        $('audio')[0].setAttribute('volume', volume);
+        $('.slider')[0].setAttribute('value', String(volume * 100));
         const radioImg = document.createElement('img');
         radioImg.src = imagePath;
         $('.radio_png')[0].innerHTML = '';
         $('.radio_png').append(radioImg);
-        $('audio')[0].src = radioUrl;
+        $('audio')[0].setAttribute('src', radioUrl);
         setDropdownTitle('Chargement');
         setIndex(_index);
         setRadioName(_radioName);
-        setTimeout(() => {
-            if (dropdownTitle === 'Chargement') {
-                console.log('Recall setRadioSourceAndInfos !!!!! after timeout 4000');
-                setRadioSourceAndInfos(imagePath, radioUrl, _index, _radioName, volume);
-            }
-        }, 4000);
     };
 
     const handleVolumeChange = (e) => {
+        const _audio = $('audio')[0] as HTMLMediaElement;
         const _radioName = radioName.indexOf('&amp;') !== -1 ? radioName.split('&amp;').join(' & ') : radioName;
-        $('audio')[0].volume = parseInt(e.target.value, 10) / 100;
-        if ($('audio')[0].paused) {
-            setRadioCookie(false, index, $('audio')[0].volume, _radioName);
+        $('audio')[0].setAttribute('volume', String(parseInt(e.target.value, 10) / 100));
+        if (_audio.paused) {
+            setRadioCookie(false, index, $('audio')[0].getAttribute('volume'), _radioName);
         }
         else {
-            setRadioCookie(true, index, $('audio')[0].volume, _radioName);
+            setRadioCookie(true, index, $('audio')[0].getAttribute('volume'), _radioName);
         }
     };
 
     const handlePause = () => {
         const _radioName = radioName.indexOf('&amp;') !== -1 ? radioName.split('&amp;').join(' & ') : radioName;
-        setRadioCookie(false, index, $('audio')[0].volume, _radioName);
+        setRadioCookie(false, index, $('audio')[0].getAttribute('volume'), _radioName);
     };
 
     const handlePlay = () => {
         const _radioName = radioName.indexOf('&amp;') !== -1 ? radioName.split('&amp;').join(' & ') : radioName;
         setDropdownTitle(_radioName);
-        setRadioCookie(true, index, $('audio')[0].volume, _radioName);
+        setRadioCookie(true, index, $('audio')[0].getAttribute('volume'), _radioName);
     };
 
     const handleTogglePlay = () => {
         if (radioName) {
-            if ($('audio')[0].paused) {
-                $('audio')[0].play();
+            const _audio = $('audio')[0] as HTMLMediaElement;
+            if (_audio.paused) {
+                _audio.play();
             }
             else {
-                $('audio')[0].pause();
+                _audio.pause();
             }
         }
     };
@@ -163,12 +168,8 @@ const Radio = (props) => {
                             return (
                                 <button
                                     className='dropdown-item'
-                                    url={obj.url}
-                                    image={`/assets/img/radio/${obj.name.toLowerCase()}.png`}
                                     key={_index}
-                                    index={_index}
-                                    name={obj.name}
-                                    onClick={handleClick}
+                                    onClick={() => { handleClick(`/assets/img/radio/${obj.name.toLowerCase()}.png`, _index, obj.name, obj.url); }}
                                 >
                                     {obj.name}
                                 </button>
@@ -186,7 +187,7 @@ const Radio = (props) => {
                         className='radio_controls_play col-3'
                         onClick={handleTogglePlay}
                     >
-                        {radio && radio.play ? <FontAwesomeIcon icon='pause' /> : <FontAwesomeIcon icon='play' />}
+                        {radio && !radio.play ? <FontAwesomeIcon icon='play' /> : <FontAwesomeIcon icon='pause' />}
                     </div>
                     <div className='slidecontainer col-9'>
                         <input

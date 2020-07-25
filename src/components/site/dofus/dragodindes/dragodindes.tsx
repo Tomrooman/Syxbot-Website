@@ -2,14 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import dragoJSON from './../../../../../assets/json/dragodindes.json';
-import DragodindesModal from './modal.jsx';
+import DragodindesModal from './modal';
 import { Tooltip } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHeart, faHeartBroken, faToggleOff, faToggleOn, faCheck, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
+import * as T from './types';
 
 library.add(faHeart);
 library.add(faHeartBroken);
@@ -18,17 +19,17 @@ library.add(faToggleOn);
 library.add(faCheck);
 library.add(faTimesCircle);
 
-const Dragodindes = (props) => {
-    const [user] = useState(props.user);
-    const [dragodindes, setDragodindes] = useState([]);
-    const [showedDragodindes, setShowedDragodindes] = useState([]);
-    const [selectedDrago, setSelectedDrago] = useState([]);
+const Dragodindes = (props): React.ReactElement => {
+    const [user] = useState(props.user || undefined);
+    const [dragodindes, setDragodindes] = useState(undefined);
+    const [showedDragodindes, setShowedDragodindes] = useState(undefined);
+    const [selectedDrago, setSelectedDrago] = useState(undefined);
     const [wait, setWait] = useState(true);
     const [loaded, setLoaded] = useState(false);
     const [show, setShow] = useState(false);
     const [action, setAction] = useState('default');
-    const [title, setTitle] = useState('');
-    const [input, setInput] = useState(false);
+    const [title, setTitle] = useState(undefined);
+    const [input, setInput] = useState(undefined);
     const [dragoJSONConst, setDragoJSONConst] = useState(dragoJSON.sort((a, b) => a.name.localeCompare(b.name)));
 
     useEffect(() => {
@@ -57,7 +58,7 @@ const Dragodindes = (props) => {
 
     const handleAddModalDrago = (name, duration, generation, selected) => {
         let localDragodindes = selectedDrago;
-        let JSONselected = '';
+        let JSONselected: T.dragoJSON[] = [];
         if (!selected) {
             JSONselected = setDragoJSON(dragoJSON, name);
             localDragodindes.push({ name: name, duration: duration, generation: generation });
@@ -193,7 +194,7 @@ const Dragodindes = (props) => {
         setTitle('');
         setSelectedDrago([]);
         setDragoJSONConst(dragoJSON.sort((a, b) => a.name.localeCompare(b.name)));
-        setInput(false);
+        setInput('');
     };
 
     const showModal = (choice) => {
@@ -231,7 +232,7 @@ const Dragodindes = (props) => {
             />
             <h2 className='craft-title text-center'>Mes dragodindes</h2>
             <div className='notes-btn col-sm-12 text-center'>
-                {!selectedDrago.length ?
+                {!selectedDrago ?
                     <button
                         className='my-dragodindes-add-btn'
                         onClick={() => showModal('new')}

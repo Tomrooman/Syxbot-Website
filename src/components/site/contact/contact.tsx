@@ -11,10 +11,10 @@ import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 library.add(faTimesCircle);
 
 const Contact = () => {
-    const [mail, setMail] = useState('');
-    const [object, setObject] = useState('');
-    const [message, setMessage] = useState('');
-    const [loaded, setLoaded] = useState('');
+    const [mail, setMail] = useState(undefined);
+    const [object, setObject] = useState(undefined);
+    const [message, setMessage] = useState(undefined);
+    const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
         if (!loaded) {
@@ -41,9 +41,9 @@ const Contact = () => {
                         setMail('');
                         setObject('');
                         setMessage('');
-                        $('input')[0].value = '';
-                        $('input')[1].value = '';
-                        $('textarea')[0].value = '';
+                        $('input')[0].textContent = '';
+                        $('input')[1].textContent = '';
+                        $('textarea')[0].textContent = '';
                         $('.alert').addClass('alert-success');
                         $('.alert').html('<span>' + $('.alert')[0].children[0].innerHTML + '</span><span style="display: none">' + $('.alert')[0].children[1].innerHTML + '</span> Message envoyé !');
                         $('.alert')[0].style.display = '';
@@ -122,9 +122,8 @@ const Contact = () => {
                     <div className='contact-message'>
                         <label htmlFor='message'>Écrivez votre message ci-dessous *</label><br />
                         <textarea
-                            type='text'
-                            rows='4'
-                            cols='30'
+                            rows={4}
+                            cols={30}
                             id='message'
                             onChange={(e) => handleOnChange('message', e)}
                         />

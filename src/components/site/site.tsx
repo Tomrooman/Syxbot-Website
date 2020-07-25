@@ -7,7 +7,7 @@ import PropTypes, { instanceOf } from 'prop-types';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAssistiveListeningSystems, faBookOpen, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-import * as Config from './../../../config.json';
+import Config from './../../../config.json';
 import Axios from 'axios';
 import $ from 'jquery';
 import './site.css';
@@ -19,14 +19,14 @@ library.add(faBookOpen);
 library.add(faPlusCircle);
 
 const Site = (props) => {
-    const [randStr, setRandStr] = useState(false);
-    const [user] = useState(props.cookies.get('syxbot', { path: '/' }) || false);
-    const [page, setPage] = useState(false);
+    const [randStr, setRandStr] = useState(undefined);
+    const [user] = useState(props.cookies.get('syxbot', { path: '/' }) || undefined);
+    const [page, setPage] = useState(undefined);
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
         if (!loaded) {
-            window.document.addEventListener('scroll', (e) => {
+            window.document.addEventListener('scroll', (e: any) => {
                 $('.radio_container').css('transform', 'translateY(' + e.path[1].scrollY + 'px)');
             });
             const fragment = new URLSearchParams(window.location.search);

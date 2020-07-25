@@ -11,7 +11,6 @@ module.exports = {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist')
     },
-    devtool: "inline-source-map",
     devServer: {
         historyApiFallback: true,
         https: true,
@@ -112,9 +111,5 @@ module.exports = {
                 { from: 'assets', to: 'assets' },
             ],
         })
-    ],
-    externals: {
-        "react": "React",
-        "react-dom": "ReactDOM"
-    }
+    ]
 };

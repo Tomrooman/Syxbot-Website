@@ -1,12 +1,12 @@
 'use strict';
 
 import React, { useState } from 'react';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 const VoiceRecognition = () => {
     const [listening, setListening] = useState(false);
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
+    const SpeechRecognition = window.SpeechRecognition;
+    const recognition: any = new SpeechRecognition();
 
     const handleToggleListen = () => {
         if (recognition) {

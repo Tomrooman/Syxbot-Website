@@ -5,9 +5,13 @@
         "noImplicitAny": false,
         "resolveJsonModule": true,
         "module": "commonjs",
+        "lib": [
+            "es2020",
+            "dom"
+        ],
         "target": "es5",
         "jsx": "react",
-        "allowJs": true,
+        "strict": true,
         "esModuleInterop": true
     }
 }

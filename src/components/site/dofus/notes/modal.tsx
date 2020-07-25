@@ -4,7 +4,7 @@ import React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import PropTypes from 'prop-types';
 
-const NotesModal = (props) => {
+const NotesModal = (props): React.ReactElement => {
     if (props.show && props.title === 'Créer une note') {
         return (
             <div>

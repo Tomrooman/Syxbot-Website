@@ -6,12 +6,12 @@ import Notes from './notes/notes';
 import Dragodindes from './dragodindes/dragodindes';
 import Fecondator from './fecondator/fecondator';
 import Craft from './craft/craft';
-import * as Config from './../../../../config.json';
+import Config from './../../../../config.json';
 
 import './dofus.css';
 
-const Dofus = (props) => {
-    const [content, setContent] = useState(false);
+const Dofus = (props): React.ReactElement => {
+    const [content, setContent] = useState(undefined);
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
@@ -26,7 +26,7 @@ const Dofus = (props) => {
                 setContent(<Fecondator user={props.user} />);
             }
             else if (props.urlArg === 'craft') {
-                setContent(<Craft user={props.user} />);
+                setContent(<Craft />);
             }
             else {
                 window.location.href = Config.OAuth.redirect_url;

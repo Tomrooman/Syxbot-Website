@@ -4,7 +4,7 @@ import React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import PropTypes from 'prop-types';
 
-const FecondatorModal = (props) => {
+const FecondatorModal = (props): React.ReactElement => {
     if (props.show) {
         return (
             <div>

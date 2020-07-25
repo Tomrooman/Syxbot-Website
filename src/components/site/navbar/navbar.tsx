@@ -2,7 +2,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as Config from './../../../../config.json';
+import Config from './../../../../config.json';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt, faUserCircle, faBook } from '@fortawesome/free-solid-svg-icons';
@@ -13,7 +13,7 @@ library.add(faDiscord);
 library.add(faUserCircle);
 library.add(faBook);
 
-const Navbar = (props) => {
+const Navbar = (props): React.ReactElement => {
     return (
         <nav className='navbar navbar-expand-lg navbar-dark navbar-site'>
             <a className='navbar-brand' href='/'>

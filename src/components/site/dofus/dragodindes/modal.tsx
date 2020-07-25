@@ -5,7 +5,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 
-const DragodindesModal = (props) => {
+const DragodindesModal = (props): React.ReactElement => {
     if (props.show && props.title === 'Ajouter des dragodindes') {
         return (
             <div>
