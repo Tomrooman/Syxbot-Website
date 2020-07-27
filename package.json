@@ -2,7 +2,8 @@
   "name": "docs.syxbot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "author": "Tom Rooman",
+  "private": true,
   "scripts": {
     "eslint": "eslint ./",
     "start": "webpack-dev-server --open --mode development",
@@ -59,7 +60,5 @@
     "ts-loader": "^8.0.1",
     "typescript": "^3.9.7",
     "url-loader": "^4.1.0"
-  },
-  "author": "Tom Rooman",
-  "license": "GPL-3.0-only"
+  }
 }

@@ -28,7 +28,8 @@
         "node_modules",
         ".yarn/",
         "webpack.config.js",
-        "dist/"
+        "dist/",
+        "private/"
     ],
     "settings": {
         "react": {
