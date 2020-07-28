@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHeart, faHeartBroken, faToggleOff, faToggleOn, faCheck, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
-import * as T from './types';
+import * as T from '../../../../@types/dragodindes';
 
 library.add(faHeart);
 library.add(faHeartBroken);
@@ -21,15 +21,15 @@ library.add(faTimesCircle);
 
 const Dragodindes = (props): React.ReactElement => {
     const [user] = useState(props.user || undefined);
-    const [dragodindes, setDragodindes] = useState(undefined);
-    const [showedDragodindes, setShowedDragodindes] = useState(undefined);
-    const [selectedDrago, setSelectedDrago] = useState(undefined);
+    const [dragodindes, setDragodindes] = useState([] as T.sortedDragoType[]);
+    const [showedDragodindes, setShowedDragodindes] = useState([] as T.sortedDragoType[]);
+    const [selectedDrago, setSelectedDrago] = useState({} as T.localDragodindesType[]);
     const [wait, setWait] = useState(true);
     const [loaded, setLoaded] = useState(false);
     const [show, setShow] = useState(false);
     const [action, setAction] = useState('default');
-    const [title, setTitle] = useState(undefined);
-    const [input, setInput] = useState(undefined);
+    const [title, setTitle] = useState('');
+    const [input, setInput] = useState('');
     const [dragoJSONConst, setDragoJSONConst] = useState(dragoJSON.sort((a, b) => a.name.localeCompare(b.name)));
 
     useEffect(() => {
@@ -57,8 +57,8 @@ const Dragodindes = (props): React.ReactElement => {
     };
 
     const handleAddModalDrago = (name, duration, generation, selected) => {
-        let localDragodindes = selectedDrago;
-        let JSONselected: T.dragoJSON[] = [];
+        let localDragodindes: T.localDragodindesType[] = selectedDrago;
+        let JSONselected: T.dragoSelectedtype[] = [];
         if (!selected) {
             JSONselected = setDragoJSON(dragoJSON, name);
             localDragodindes.push({ name: name, duration: duration, generation: generation });
@@ -71,7 +71,7 @@ const Dragodindes = (props): React.ReactElement => {
         setDragoJSONConst(input ? JSONselected.filter(d => d.name.toLowerCase().indexOf(input) !== -1).sort((a, b) => a.name.localeCompare(b.name)) : JSONselected.sort((a, b) => a.name.localeCompare(b.name)));
     };
 
-    const removeDragodindeFromArray = (name, localDragodindes) => {
+    const removeDragodindeFromArray = (name, localDragodindes): T.localDragodindesType[] => {
         const arrayDrago = localDragodindes;
         localDragodindes.map((drago, index) => {
             if (drago.name === name) {
@@ -82,7 +82,7 @@ const Dragodindes = (props): React.ReactElement => {
     };
 
     const setRemoveDragoJSON = (name) => {
-        const JSONselected = [];
+        const JSONselected: T.dragoSelectedtype[] = [];
         dragoJSON.map(d => {
             const check = checkAlreadySelected(d);
             if (d.name === name || !check) {
@@ -96,7 +96,7 @@ const Dragodindes = (props): React.ReactElement => {
     };
 
     const setDragoJSON = (array, name) => {
-        const JSONselected = [];
+        const JSONselected: T.dragoSelectedtype[] = [];
         array.map(d => {
             const check = checkAlreadySelected(d);
             if (d.name === name || check) {
@@ -274,12 +274,12 @@ const Dragodindes = (props): React.ReactElement => {
                             showedDragodindes.map((drago, index) => {
                                 return (
                                     <div
-                                        className={drago.selected ? 'my-drago-line-selected' : drago.last.status ? 'my-drago-line-last' : drago.used ? 'my-drago-line-used' : 'my-drago-line'}
+                                        className={drago.selected ? 'my-drago-line-selected' : drago.last?.status ? 'my-drago-line-last' : drago.used ? 'my-drago-line-used' : 'my-drago-line'}
                                         key={index}
                                     >
                                         <div className='my-dragodindes-name col-9'>
                                             <img src={'/assets/img/dragodindes/' + drago.name.toLowerCase().split(' ').join('-') + '.png'} alt='dd_icon' />
-                                            {drago.last.status ?
+                                            {drago.last?.status ?
                                                 <p>{drago.name}<span className='my-drago-fecond-message'> - Fécondée</span></p> : drago.used ?
                                                     <p>{drago.name}<span className='my-drago-used-message'> - Utilisée</span></p> :
                                                     <p>{drago.name}</p>}
@@ -308,7 +308,7 @@ const Dragodindes = (props): React.ReactElement => {
                                                             <FontAwesomeIcon icon='toggle-on' />
                                                         </span>
                                                     </Tooltip> : ''}
-                                            {(!selectedDrago.length || show) && !drago.last.status ?
+                                            {(!selectedDrago.length || show) && !drago.last?.status ?
                                                 <Tooltip
                                                     title='Définir comme la dernière dragodinde fécondée'
                                                     placement='top'
@@ -319,7 +319,7 @@ const Dragodindes = (props): React.ReactElement => {
                                                     >
                                                         <FontAwesomeIcon icon='heart' />
                                                     </span>
-                                                </Tooltip> : (!selectedDrago.length || show) && drago.last.status ?
+                                                </Tooltip> : (!selectedDrago.length || show) && drago.last?.status ?
                                                     <Tooltip
                                                         title='Retirer la fécondation'
                                                         placement='top'

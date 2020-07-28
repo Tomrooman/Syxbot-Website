@@ -45,7 +45,7 @@ const VoiceRecognition = () => {
     const getCommands = (event) => {
         const finalTranscript = _.find(event.results, { isFinal: true })[0].transcript;
         console.log('transcript : ', finalTranscript);
-        document.getElementById('final').innerHTML = finalTranscript;
+        document.getElementById('final')!.innerHTML = finalTranscript;
         const commands = finalTranscript.split(' ');
         console.log('Commandes : ', commands);
         if (commands[0] === 'stop' && commands[1] === 'listening') {
@@ -54,7 +54,7 @@ const VoiceRecognition = () => {
                 console.log('Stopped listening per command');
                 setListening(false);
                 const finalText = commands.join(' ');
-                document.getElementById('final').innerHTML = finalText;
+                document.getElementById('final')!.innerHTML = finalText;
             };
         }
     };

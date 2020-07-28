@@ -12,6 +12,8 @@
         "target": "es5",
         "jsx": "react",
         "strict": true,
-        "esModuleInterop": true
+        "declaration": false,
+        "esModuleInterop": true,
+        "skipLibCheck": true
     }
 }

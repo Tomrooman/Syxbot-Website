@@ -11,20 +11,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
-import * as T from './types';
+import * as T from '../../../../@types/dragodindes';
+
 
 library.add(faSync);
 
 const Fecondator = (props): React.ReactElement => {
     const [user] = useState(props.user || undefined);
-    const [dragodindes, setDragodindes] = useState(undefined);
-    const [showedDragodindes, setShowedDragodindes] = useState(undefined);
-    const [selectedDrago, setSelectedDrago] = useState(undefined);
+    const [dragodindes, setDragodindes] = useState([] as T.sortedDragoType[]);
+    const [showedDragodindes, setShowedDragodindes] = useState([] as T.sortedDragoType[]);
+    const [selectedDrago, setSelectedDrago] = useState({} as T.selectedDragoType);
     const [show, setShow] = useState(false);
     const [accouchDate, setAccouchDate] = useState(false);
-    const [finishTime, setFinishTime] = useState(undefined);
-    const [lateCountdown, setLateCountdown] = useState(undefined);
-    const [last, setLast] = useState(undefined);
+    const [finishTime, setFinishTime] = useState('');
+    const [lateCountdown, setLateCountdown] = useState('');
+    const [last, setLast] = useState({} as T.dragoType);
     const [wait, setWait] = useState(true);
     const [loaded, setLoaded] = useState(false);
     let interval: any = {};
@@ -115,7 +116,7 @@ const Fecondator = (props): React.ReactElement => {
     };
 
     const calculateTime = (now, ddFecond, sortedDragodindes): T.sortedDragoType[] => {
-        let setDrago = [];
+        let setDrago: T.sortedDragoType[] = [];
         const baseDate = ddFecond ? Date.parse(ddFecond.last.date) : now;
         const hoursLate = ddFecond ? Math.floor((now - baseDate) / (1000 * 60 * 60)) : 0;
         let secondDiff = ddFecond ? Math.floor((now - baseDate) / 1000) : 0;
@@ -177,12 +178,12 @@ const Fecondator = (props): React.ReactElement => {
 
     const makeDragodindesParams = (baseDate, ddFecond, sortedDragodindes, hoursDiff, minDiff, secondDiff): T.sortedDragoType[] => {
         let estimatedTime = 0;
-        let prevDrago: T.sortedDragoType = {};
+        let prevDrago: T.sortedDragoType = {} as T.sortedDragoType;
         let isEnded = false;
         sortedDragodindes.map((drago, index) => {
             let goodTime = '';
             let goodDate = '';
-            if ((prevDrago && prevDrago.end.time.substr(0, 10) === 'Maintenant') || isEnded) {
+            if ((prevDrago && prevDrago.end?.time.substr(0, 10) === 'Maintenant') || isEnded) {
                 estimatedTime += Number(prevDrago.duration) - drago.duration;
                 goodTime = estimatedTime === 0 ? 'Maintenant' : estimatedTime + 'H';
                 goodDate = dateFormat(Date.now() + (estimatedTime * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
@@ -216,14 +217,15 @@ const Fecondator = (props): React.ReactElement => {
         return sortedDragodindes;
     };
 
-    const setLateTimeRemaining = (hours, minutes, seconds) => {
+    const setLateTimeRemaining = (hours, minutes, seconds): string => {
         const goodMinutes = (minutes >= 0 && minutes < 10 ? '0' + minutes + 'M' : minutes + 'M');
         const goodSeconds = (seconds >= 0 && seconds < 10 ? '0' + seconds + 'S' : seconds + 'S');
         return hours > 0 ? hours + 'H' + goodMinutes + goodSeconds : goodMinutes + goodSeconds;
     };
 
-    const setTimeRemaining = (duration, hours, minutes, seconds) => {
+    const setTimeRemaining = (duration, hours, minutes, seconds): string => {
         let goodHours: string | number = duration - hours;
+        let returnedObj = '';
         goodHours = minutes > 0 || seconds > 0 ? goodHours - 1 : goodHours;
         minutes = seconds > 0 ? minutes - 1 : minutes;
         if (seconds === 60) {
@@ -235,20 +237,21 @@ const Fecondator = (props): React.ReactElement => {
         const stringMinutes = (minutes > 0 && minutes < 10 ? '0' + minutes + 'M' : minutes + 'M');
         const stringSeconds = (seconds > 0 && seconds < 10 ? '0' + seconds + 'S' : seconds + 'S');
         if (seconds !== 60 && minutes !== 60) {
-            return goodHours > 0 ? goodHours + 'H' + stringMinutes + stringSeconds : stringMinutes + stringSeconds;
+            returnedObj = goodHours > 0 ? goodHours + 'H' + stringMinutes + stringSeconds : stringMinutes + stringSeconds;
         }
         else if (seconds === 60 && minutes === 60) {
             goodHours = goodHours <= 0 ? '1H' : goodHours + 1;
-            return goodHours === '1H' ? goodHours : goodHours + 'H';
+            returnedObj = goodHours === '1H' ? goodHours : goodHours + 'H';
         }
         else if (seconds === 60 && minutes !== 60) {
-            return goodHours <= 0 ? stringMinutes + '00S' : goodHours + 'H' + stringMinutes + '00S';
+            returnedObj = goodHours <= 0 ? stringMinutes + '00S' : goodHours + 'H' + stringMinutes + '00S';
         }
+        return returnedObj;
     };
 
     const handleAutomateFecond = (index) => {
-        const used = [];
-        const localLast = [];
+        const used: T.dragoType[] = [];
+        const localLast: T.dragoType[] = [];
         dragodindes.map((drago, mapIndex) => {
             if (mapIndex < index) {
                 used.push(drago);
@@ -318,7 +321,7 @@ const Fecondator = (props): React.ReactElement => {
                             <p className='label'>Nom</p>
                             <p className='value'>{last.name}</p>
                             <p className='label'>Fécondation</p>
-                            <p className='value'>{dateFormat(last.last.date, 'dd/mm/yyyy HH:MM:ss')}</p>
+                            <p className='value'>{dateFormat(last.last?.date, 'dd/mm/yyyy HH:MM:ss')}</p>
                         </div>
                     </div> : ''}
                 {accouchDate || lateCountdown || finishTime ?
@@ -360,9 +363,9 @@ const Fecondator = (props): React.ReactElement => {
                                             <p> {drago.name}</p>
                                         </div>
                                         <div className='fecondator-time col-4'>
-                                            {drago.end.time.substr(0, 10) === 'Maintenant' ?
+                                            {drago.end?.time.substr(0, 10) === 'Maintenant' ?
                                                 <div className='fecondator-time-now'>
-                                                    {(showedDragodindes[index + 1] && showedDragodindes[index + 1].end.time.substr(0, 10) !== 'Maintenant') || (!showedDragodindes[index + 1]) ?
+                                                    {(showedDragodindes[index + 1] && showedDragodindes[index + 1].end?.time.substr(0, 10) !== 'Maintenant') || (!showedDragodindes[index + 1]) ?
                                                         <>
                                                             <p className='fecondator-automate-time col-10 text-center'>Maintenant</p>
                                                             <Tooltip
@@ -381,10 +384,10 @@ const Fecondator = (props): React.ReactElement => {
                                                 </div> :
                                                 <>
                                                     <div className='fecondator-time-duration'>
-                                                        <p>{drago.end.time}</p>
+                                                        <p>{drago.end?.time}</p>
                                                     </div>
                                                     <div className='fecondator-time-date'>
-                                                        <p>{drago.end.date}</p>
+                                                        <p>{drago.end?.date}</p>
                                                     </div>
                                                 </>}
                                         </div>

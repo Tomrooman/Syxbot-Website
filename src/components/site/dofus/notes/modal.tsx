@@ -104,7 +104,7 @@ const NotesModal = (props): React.ReactElement => {
         );
     }
     else {
-        return null;
+        return <></>;
     }
 };
 

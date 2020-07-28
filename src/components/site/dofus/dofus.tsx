@@ -11,7 +11,7 @@ import Config from './../../../../config.json';
 import './dofus.css';
 
 const Dofus = (props): React.ReactElement => {
-    const [content, setContent] = useState(undefined);
+    const [content, setContent] = useState(<></>);
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {

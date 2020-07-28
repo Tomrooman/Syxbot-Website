@@ -6,7 +6,7 @@ import Radio from '../radio/radio';
 import './scrollbar.css';
 
 const Router = (): React.ReactElement => {
-    const [page, setPage] = useState(undefined);
+    const [page, setPage] = useState(<></>);
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {

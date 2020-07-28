@@ -19,9 +19,9 @@ library.add(faBookOpen);
 library.add(faPlusCircle);
 
 const Site = (props) => {
-    const [randStr, setRandStr] = useState(undefined);
+    const [randStr, setRandStr] = useState('');
     const [user] = useState(props.cookies.get('syxbot', { path: '/' }) || undefined);
-    const [page, setPage] = useState(undefined);
+    const [page, setPage] = useState(<></>);
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {

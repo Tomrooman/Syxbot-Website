@@ -11,9 +11,9 @@ import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 library.add(faTimesCircle);
 
 const Contact = () => {
-    const [mail, setMail] = useState(undefined);
-    const [object, setObject] = useState(undefined);
-    const [message, setMessage] = useState(undefined);
+    const [mail, setMail] = useState('');
+    const [object, setObject] = useState('');
+    const [message, setMessage] = useState('');
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
