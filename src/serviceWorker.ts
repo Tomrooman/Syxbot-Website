@@ -12,6 +12,8 @@
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read https://bit.ly/CRA-PWA
 
+/* eslint-disable  @typescript-eslint/no-non-null-assertion */
+
 const isLocalhost = Boolean(
     window.location.hostname === 'localhost' ||
     // [::1] is the IPv6 localhost address.
@@ -22,10 +24,10 @@ const isLocalhost = Boolean(
     )
 );
 
-export function register(config) {
+export const register = (config: { onUpdate: FunctionConstructor, onSucces: FunctionConstructor }): void => {
     if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
         // The URL constructor is available in all browsers that support SW.
-        const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
+        const publicUrl = new URL(process.env.PUBLIC_URL!, window.location.href);
         if (publicUrl.origin !== window.location.origin) {
             // Our service worker won't work if PUBLIC_URL is on a different origin
             // from what our page is served on. This might happen if a CDN is used to
@@ -54,9 +56,9 @@ export function register(config) {
             }
         });
     }
-}
+};
 
-function registerValidSW(swUrl, config) {
+const registerValidSW = (swUrl: string, config: any) => {
     navigator.serviceWorker
         .register(swUrl)
         .then(registration => {
@@ -98,9 +100,9 @@ function registerValidSW(swUrl, config) {
         .catch(error => {
             console.error('Error during service worker registration:', error);
         });
-}
+};
 
-function checkValidServiceWorker(swUrl, config) {
+const checkValidServiceWorker = (swUrl: string, config: any) => {
     // Check if the service worker can be found. If it can't reload the page.
     fetch(swUrl)
         .then(response => {
@@ -126,12 +128,12 @@ function checkValidServiceWorker(swUrl, config) {
                 'No internet connection found. App is running in offline mode.'
             );
         });
-}
+};
 
-export function unregister() {
+export const unregister = (): void => {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.ready.then(registration => {
             registration.unregister();
         });
     }
-}
+};

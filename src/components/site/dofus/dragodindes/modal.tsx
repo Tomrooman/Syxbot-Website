@@ -1,11 +1,23 @@
 'use strict';
 
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
+import { dragoSelectedtype, dragoType } from '../../../../@types/dragodindes';
 
-const DragodindesModal = (props): React.ReactElement => {
+interface propsType {
+    dragoJSON: dragoSelectedtype[];
+    dragodindes: dragoType[];
+    handleAddModalDrago(name: string, duration: number, generation: number, selected: boolean): void;
+    handleCallAPI(url: string): void;
+    handleChangeModal(e: ChangeEvent): void;
+    handleClose(): void;
+    show: boolean;
+    title: string;
+}
+
+const DragodindesModal = (props: propsType): React.ReactElement => {
     if (props.show && props.title === 'Ajouter des dragodindes') {
         return (
             <div>
@@ -30,11 +42,12 @@ const DragodindesModal = (props): React.ReactElement => {
                             {props.dragoJSON.length ?
                                 props.dragoJSON.map((drago, index) => {
                                     if (!props.dragodindes.filter(d => d.name === drago.name)[0]) {
+                                        console.log('drago selected : ', drago);
                                         return (
                                             <div
                                                 className={drago.selected ? 'drago-line-selected' : 'drago-line'}
                                                 key={index}
-                                                onClick={() => props.handleAddModalDrago(drago.name, drago.duration, drago.generation, drago.selected)}
+                                                onClick={() => props.handleAddModalDrago(drago.name, drago.duration, drago.generation, drago.selected || false)}
                                             >
                                                 {drago.selected ?
                                                     <span>
@@ -81,8 +94,7 @@ const DragodindesModal = (props): React.ReactElement => {
                 </Modal>
             </div>
         );
-    }
-    else if (props.show && props.title === 'Définir comme fécondée ?') {
+    } else if (props.show && props.title === 'Définir comme fécondée ?') {
         return (
             <div>
                 <Modal
@@ -120,8 +132,7 @@ const DragodindesModal = (props): React.ReactElement => {
                 </Modal>
             </div>
         );
-    }
-    else if (props.show && props.title === 'Retirer la fécondation ?') {
+    } else if (props.show && props.title === 'Retirer la fécondation ?') {
         return (
             <div>
                 <Modal
@@ -154,8 +165,7 @@ const DragodindesModal = (props): React.ReactElement => {
                 </Modal>
             </div>
         );
-    }
-    else if (props.show && props.title === 'Définir comme déjà utilisée ?') {
+    } else if (props.show && props.title === 'Définir comme déjà utilisée ?') {
         return (
             <div>
                 <Modal
@@ -188,8 +198,7 @@ const DragodindesModal = (props): React.ReactElement => {
                 </Modal>
             </div>
         );
-    }
-    else if (props.show && props.title === 'Définir comme disponible ?') {
+    } else if (props.show && props.title === 'Définir comme disponible ?') {
         return (
             <div>
                 <Modal
@@ -222,8 +231,7 @@ const DragodindesModal = (props): React.ReactElement => {
                 </Modal>
             </div>
         );
-    }
-    else {
+    } else {
         return (<></>);
     }
 };

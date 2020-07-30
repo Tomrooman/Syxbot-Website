@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import Axios from 'axios';
 import _ from 'lodash';
 import dragoJSON from './../../../../../assets/json/dragodindes.json';
@@ -11,6 +11,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHeart, faHeartBroken, faToggleOff, faToggleOn, faCheck, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import * as T from '../../../../@types/dragodindes';
+import { userType } from '../../../../@types/user';
 
 library.add(faHeart);
 library.add(faHeartBroken);
@@ -19,18 +20,22 @@ library.add(faToggleOn);
 library.add(faCheck);
 library.add(faTimesCircle);
 
-const Dragodindes = (props): React.ReactElement => {
+interface propsType {
+    user: userType;
+}
+
+const Dragodindes = (props: propsType): React.ReactElement => {
     const [user] = useState(props.user || undefined);
     const [dragodindes, setDragodindes] = useState([] as T.sortedDragoType[]);
     const [showedDragodindes, setShowedDragodindes] = useState([] as T.sortedDragoType[]);
-    const [selectedDrago, setSelectedDrago] = useState({} as T.localDragodindesType[]);
+    const [selectedDrago, setSelectedDrago] = useState([] as T.localDragodindesType[]);
     const [wait, setWait] = useState(true);
     const [loaded, setLoaded] = useState(false);
     const [show, setShow] = useState(false);
     const [action, setAction] = useState('default');
     const [title, setTitle] = useState('');
     const [input, setInput] = useState('');
-    const [dragoJSONConst, setDragoJSONConst] = useState(dragoJSON.sort((a, b) => a.name.localeCompare(b.name)));
+    const [dragoJSONConst, setDragoJSONConst] = useState(dragoJSON.sort((a, b) => a.name.localeCompare(b.name)) as T.dragoSelectedtype[]);
 
     useEffect(() => {
         if (wait && !loaded) {
@@ -38,9 +43,10 @@ const Dragodindes = (props): React.ReactElement => {
                 const res = await Axios.post('/api/dofus/dragodindes', {
                     userId: user.id
                 });
+                console.log('res data mes dragodindes : ', res.data);
                 if (res.data && res.data.length) {
-                    setDragodindes(res.data.sort((a, b) => a.name.localeCompare(b.name)));
-                    setShowedDragodindes(res.data.sort((a, b) => a.name.localeCompare(b.name)));
+                    setDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
+                    setShowedDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
                 }
                 setWait(false);
             };
@@ -49,21 +55,20 @@ const Dragodindes = (props): React.ReactElement => {
         }
     });
 
-    const updateDragodindesAPI = async (url, paramsObj) => {
+    const updateDragodindesAPI = async (url: string, paramsObj: { userId: string, dragodindes: T.localDragodindesType[] }) => {
         const res = await Axios.post(url, paramsObj);
-        setDragodindes(res.data.sort((a, b) => a.name.localeCompare(b.name)));
-        setShowedDragodindes(res.data.sort((a, b) => a.name.localeCompare(b.name)));
+        setDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
+        setShowedDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
         setAction('default');
     };
 
-    const handleAddModalDrago = (name, duration, generation, selected) => {
+    const handleAddModalDrago = (name: string, duration: number, generation: number, selected: boolean) => {
         let localDragodindes: T.localDragodindesType[] = selectedDrago;
         let JSONselected: T.dragoSelectedtype[] = [];
         if (!selected) {
             JSONselected = setDragoJSON(dragoJSON, name);
             localDragodindes.push({ name: name, duration: duration, generation: generation });
-        }
-        else {
+        } else {
             localDragodindes = removeDragodindeFromArray(name, localDragodindes);
             JSONselected = setRemoveDragoJSON(name);
         }
@@ -71,7 +76,7 @@ const Dragodindes = (props): React.ReactElement => {
         setDragoJSONConst(input ? JSONselected.filter(d => d.name.toLowerCase().indexOf(input) !== -1).sort((a, b) => a.name.localeCompare(b.name)) : JSONselected.sort((a, b) => a.name.localeCompare(b.name)));
     };
 
-    const removeDragodindeFromArray = (name, localDragodindes): T.localDragodindesType[] => {
+    const removeDragodindeFromArray = (name: string, localDragodindes: T.localDragodindesType[]): T.localDragodindesType[] => {
         const arrayDrago = localDragodindes;
         localDragodindes.map((drago, index) => {
             if (drago.name === name) {
@@ -81,35 +86,33 @@ const Dragodindes = (props): React.ReactElement => {
         return _.compact(arrayDrago);
     };
 
-    const setRemoveDragoJSON = (name) => {
+    const setRemoveDragoJSON = (name: string) => {
         const JSONselected: T.dragoSelectedtype[] = [];
         dragoJSON.map(d => {
             const check = checkAlreadySelected(d);
             if (d.name === name || !check) {
                 JSONselected.push(d);
-            }
-            else {
+            } else {
                 JSONselected.push({ ...d, selected: true });
             }
         });
         return JSONselected;
     };
 
-    const setDragoJSON = (array, name) => {
+    const setDragoJSON = (array: T.dragoSelectedtype[], name: string) => {
         const JSONselected: T.dragoSelectedtype[] = [];
         array.map(d => {
             const check = checkAlreadySelected(d);
             if (d.name === name || check) {
                 JSONselected.push({ ...d, selected: true });
-            }
-            else {
+            } else {
                 JSONselected.push(d);
             }
         });
         return JSONselected;
     };
 
-    const checkAlreadySelected = (dragodinde) => {
+    const checkAlreadySelected = (dragodinde: T.dragoSelectedtype) => {
         let check = false;
         selectedDrago.map(drago => {
             if (drago.name === dragodinde.name) {
@@ -119,18 +122,18 @@ const Dragodindes = (props): React.ReactElement => {
         return check;
     };
 
-    const handleChange = (e) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const filtered = dragodindes.filter(d => d.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1);
         setShowedDragodindes(filtered.sort((a, b) => a.name.localeCompare(b.name)));
     };
 
-    const handleChangeModal = (e) => {
+    const handleChangeModal = (e: ChangeEvent<HTMLInputElement>) => {
         const filtered = dragoJSON.filter(d => d.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1);
-        setDragoJSONConst(setDragoJSON(filtered, false).sort((a, b) => a.name.localeCompare(b.name)));
-        setInput(e.target.value === '' ? false : e.target.value.toLowerCase());
+        setDragoJSONConst(setDragoJSON(filtered, '').sort((a, b) => a.name.localeCompare(b.name)));
+        setInput(e.target.value === '' ? '' : e.target.value.toLowerCase());
     };
 
-    const handleCallAPI = (url) => {
+    const handleCallAPI = (url: string) => {
         if (selectedDrago.length) {
             updateDragodindesAPI(url, {
                 userId: user.id,
@@ -140,7 +143,7 @@ const Dragodindes = (props): React.ReactElement => {
         }
     };
 
-    const handleSelectMyDragodindes = (name, duration, generation, selected) => {
+    const handleSelectMyDragodindes = (name: string, duration: number, generation: number, selected: boolean | undefined) => {
         const _showedDragodindes = showedDragodindes;
         let _selectedDrago = selectedDrago;
         _showedDragodindes.map(drago => {
@@ -155,8 +158,7 @@ const Dragodindes = (props): React.ReactElement => {
                     _selectedDrago = _.compact(_selectedDrago);
                 }
             });
-        }
-        else {
+        } else {
             _selectedDrago.push({ name: name, duration: duration, generation: generation });
             _selectedDrago = _.compact(_selectedDrago);
         }
@@ -165,26 +167,24 @@ const Dragodindes = (props): React.ReactElement => {
         setAction(_selectedDrago.length === 0 ? 'default' : 'remove');
     };
 
-    const handleUnusedDragodindes = (drago) => {
+    const handleUnusedDragodindes = (drago: T.sortedDragoType) => {
         const selected = selectedDrago;
         selected.push({ name: drago.name });
         setSelectedDrago(selected);
         if (!drago.used) {
             showModal('unused');
-        }
-        else {
+        } else {
             showModal('remove-unused');
         }
     };
 
-    const handleLastDragodinde = (drago) => {
+    const handleLastDragodinde = (drago: T.sortedDragoType) => {
         const selected = selectedDrago;
         selected.push({ name: drago.name });
         setSelectedDrago(selected);
         if (!drago.last.status) {
             showModal('last');
-        }
-        else {
+        } else {
             showModal('remove-last');
         }
     };
@@ -197,21 +197,17 @@ const Dragodindes = (props): React.ReactElement => {
         setInput('');
     };
 
-    const showModal = (choice) => {
+    const showModal = (choice: string) => {
         let goodTitle = '';
         if (choice === 'new') {
             goodTitle = 'Ajouter des dragodindes';
-        }
-        else if (choice === 'last') {
+        } else if (choice === 'last') {
             goodTitle = 'Définir comme fécondée ?';
-        }
-        else if (choice === 'remove-last') {
+        } else if (choice === 'remove-last') {
             goodTitle = 'Retirer la fécondation ?';
-        }
-        else if (choice === 'unused') {
+        } else if (choice === 'unused') {
             goodTitle = 'Définir comme déjà utilisée ?';
-        }
-        else if (choice === 'remove-unused') {
+        } else if (choice === 'remove-unused') {
             goodTitle = 'Définir comme disponible ?';
         }
         setShow(true);
@@ -232,7 +228,7 @@ const Dragodindes = (props): React.ReactElement => {
             />
             <h2 className='craft-title text-center'>Mes dragodindes</h2>
             <div className='notes-btn col-sm-12 text-center'>
-                {!selectedDrago ?
+                {!selectedDrago.length ?
                     <button
                         className='my-dragodindes-add-btn'
                         onClick={() => showModal('new')}

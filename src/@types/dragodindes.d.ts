@@ -3,7 +3,7 @@ export interface dragoType {
     duration: number;
     generation: number;
     used: boolean;
-    last?: {
+    last: {
         status: boolean;
         date?: string;
     };
@@ -21,21 +21,32 @@ export interface sortedDragoType {
     };
     end: {
         time: string;
-        date: string;
+        date: number;
     };
 };
 
-export interface localDragodindesType {
+export interface ddFecondType {
     name: string;
-    duration?: string;
-    generation?: number;
-    used?: boolean;
+    duration: number;
+    generation: number;
+    used: boolean;
+    last: {
+        status: boolean;
+        date: string;
+    };
 }
 
-export interface selectedDragoType {
+export interface localDragodindesType {
+    name: string;
+    duration?: number;
+    generation?: number;
+    used?: boolean;
+};
+
+export interface usedAndLastArrayDragoType {
     used: dragoType[];
     last: dragoType[];
-}
+};
 
 export type dragoSelectedtype = {
     name: string,

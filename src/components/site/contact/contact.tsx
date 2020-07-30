@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import $ from 'jquery';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TextField from '@material-ui/core/TextField';
@@ -67,7 +67,7 @@ const Contact = () => {
         $('.alert')[0].style.display = '';
     };
 
-    const handleOnChange = (type, e) => {
+    const handleOnChange = (type: string, e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (type === 'mail') {
             setMail(e.target.value);
         }
@@ -107,7 +107,7 @@ const Contact = () => {
                             label='Votre adresse mail'
                             placeholder='Exemple@hotmail.com'
                             variant='outlined'
-                            onChange={(e) => handleOnChange('mail', e)}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => handleOnChange('mail', e)}
                         />
                     </div>
                     <div className='contact-object'>
@@ -116,7 +116,7 @@ const Contact = () => {
                             id='required-object'
                             label='Objet'
                             variant='outlined'
-                            onChange={(e) => handleOnChange('object', e)}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => handleOnChange('object', e)}
                         />
                     </div>
                     <div className='contact-message'>
@@ -125,7 +125,7 @@ const Contact = () => {
                             rows={4}
                             cols={30}
                             id='message'
-                            onChange={(e) => handleOnChange('message', e)}
+                            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleOnChange('message', e)}
                         />
                     </div>
                     <div className='contact-submit-div'>

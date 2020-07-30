@@ -1,24 +1,30 @@
 'use strict';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import Axios from 'axios';
 import _ from 'lodash';
 import $ from 'jquery';
 import NotesModal from './modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PropTypes, { string } from 'prop-types';
+import PropTypes from 'prop-types';
+import { userType } from '../../../../@types/user';
+import { noteType, createNoteType, modifyNoteType } from '../../../../@types/notes';
 
-const Notes = (props): React.ReactElement => {
-    const [showInput, setShowInput] = useState(undefined);
-    const [showContent, setShowContent] = useState(undefined);
-    const [removeNote, setRemoveNote] = useState({ title: string, content: string });
+interface propsType {
+    user: userType;
+}
+
+const Notes = (props: propsType): React.ReactElement => {
+    const [showInput, setShowInput] = useState('');
+    const [showContent, setShowContent] = useState('');
+    const [removeNote, setRemoveNote] = useState({} as noteType);
     const [wait, setWait] = useState(true);
-    const [input, setInput] = useState(undefined);
-    const [notes, setNotes] = useState([{ title: string, content: string }]);
+    const [input, setInput] = useState('');
+    const [notes, setNotes] = useState([] as noteType[]);
     const [show, setShow] = useState(false);
     const [title, setTitle] = useState('');
-    const [noteTitle, setNoteTitle] = useState(undefined);
-    const [content, setContent] = useState(undefined);
+    const [noteTitle, setNoteTitle] = useState('');
+    const [content, setContent] = useState('');
     const [user] = useState(props.user || undefined);
     const [loaded, setLoaded] = useState(false);
 
@@ -41,7 +47,7 @@ const Notes = (props): React.ReactElement => {
         setTitle('');
     };
 
-    const handleClick = (newTitle, oldContent) => {
+    const handleClick = (newTitle: string, oldContent: string) => {
         if (input !== content) {
             updateNoteAPI('/api/dofus/notes/update', {
                 userId: user.id,
@@ -52,24 +58,23 @@ const Notes = (props): React.ReactElement => {
         }
     };
 
-    const updateNoteAPI = async (url, paramsObj) => {
+    const updateNoteAPI = async (url: string, paramsObj: createNoteType | modifyNoteType) => {
         const res = await Axios.post(url, paramsObj);
         if (res.data) {
             setNotes(_.orderBy(res.data, 'title', 'asc'));
         }
-        setShowInput(undefined);
-        setShowContent(undefined);
+        setShowInput('');
+        setShowContent('');
     };
 
-    const handleChange = (e) => {
+    const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
         setInput(e.target.value);
     };
 
-    const handleChangeModal = (e) => {
+    const handleChangeModal = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.tagName === 'INPUT') {
             setNoteTitle(e.target.value);
-        }
-        else {
+        } else {
             setContent(e.target.value);
         }
     };
@@ -94,24 +99,23 @@ const Notes = (props): React.ReactElement => {
         handleClose();
     };
 
-    const handleModifyInfos = (e, newTitle, newContent) => {
+    const handleModifyInfos = (e: any, newTitle: string, newContent: string) => {
         if (e.target.tagName === 'svg' || e.target.tagName === 'SPAN' || e.target.tagName === 'path') {
             showModal('remove', { title: newTitle, content: newContent });
-        }
-        else if (e.target.type !== 'textarea') {
+        } else if (e.target.type !== 'textarea') {
             setInput(newContent);
-            setShowInput(showInput === newTitle ? undefined : newTitle);
-            setShowContent(showContent === newContent ? undefined : newContent);
+            setShowInput(showInput === newTitle ? '' : newTitle);
+            setShowContent(showContent === newContent ? '' : newContent);
             if ($('textarea')[0]) {
                 $('textarea')[0].setAttribute('value', String(input));
             }
         }
     };
 
-    const showModal = (choice, noteObj = { title: string, content: string }) => {
+    const showModal = (choice: string, noteObj = {} as noteType) => {
         setShow(true);
-        setNoteTitle(undefined);
-        setContent(undefined);
+        setNoteTitle('');
+        setContent('');
         setRemoveNote(noteObj);
         setTitle(choice === 'new' ? 'Créer une note' : 'Supprimer la note');
     };
@@ -139,7 +143,7 @@ const Notes = (props): React.ReactElement => {
                         return (
                             <div
                                 className='one_infos text-center col-sm-12 col-md-5 col-lg-5'
-                                onClick={(e) => handleModifyInfos(e, note.title, note.content)}
+                                onClick={(e: any) => handleModifyInfos(e, note.title, note.content)}
                                 key={index}
                             >
                                 <h4>

@@ -1,9 +1,8 @@
 'use strict';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import $ from 'jquery';
-import { instanceOf } from 'prop-types';
-import { withCookies, Cookies } from 'react-cookie';
+import { useCookies } from 'react-cookie';
 import Radios from './../../../assets/json/radios.json';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -14,18 +13,19 @@ library.add(faCaretUp);
 library.add(faPlay);
 library.add(faPause);
 
-const Radio = (props) => {
+const Radio = (): React.ReactElement => {
+    const [cookies, setCookie] = useCookies(['syxbot_radio']);
     const [dropdownTitle, setDropdownTitle] = useState('Radios disponibles');
-    const [index, setIndex] = useState('');
+    const [index, setIndex] = useState(99);
     const [radioName, setRadioName] = useState('');
-    const [radio, setRadio] = useState(props.cookies.get('syxbot_radio', { path: '/' }) || false);
+    const [radio, setRadio] = useState(cookies.syxbot_radio || false);
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
         if (!loaded) {
             $('.radio_png').css('display', 'none');
         }
-        if (radio && radio.index && !loaded) {
+        if (radio && radio.index !== 99 && !loaded) {
             const playArg = radio.play;
             const { imagePath, radioUrl } = getRadio(radio.index);
             setLoaded(true);
@@ -34,20 +34,18 @@ const Radio = (props) => {
                 $('audio')[0].removeAttribute('autoPlay');
                 setDropdownTitle(radio.name.indexOf('&amp;') !== -1 ? radio.name.split('&amp;').join(' & ') : radio.name);
             }
-        }
-        else if (radio && radio.volume && !loaded) {
-            $('audio')[0].setAttribute('volume', String(radio.volume));
+        } else if (radio && radio.volume && !loaded) {
+            ($('audio')[0] as HTMLAudioElement).volume = radio.volume;
             $('.slider')[0].setAttribute('value', String(radio.volume * 100));
             setLoaded(true);
-        }
-        else if (!loaded) {
-            $('audio')[0].setAttribute('volume', String(0.2));
+        } else if (!loaded) {
+            ($('audio')[0] as HTMLAudioElement).volume = 0.2;
             $('.slider')[0].setAttribute('value', String(20));
             setLoaded(true);
         }
     });
 
-    const getRadio = (_index) => {
+    const getRadio = (_index: number) => {
         const returnedObj = {
             imagePath: '',
             radioUrl: ''
@@ -61,16 +59,16 @@ const Radio = (props) => {
         return returnedObj;
     };
 
-    const handleClick = (image, _index, _radioName, url) => {
+    const handleClick = (image: string, _index: number, _radioName: string, url: string) => {
         const _audio = $('audio')[0] as HTMLMediaElement;
         setRadioSourceAndInfos(image, url, _index, _radioName, _audio.volume);
         setRadioCookie(true, _index, _audio.volume, _radioName);
         _audio.play();
     };
 
-    const setRadioSourceAndInfos = (imagePath, radioUrl, _index, _radioName, volume) => {
+    const setRadioSourceAndInfos = (imagePath: string, radioUrl: string, _index: number, _radioName: string, volume: number) => {
         $('.radio_png').css('display', 'initial');
-        $('audio')[0].setAttribute('volume', volume);
+        ($('audio')[0] as HTMLAudioElement).volume = volume;
         $('.slider')[0].setAttribute('value', String(volume * 100));
         const radioImg = document.createElement('img');
         radioImg.src = imagePath;
@@ -82,27 +80,26 @@ const Radio = (props) => {
         setRadioName(_radioName);
     };
 
-    const handleVolumeChange = (e) => {
+    const handleVolumeChange = (e: ChangeEvent<HTMLInputElement>) => {
         const _audio = $('audio')[0] as HTMLMediaElement;
         const _radioName = radioName.indexOf('&amp;') !== -1 ? radioName.split('&amp;').join(' & ') : radioName;
-        $('audio')[0].setAttribute('volume', String(parseInt(e.target.value, 10) / 100));
+        ($('audio')[0] as HTMLAudioElement).volume = parseInt(e.target.value, 10) / 100;
         if (_audio.paused) {
-            setRadioCookie(false, index, $('audio')[0].getAttribute('volume'), _radioName);
-        }
-        else {
-            setRadioCookie(true, index, $('audio')[0].getAttribute('volume'), _radioName);
+            setRadioCookie(false, index, ($('audio')[0] as HTMLAudioElement).volume, _radioName);
+        } else {
+            setRadioCookie(true, index, ($('audio')[0] as HTMLAudioElement).volume, _radioName);
         }
     };
 
     const handlePause = () => {
         const _radioName = radioName.indexOf('&amp;') !== -1 ? radioName.split('&amp;').join(' & ') : radioName;
-        setRadioCookie(false, index, $('audio')[0].getAttribute('volume'), _radioName);
+        setRadioCookie(false, index, ($('audio')[0] as HTMLAudioElement).volume, _radioName);
     };
 
     const handlePlay = () => {
         const _radioName = radioName.indexOf('&amp;') !== -1 ? radioName.split('&amp;').join(' & ') : radioName;
         setDropdownTitle(_radioName);
-        setRadioCookie(true, index, $('audio')[0].getAttribute('volume'), _radioName);
+        setRadioCookie(true, index, ($('audio')[0] as HTMLAudioElement).volume, _radioName);
     };
 
     const handleTogglePlay = () => {
@@ -110,33 +107,29 @@ const Radio = (props) => {
             const _audio = $('audio')[0] as HTMLMediaElement;
             if (_audio.paused) {
                 _audio.play();
-            }
-            else {
+            } else {
                 _audio.pause();
             }
         }
     };
 
-    const setRadioCookie = (play, _index, volume, name) => {
-        const radioCookie = props.cookies.get('syxbot_radio', { path: '/' });
-        if (!radioCookie || (radioCookie && (radioCookie.play !== play || radioCookie.index !== _index || radioCookie.volume !== volume || radioCookie.name !== name))) {
+    const setRadioCookie = (play: boolean, _index: number, volume: number, name: string) => {
+        if (!radio || (radio && (radio.play !== play || radio.index !== _index || radio.volume !== volume || radio.name !== name))) {
             const oneDay = 1000 * 60 * 60 * 24;
             const expireDate = new Date(Date.now() + (oneDay * 10));
-            props.cookies.set('syxbot_radio', {
+            const cookieData = {
                 play: play,
                 index: index,
                 volume: volume,
                 name: name
-            }, {
+            };
+            setCookie('syxbot_radio', cookieData, {
                 path: '/',
-                expires: expireDate
+                expires: expireDate,
+                secure: true,
+                sameSite: true
             });
-            setRadio({
-                play: play,
-                index: index,
-                volume: volume,
-                name: name
-            });
+            setRadio(cookieData);
         }
     };
 
@@ -145,8 +138,7 @@ const Radio = (props) => {
             $('.radio_player').css('opacity', 0);
             $('.radio_player').css('transform', 'translateY(-50px)');
             $('.radio_player').css('visibility', 'hidden');
-        }
-        else {
+        } else {
             $('.radio_player').css('opacity', 1);
             $('.radio_player').css('transform', 'translateY(0px)');
             $('.radio_player').css('visibility', 'visible');
@@ -224,8 +216,4 @@ const Radio = (props) => {
     );
 };
 
-Radio.propTypes = {
-    cookies: instanceOf(Cookies).isRequired
-};
-
-export default withCookies(Radio);
+export default Radio;

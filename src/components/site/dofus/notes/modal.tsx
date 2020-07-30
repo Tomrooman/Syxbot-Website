@@ -1,10 +1,21 @@
 'use strict';
 
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import PropTypes from 'prop-types';
+import { noteType } from '../../../../@types/notes';
 
-const NotesModal = (props): React.ReactElement => {
+interface propsType {
+    handleChangeModal(e: ChangeEvent): void;
+    handleClose(): void;
+    handleCreateNote(): void;
+    handleRemoveNote(): void;
+    removeNote: noteType;
+    show: boolean;
+    title: string;
+}
+
+const NotesModal = (props: propsType): React.ReactElement => {
     if (props.show && props.title === 'Créer une note') {
         return (
             <div>
@@ -53,8 +64,7 @@ const NotesModal = (props): React.ReactElement => {
                 </Modal>
             </div>
         );
-    }
-    else if (props.show && props.title === 'Supprimer la note') {
+    } else if (props.show && props.title === 'Supprimer la note') {
         return (
             <div>
                 <Modal
@@ -102,8 +112,7 @@ const NotesModal = (props): React.ReactElement => {
                 </Modal>
             </div>
         );
-    }
-    else {
+    } else {
         return <></>;
     }
 };

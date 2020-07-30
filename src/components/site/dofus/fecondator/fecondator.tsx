@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import Axios from 'axios';
 import _ from 'lodash';
 import dateFormat from 'dateformat';
@@ -12,20 +12,25 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import * as T from '../../../../@types/dragodindes';
+import { userType } from '../../../../@types/user';
 
 
 library.add(faSync);
 
-const Fecondator = (props): React.ReactElement => {
+interface propsType {
+    user: userType;
+}
+
+const Fecondator = (props: propsType): React.ReactElement => {
     const [user] = useState(props.user || undefined);
     const [dragodindes, setDragodindes] = useState([] as T.sortedDragoType[]);
     const [showedDragodindes, setShowedDragodindes] = useState([] as T.sortedDragoType[]);
-    const [selectedDrago, setSelectedDrago] = useState({} as T.selectedDragoType);
+    const [selectedDrago, setSelectedDrago] = useState({} as T.usedAndLastArrayDragoType);
     const [show, setShow] = useState(false);
-    const [accouchDate, setAccouchDate] = useState(false);
+    const [accouchDate, setAccouchDate] = useState('');
     const [finishTime, setFinishTime] = useState('');
     const [lateCountdown, setLateCountdown] = useState('');
-    const [last, setLast] = useState({} as T.dragoType);
+    const [last, setLast] = useState({} as T.ddFecondType);
     const [wait, setWait] = useState(true);
     const [loaded, setLoaded] = useState(false);
     let interval: any = {};
@@ -38,16 +43,13 @@ const Fecondator = (props): React.ReactElement => {
     });
 
     const getDataAndSetConst = async () => {
-        const res = await Axios.post('/api/dofus/dragodindes', {
+        const res = await Axios.post('/api/dofus/dragodindes/fecondator', {
             userId: user.id
         });
-        if (res.data && res.data.length) {
+        if (res.data && res.data.dragodindes) {
+            const sortedDragodindes = res.data.dragodindes;
             const now = Date.now();
-            let ddFecond = res.data.filter(d => d.last.status);
-            ddFecond = ddFecond && ddFecond[0] ? ddFecond[0] : false;
-            const filteredDrago = res.data.filter(d => !d.last.status && !d.used);
-            const dragoArray: T.dragoType[] = filteredDrago.length ? _.reverse(_.sortBy(filteredDrago, 'duration', 'asc')) : [];
-            const sortedDragodindes: T.sortedDragoType[] = calculateTime(now, ddFecond, dragoArray);
+            const ddFecond = res.data.ddFecond || false;
             setDragodindes(sortedDragodindes);
             setShowedDragodindes(sortedDragodindes);
             const newAccouchDate = getAccouchDate(now, ddFecond, sortedDragodindes);
@@ -55,39 +57,38 @@ const Fecondator = (props): React.ReactElement => {
             if (ddFecond) {
                 setLast(ddFecond);
             }
-            countdown(sortedDragodindes);
+            countdown(Date.now(), ddFecond, sortedDragodindes);
             countDownInterval(ddFecond, sortedDragodindes);
             setWait(false);
-        }
-        else if (wait) {
+        } else if (wait) {
             setWait(false);
         }
     };
 
-    const countDownInterval = (ddFecond, sortedDragodindes) => {
+    const countDownInterval = (ddFecond: T.ddFecondType, sortedDragodindes: T.sortedDragoType[]) => {
         if (ddFecond && user.countdown) {
             interval = setInterval(() => {
                 if (user.countdown && (sortedDragodindes || ddFecond)) {
-                    countdown(calculateTime(Date.now(), ddFecond, sortedDragodindes));
+                    countdown(Date.now(), ddFecond, sortedDragodindes);
+                    calculateFinishAndLateTime(Date.now(), ddFecond, sortedDragodindes);
                 }
             }, 1000);
         }
     };
 
-    const countdown = (timedDragodindes) => {
+    const countdown = (now: number, ddFecond: T.ddFecondType, sortedDragodindes: T.sortedDragoType[]) => {
         let ended = false;
         if ($('.fecondator-line').length) {
-            $('.fecondator-line').map((index, line) => {
+            $('.fecondator-line').map((_index, line) => {
                 const fecondTimeDiv = $(line.children[1])[0].children;
                 if (fecondTimeDiv.length === 2) {
                     const dragoName = $(line.children[0])[0].children[1].innerHTML.trim();
                     const countdownContent = fecondTimeDiv[0].children[0];
-                    const findDrago = _.find(timedDragodindes, { name: dragoName });
-                    if (countdownContent.innerHTML.substr(0, 10) !== 'Maintenant') {
-                        if (findDrago.end.time.substr(0, 10) !== 'Maintenant') {
-                            countdownContent.innerHTML = findDrago.end.time;
-                        }
-                        else {
+                    const findDrago: T.sortedDragoType = _.find(sortedDragodindes, { name: dragoName }) || {} as T.sortedDragoType;
+                    if (countdownContent.innerHTML.substr(0, 10) !== 'Maintenant' && ddFecond) {
+                        const timeRemaining = setCountdownTime(now, findDrago);
+                        countdownContent.innerHTML = timeRemaining;
+                        if (timeRemaining === 'Maintenant') {
                             // Dragodindes prête(s)
                             ended = true;
                         }
@@ -101,43 +102,58 @@ const Fecondator = (props): React.ReactElement => {
         }
     };
 
-    const getAccouchDate = (now, ddFecond, sortedDragodindes) => {
+    const setCountdownTime = (now: number, drago: T.sortedDragoType) => {
+        const timeDiff = getTimeDif(Number(drago.end.date), now);
+        if (timeDiff.hoursLate <= 0 && timeDiff.minDiff <= 0 && timeDiff.secondDiff <= 0) {
+            return 'Maintenant';
+        }
+        return setLateTimeRemaining(timeDiff.hoursLate, timeDiff.minDiff, timeDiff.secondDiff);
+    };
+
+    const getAccouchDate = (now: number, ddFecond: T.ddFecondType | false, sortedDragodindes: T.sortedDragoType[]) => {
         let date = sortedDragodindes.length ? dateFormat(now + (sortedDragodindes[0].duration * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss') : false;
         if (ddFecond) {
             const hoursDiff = Math.floor((now - Date.parse(ddFecond.last.date)) / (1000 * 60 * 60));
             if (sortedDragodindes.length && hoursDiff >= ddFecond.duration - sortedDragodindes[0].duration) {
                 date = dateFormat(Date.now() + (sortedDragodindes[0].duration * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
-            }
-            else {
+            } else {
                 date = dateFormat(Date.parse(ddFecond.last.date) + (ddFecond.duration * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
             }
         }
         return date;
     };
 
-    const calculateTime = (now, ddFecond, sortedDragodindes): T.sortedDragoType[] => {
-        let setDrago: T.sortedDragoType[] = [];
-        const baseDate = ddFecond ? Date.parse(ddFecond.last.date) : now;
-        const hoursLate = ddFecond ? Math.floor((now - baseDate) / (1000 * 60 * 60)) : 0;
-        let secondDiff = ddFecond ? Math.floor((now - baseDate) / 1000) : 0;
-        secondDiff = ddFecond ? secondDiff - Math.floor(secondDiff / 60) * 60 : 0;
-        let minDiff = ddFecond ? Math.floor((now - baseDate) / (1000 * 60)) : 0;
-        minDiff = ddFecond ? minDiff - (Math.floor(minDiff / 60) * 60) : 0;
-        if (ddFecond && sortedDragodindes && hoursLate >= ddFecond.duration - sortedDragodindes[0].duration) {
+    const calculateFinishAndLateTime = (now: number, ddFecond: T.ddFecondType, sortedDragodindes: T.sortedDragoType[]): T.sortedDragoType[] => {
+        const baseDate = Date.parse(ddFecond.last.date);
+        const timeDif = getTimeDif(now, baseDate);
+        const hoursLate = timeDif.hoursLate;
+        let secondDiff = timeDif.secondDiff;
+        let minDiff = timeDif.minDiff;
+        if (ddFecond && sortedDragodindes.length && hoursLate >= ddFecond.duration - sortedDragodindes[0].duration) {
             getLateCountdown(secondDiff, minDiff, hoursLate, ddFecond, sortedDragodindes);
         }
         minDiff = 60 - minDiff;
         secondDiff = 60 - secondDiff;
-        if (sortedDragodindes) {
-            setDrago = makeDragodindesParams(baseDate, ddFecond, sortedDragodindes, hoursLate, minDiff, secondDiff);
-        }
-        else if (ddFecond && hoursLate <= ddFecond.duration && !sortedDragodindes) {
+        if (ddFecond && hoursLate <= ddFecond.duration && !sortedDragodindes.length) {
             calculateFinishTime(baseDate, now, ddFecond, hoursLate);
         }
-        return setDrago;
+        return sortedDragodindes;
     };
 
-    const calculateFinishTime = (baseDate, now, ddFecond, hoursLate) => {
+    const getTimeDif = (now: number, baseDate: number) => {
+        const hoursLate = Math.floor((now - baseDate) / (1000 * 60 * 60));
+        let secondDiff = Math.floor((now - baseDate) / 1000);
+        secondDiff = secondDiff - Math.floor(secondDiff / 60) * 60;
+        let minDiff = Math.floor((now - baseDate) / (1000 * 60));
+        minDiff = minDiff - (Math.floor(minDiff / 60) * 60);
+        return {
+            hoursLate,
+            secondDiff,
+            minDiff
+        };
+    };
+
+    const calculateFinishTime = (baseDate: number, now: number, ddFecond: T.ddFecondType, hoursLate: number) => {
         if (hoursLate < ddFecond.duration) {
             const endDate = (baseDate + (ddFecond.duration * 60 * 60 * 1000) - now);
             const endHours = Math.floor(endDate / (1000 * 60 * 60));
@@ -147,23 +163,20 @@ const Fecondator = (props): React.ReactElement => {
             endSec -= Math.floor(endSec / 60) * 60;
             if (!finishTime) {
                 setFinishTime(setLateTimeRemaining(endHours, endMin, endSec));
-            }
-            else {
+            } else {
                 $('.finish-countdown')[0].innerHTML = setLateTimeRemaining(endHours, endMin, endSec);
             }
-        }
-        else {
+        } else {
             setFinishTime('Maintenant');
         }
     };
 
-    const getLateCountdown = (secondDiff, minDiff, hoursLate, ddFecond, sortedDragodindes) => {
+    const getLateCountdown = (secondDiff: number, minDiff: number, hoursLate: number, ddFecond: T.ddFecondType, sortedDragodindes: T.dragoType[] | T.sortedDragoType[]) => {
         if (ddFecond) {
             let goodHours = 0;
             if (sortedDragodindes && hoursLate >= ddFecond.duration - sortedDragodindes[0].duration) {
                 goodHours = hoursLate - (ddFecond.duration - sortedDragodindes[0].duration);
-            }
-            else if (!sortedDragodindes && hoursLate >= ddFecond.duration) {
+            } else if (!sortedDragodindes && hoursLate >= ddFecond.duration) {
                 goodHours = hoursLate - ddFecond.duration;
             }
             const stringDuration = setLateTimeRemaining(goodHours, minDiff, secondDiff);
@@ -176,91 +189,23 @@ const Fecondator = (props): React.ReactElement => {
         }
     };
 
-    const makeDragodindesParams = (baseDate, ddFecond, sortedDragodindes, hoursDiff, minDiff, secondDiff): T.sortedDragoType[] => {
-        let estimatedTime = 0;
-        let prevDrago: T.sortedDragoType = {} as T.sortedDragoType;
-        let isEnded = false;
-        sortedDragodindes.map((drago, index) => {
-            let goodTime = '';
-            let goodDate = '';
-            if ((prevDrago && prevDrago.end?.time.substr(0, 10) === 'Maintenant') || isEnded) {
-                estimatedTime += Number(prevDrago.duration) - drago.duration;
-                goodTime = estimatedTime === 0 ? 'Maintenant' : estimatedTime + 'H';
-                goodDate = dateFormat(Date.now() + (estimatedTime * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
-                isEnded = true;
-            }
-            else if (ddFecond && index === 0 && ddFecond.duration !== drago.duration && hoursDiff < ddFecond.duration - drago.duration) {
-                estimatedTime += ddFecond.duration - drago.duration;
-                goodDate = dateFormat(baseDate + ((ddFecond.duration - drago.duration) * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
-                const showedTime = setTimeRemaining(estimatedTime, hoursDiff, minDiff, secondDiff);
-                goodTime = showedTime.toString();
-            }
-            else if ((!ddFecond && !prevDrago && index === 0) || (ddFecond && ddFecond.duration === drago.duration) || (hoursDiff >= ddFecond.duration - drago.duration)) {
-                goodTime = 'Maintenant';
-                goodDate = ddFecond && hoursDiff >= ddFecond.duration - drago.duration ? dateFormat(baseDate + (hoursDiff * 1000 * 60 * 60), 'dd/mm/yyyy HH:MM:ss') : dateFormat(baseDate, 'dd/mm/yyyy HH:MM:ss');
-                baseDate = ddFecond && hoursDiff >= ddFecond.duration - drago.duration ? baseDate + (hoursDiff * 60 * 60 * 1000) : baseDate;
-            }
-            else {
-                if (prevDrago.duration !== drago.duration) {
-                    estimatedTime += Number(prevDrago.duration) - drago.duration;
-                }
-                const showedTime = setTimeRemaining(estimatedTime, hoursDiff, minDiff, secondDiff);
-                goodTime = estimatedTime === 0 ? 'Maintenant' : showedTime.toString();
-                goodDate = dateFormat(baseDate + (estimatedTime * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
-            }
-            drago.end = {
-                time: goodTime,
-                date: goodDate
-            };
-            prevDrago = drago;
-        });
-        return sortedDragodindes;
-    };
-
-    const setLateTimeRemaining = (hours, minutes, seconds): string => {
+    const setLateTimeRemaining = (hours: number, minutes: number, seconds: number): string => {
         const goodMinutes = (minutes >= 0 && minutes < 10 ? '0' + minutes + 'M' : minutes + 'M');
         const goodSeconds = (seconds >= 0 && seconds < 10 ? '0' + seconds + 'S' : seconds + 'S');
         return hours > 0 ? hours + 'H' + goodMinutes + goodSeconds : goodMinutes + goodSeconds;
     };
 
-    const setTimeRemaining = (duration, hours, minutes, seconds): string => {
-        let goodHours: string | number = duration - hours;
-        let returnedObj = '';
-        goodHours = minutes > 0 || seconds > 0 ? goodHours - 1 : goodHours;
-        minutes = seconds > 0 ? minutes - 1 : minutes;
-        if (seconds === 60) {
-            minutes += 1;
-        }
-        else if (minutes > 0 && seconds === 0) {
-            minutes -= 1;
-        }
-        const stringMinutes = (minutes > 0 && minutes < 10 ? '0' + minutes + 'M' : minutes + 'M');
-        const stringSeconds = (seconds > 0 && seconds < 10 ? '0' + seconds + 'S' : seconds + 'S');
-        if (seconds !== 60 && minutes !== 60) {
-            returnedObj = goodHours > 0 ? goodHours + 'H' + stringMinutes + stringSeconds : stringMinutes + stringSeconds;
-        }
-        else if (seconds === 60 && minutes === 60) {
-            goodHours = goodHours <= 0 ? '1H' : goodHours + 1;
-            returnedObj = goodHours === '1H' ? goodHours : goodHours + 'H';
-        }
-        else if (seconds === 60 && minutes !== 60) {
-            returnedObj = goodHours <= 0 ? stringMinutes + '00S' : goodHours + 'H' + stringMinutes + '00S';
-        }
-        return returnedObj;
-    };
-
-    const handleAutomateFecond = (index) => {
+    const handleAutomateFecond = (index: number) => {
         const used: T.dragoType[] = [];
         const localLast: T.dragoType[] = [];
         dragodindes.map((drago, mapIndex) => {
             if (mapIndex < index) {
                 used.push(drago);
-            }
-            else if (mapIndex === index) {
+            } else if (mapIndex === index) {
                 localLast.push(drago);
             }
         });
-        if (last) {
+        if (Object.keys(last).length) {
             used.push(last);
         }
         setSelectedDrago({ used: used, last: localLast });
@@ -280,7 +225,7 @@ const Fecondator = (props): React.ReactElement => {
         ]).then(() => {
             handleClose();
             clearInterval(interval[0]);
-            getDataAndSetConst();
+            window.location.reload();
         }).catch(() => {
             setTimeout(() => {
                 handleCallAutomateAPI();
@@ -293,7 +238,7 @@ const Fecondator = (props): React.ReactElement => {
         setSelectedDrago({ used: [], last: [] });
     };
 
-    const handleChange = (e) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const filtered = dragodindes.filter(d => d.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1);
         setShowedDragodindes(_.reverse(_.sortBy(filtered, 'duration', 'asc')));
     };
@@ -313,7 +258,7 @@ const Fecondator = (props): React.ReactElement => {
                 </a>
             </div>
             <div className='text-center fecondator-last-dragodinde col-sm-11 col-md-10 col-lg-9 col-xl-8'>
-                {last ?
+                {Object.keys(last).length ?
                     <div className='fecondator-last-div col-9 col-sm-8 col-md-6'>
                         <h4 className='col-12'>Dragodinde fécondée</h4>
                         <img className='col-4' alt='dd_icon' src={'/assets/img/dragodindes/' + last.name.toLowerCase().split(' ').join('-') + '.png'} />
@@ -324,7 +269,7 @@ const Fecondator = (props): React.ReactElement => {
                             <p className='value'>{dateFormat(last.last?.date, 'dd/mm/yyyy HH:MM:ss')}</p>
                         </div>
                     </div> : ''}
-                {accouchDate || lateCountdown || finishTime ?
+                {accouchDate !== '' || lateCountdown !== '' || finishTime !== '' ?
                     <div className='fecondator-infos col-7 col-sm-7 col-md-5'>
                         <h4 className='col-12'>Informations</h4>
                         <div className='fecondator-infos-content col-10'>
@@ -387,7 +332,7 @@ const Fecondator = (props): React.ReactElement => {
                                                         <p>{drago.end?.time}</p>
                                                     </div>
                                                     <div className='fecondator-time-date'>
-                                                        <p>{drago.end?.date}</p>
+                                                        <p> {dateFormat(drago.end.date, 'dd/mm/yyyy HH:MM:ss')} </p>
                                                     </div>
                                                 </>}
                                         </div>

@@ -7,13 +7,22 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt, faUserCircle, faBook } from '@fortawesome/free-solid-svg-icons';
 import { faDiscord } from '@fortawesome/free-brands-svg-icons';
+import { userType } from '../../../@types/user';
 
 library.add(faSignOutAlt);
 library.add(faDiscord);
 library.add(faUserCircle);
 library.add(faBook);
 
-const Navbar = (props): React.ReactElement => {
+interface propsType {
+    page: string;
+    randStr: string;
+    urlArg: string;
+    user: userType;
+    disconnect(): void;
+}
+
+const Navbar = (props: propsType): React.ReactElement => {
     return (
         <nav className='navbar navbar-expand-lg navbar-dark navbar-site'>
             <a className='navbar-brand' href='/'>

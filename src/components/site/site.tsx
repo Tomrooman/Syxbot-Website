@@ -1,8 +1,8 @@
 'use strict';
 
 import React, { useState, useEffect } from 'react';
-import { withCookies, Cookies } from 'react-cookie';
-import PropTypes, { instanceOf } from 'prop-types';
+import { useCookies } from 'react-cookie';
+import PropTypes from 'prop-types';
 // import VoiceRecognition from './voiceRecognition.jsx';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,14 +13,21 @@ import $ from 'jquery';
 import './site.css';
 import Navbar from './navbar/navbar';
 import Dofus from './dofus/dofus';
+import { sessionDataType } from '../../@types/user';
 
 library.add(faAssistiveListeningSystems);
 library.add(faBookOpen);
 library.add(faPlusCircle);
 
-const Site = (props) => {
+interface propsType {
+    page: string;
+    urlArg: string;
+}
+
+const Site = (props: propsType): React.ReactElement => {
     const [randStr, setRandStr] = useState('');
-    const [user] = useState(props.cookies.get('syxbot', { path: '/' }) || undefined);
+    const [cookies, setCookie, removeCookie] = useCookies(['syxbot']);
+    const [user] = useState(cookies.syxbot || false);
     const [page, setPage] = useState(<></>);
     const [loaded, setLoaded] = useState(false);
 
@@ -32,11 +39,9 @@ const Site = (props) => {
             const fragment = new URLSearchParams(window.location.search);
             if (fragment.has('code')) {
                 connectUser(fragment);
-            }
-            else if (user) {
+            } else if (user) {
                 verifyTokenExpiration();
-            }
-            else {
+            } else {
                 generateRandomString();
             }
             if (props.page === 'dofus') {
@@ -57,33 +62,31 @@ const Site = (props) => {
         }
     };
 
-    const connectUser = async (fragment) => {
-        const urlState = fragment.get('state');
+    const connectUser = async (fragment: URLSearchParams) => {
+        const urlState = String(fragment.get('state'));
         const code = fragment.get('code');
         const stateParameter = localStorage.getItem('stateParameter');
         if (stateParameter === encodeURIComponent(urlState)) {
             const { data } = await Axios.post('/api/token/connect', { code: code });
             if (data) {
                 updateTokenAPI(data);
-            }
-            else {
+            } else {
                 setTimeout(() => {
                     window.location.href = Config.OAuth.redirect_url;
                 }, 1000);
             }
-        }
-        else {
+        } else {
             alert('Bad state parameter ! Réessayez de vous connecter');
             generateRandomString();
         }
     };
 
-    const updateTokenAPI = async (tokenObj) => {
+    const updateTokenAPI = async (tokenObj: sessionDataType) => {
         const { data } = await Axios.post('/api/token/update', tokenObj);
         if (data) {
             const oneDay = 1000 * 60 * 60 * 24;
             const expireDate = new Date(Date.now() + (oneDay * 10));
-            props.cookies.set('syxbot', {
+            setCookie('syxbot', {
                 username: tokenObj.username,
                 discriminator: tokenObj.discriminator,
                 id: tokenObj.userId,
@@ -92,7 +95,9 @@ const Site = (props) => {
                 countdown: true
             }, {
                 path: '/',
-                expires: expireDate
+                expires: expireDate,
+                secure: true,
+                sameSite: true
             });
             window.location.href = Config.OAuth.redirect_url;
         }
@@ -101,8 +106,8 @@ const Site = (props) => {
     const disconnect = async () => {
         const { data } = await Axios.post('/api/token/remove', { userId: user.id });
         if (data) {
-            props.cookies.remove('syxbot', { path: '/' });
-            window.location.reload();
+            removeCookie('syxbot', { path: '/' });
+            window.location.href = Config.OAuth.redirect_url;
         }
     };
 
@@ -129,7 +134,8 @@ const Site = (props) => {
                     urlArg={props.urlArg}
                 />
                 <div className='website-container'>
-                    {page ||
+                    {String(page.type) !== 'Symbol(react.fragment)' ?
+                        page :
                         <div className='home-container'>
                             <div className='home-top-infos'>
                                 <h1 className='page-title'>Site en construction</h1>
@@ -154,8 +160,7 @@ const Site = (props) => {
                         </div>}
                 </div>
             </>);
-    }
-    else if (props.page === '/') {
+    } else if (props.page === '/') {
         return (
             <table className='loading-table'>
                 <tbody>
@@ -168,8 +173,7 @@ const Site = (props) => {
                 </tbody>
             </table>
         );
-    }
-    else {
+    } else {
         return (
             <>
             </>
@@ -179,8 +183,7 @@ const Site = (props) => {
 
 Site.propTypes = {
     page: PropTypes.string.isRequired,
-    urlArg: PropTypes.string.isRequired,
-    cookies: instanceOf(Cookies).isRequired
+    urlArg: PropTypes.string.isRequired
 };
 
-export default withCookies(Site);
+export default Site;

@@ -49,11 +49,7 @@
             4
         ],
         "brace-style": [
-            "error",
-            "stroustrup",
-            {
-                "allowSingleLine": true
-            }
+            2
         ],
         "comma-dangle": [
             "error",

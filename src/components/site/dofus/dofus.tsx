@@ -7,10 +7,16 @@ import Dragodindes from './dragodindes/dragodindes';
 import Fecondator from './fecondator/fecondator';
 import Craft from './craft/craft';
 import Config from './../../../../config.json';
+import { userType } from '../../../@types/user';
 
 import './dofus.css';
 
-const Dofus = (props): React.ReactElement => {
+interface propsType {
+    user: userType;
+    urlArg: string;
+}
+
+const Dofus = (props: propsType): React.ReactElement => {
     const [content, setContent] = useState(<></>);
     const [loaded, setLoaded] = useState(false);
 
@@ -18,17 +24,13 @@ const Dofus = (props): React.ReactElement => {
         if (!loaded) {
             if (props.urlArg === 'notes' && props.user) {
                 setContent(<Notes user={props.user} />);
-            }
-            else if (props.urlArg === 'dragodindes' && props.user) {
+            } else if (props.urlArg === 'dragodindes' && props.user) {
                 setContent(<Dragodindes user={props.user} />);
-            }
-            else if (props.urlArg === 'fecondator' && props.user) {
+            } else if (props.urlArg === 'fecondator' && props.user) {
                 setContent(<Fecondator user={props.user} />);
-            }
-            else if (props.urlArg === 'craft') {
+            } else if (props.urlArg === 'craft') {
                 setContent(<Craft />);
-            }
-            else {
+            } else {
                 window.location.href = Config.OAuth.redirect_url;
             }
             setLoaded(true);

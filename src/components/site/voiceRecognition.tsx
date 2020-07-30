@@ -34,15 +34,15 @@ const VoiceRecognition = () => {
         recognition.onstart = () => {
             console.log('Listening!');
         };
-        recognition.onerror = event => {
+        recognition.onerror = (event: any) => {
             console.log('Error occurred in recognition: ' + event.error);
         };
-        recognition.onresult = event => {
+        recognition.onresult = (event: any) => {
             getCommands(event);
         };
     };
 
-    const getCommands = (event) => {
+    const getCommands = (event: any) => {
         const finalTranscript = _.find(event.results, { isFinal: true })[0].transcript;
         console.log('transcript : ', finalTranscript);
         document.getElementById('final')!.innerHTML = finalTranscript;
