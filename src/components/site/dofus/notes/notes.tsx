@@ -6,15 +6,10 @@ import _ from 'lodash';
 import $ from 'jquery';
 import NotesModal from './modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PropTypes from 'prop-types';
-import { userType } from '../../../../@types/user';
 import { noteType, createNoteType, modifyNoteType } from '../../../../@types/notes';
+import Config from '../../../../../config.json';
 
-interface propsType {
-    user: userType;
-}
-
-const Notes = (props: propsType): React.ReactElement => {
+const Notes = (): React.ReactElement => {
     const [showInput, setShowInput] = useState('');
     const [showContent, setShowContent] = useState('');
     const [removeNote, setRemoveNote] = useState({} as noteType);
@@ -25,13 +20,12 @@ const Notes = (props: propsType): React.ReactElement => {
     const [title, setTitle] = useState('');
     const [noteTitle, setNoteTitle] = useState('');
     const [content, setContent] = useState('');
-    const [user] = useState(props.user || undefined);
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
         if (wait && !loaded) {
             const getNotesAPI = async () => {
-                const { data } = await Axios.post('/api/dofus/notes', { userId: user.id });
+                const { data } = await Axios.post('/api/dofus/notes', { token: Config.security.token });
                 if (data) {
                     setNotes(_.orderBy(data, 'title', 'asc'));
                 }
@@ -50,7 +44,6 @@ const Notes = (props: propsType): React.ReactElement => {
     const handleClick = (newTitle: string, oldContent: string) => {
         if (input !== content) {
             updateNoteAPI('/api/dofus/notes/update', {
-                userId: user.id,
                 title: newTitle,
                 oldContent: oldContent,
                 newContent: input
@@ -59,7 +52,7 @@ const Notes = (props: propsType): React.ReactElement => {
     };
 
     const updateNoteAPI = async (url: string, paramsObj: createNoteType | modifyNoteType) => {
-        const res = await Axios.post(url, paramsObj);
+        const res = await Axios.post(url, { ...paramsObj, token: Config.security.token });
         if (res.data) {
             setNotes(_.orderBy(res.data, 'title', 'asc'));
         }
@@ -82,7 +75,6 @@ const Notes = (props: propsType): React.ReactElement => {
     const handleCreateNote = () => {
         if (noteTitle && content) {
             updateNoteAPI('/api/dofus/notes/create', {
-                userId: user.id,
                 title: noteTitle,
                 content: content
             });
@@ -92,7 +84,6 @@ const Notes = (props: propsType): React.ReactElement => {
 
     const handleRemoveNote = () => {
         updateNoteAPI('/api/dofus/notes/remove', {
-            userId: user.id,
             title: removeNote.title,
             content: removeNote.content
         });
@@ -181,13 +172,6 @@ const Notes = (props: propsType): React.ReactElement => {
             </div>
         </div>
     );
-};
-
-Notes.propTypes = {
-    user: PropTypes.oneOfType([
-        PropTypes.object.isRequired,
-        PropTypes.bool.isRequired
-    ])
 };
 
 export default Notes;

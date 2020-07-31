@@ -13,7 +13,7 @@ import { faSync } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import * as T from '../../../../@types/dragodindes';
 import { userType } from '../../../../@types/user';
-
+import Config from '../../../../../config.json';
 
 library.add(faSync);
 
@@ -44,7 +44,7 @@ const Fecondator = (props: propsType): React.ReactElement => {
 
     const getDataAndSetConst = async () => {
         const res = await Axios.post('/api/dofus/dragodindes/fecondator', {
-            userId: user.id
+            token: Config.security.token
         });
         if (res.data && res.data.dragodindes) {
             const sortedDragodindes = res.data.dragodindes;
@@ -97,7 +97,7 @@ const Fecondator = (props: propsType): React.ReactElement => {
             });
             if (ended) {
                 clearInterval(interval);
-                getDataAndSetConst();
+                window.location.reload();
             }
         }
     };
@@ -215,12 +215,12 @@ const Fecondator = (props: propsType): React.ReactElement => {
     const handleCallAutomateAPI = () => {
         Promise.all([
             Axios.post('/api/dofus/dragodindes/status/used/update', {
-                userId: user.id,
-                dragodindes: selectedDrago.used
+                dragodindes: selectedDrago.used,
+                token: Config.security.token
             }),
             Axios.post('/api/dofus/dragodindes/status/last/update', {
-                userId: user.id,
-                dragodindes: selectedDrago.last
+                dragodindes: selectedDrago.last,
+                token: Config.security.token
             })
         ]).then(() => {
             handleClose();

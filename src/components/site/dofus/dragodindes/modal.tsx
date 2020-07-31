@@ -42,7 +42,6 @@ const DragodindesModal = (props: propsType): React.ReactElement => {
                             {props.dragoJSON.length ?
                                 props.dragoJSON.map((drago, index) => {
                                     if (!props.dragodindes.filter(d => d.name === drago.name)[0]) {
-                                        console.log('drago selected : ', drago);
                                         return (
                                             <div
                                                 className={drago.selected ? 'drago-line-selected' : 'drago-line'}

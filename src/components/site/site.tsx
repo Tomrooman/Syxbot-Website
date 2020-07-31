@@ -26,7 +26,7 @@ interface propsType {
 
 const Site = (props: propsType): React.ReactElement => {
     const [randStr, setRandStr] = useState('');
-    const [cookies, setCookie, removeCookie] = useCookies(['syxbot']);
+    const [cookies] = useCookies(['syxbot']);
     const [user] = useState(cookies.syxbot || false);
     const [page, setPage] = useState(<></>);
     const [loaded, setLoaded] = useState(false);
@@ -55,7 +55,7 @@ const Site = (props: propsType): React.ReactElement => {
         const diffH = Math.floor((user.expire_at - (Date.now() / 1000)) / 3600);
         // Max diffH => 167
         if (diffH <= 10) {
-            const { data } = await Axios.post('/api/token/expiration', { userId: user.id });
+            const { data } = await Axios.post('/api/token/expiration', { token: Config.security.token });
             if (data) {
                 updateTokenAPI(data);
             }
@@ -67,7 +67,7 @@ const Site = (props: propsType): React.ReactElement => {
         const code = fragment.get('code');
         const stateParameter = localStorage.getItem('stateParameter');
         if (stateParameter === encodeURIComponent(urlState)) {
-            const { data } = await Axios.post('/api/token/connect', { code: code });
+            const { data } = await Axios.post('/api/token/connect', { code: code, token: Config.security.token });
             if (data) {
                 updateTokenAPI(data);
             } else {
@@ -82,31 +82,16 @@ const Site = (props: propsType): React.ReactElement => {
     };
 
     const updateTokenAPI = async (tokenObj: sessionDataType) => {
-        const { data } = await Axios.post('/api/token/update', tokenObj);
-        if (data) {
-            const oneDay = 1000 * 60 * 60 * 24;
-            const expireDate = new Date(Date.now() + (oneDay * 10));
-            setCookie('syxbot', {
-                username: tokenObj.username,
-                discriminator: tokenObj.discriminator,
-                id: tokenObj.userId,
-                token_type: tokenObj.token_type,
-                expire_at: (Date.now() / 1000) + tokenObj.expires_in,
-                countdown: true
-            }, {
-                path: '/',
-                expires: expireDate,
-                secure: true,
-                sameSite: true
-            });
+        tokenObj.token = Config.security.token;
+        const res = await Axios.post('/api/token/update', tokenObj);
+        if (res.data) {
             window.location.href = Config.OAuth.redirect_url;
         }
     };
 
     const disconnect = async () => {
-        const { data } = await Axios.post('/api/token/remove', { userId: user.id });
+        const { data } = await Axios.post('/api/token/remove', { token: Config.security.token });
         if (data) {
-            removeCookie('syxbot', { path: '/' });
             window.location.href = Config.OAuth.redirect_url;
         }
     };

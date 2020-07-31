@@ -15,4 +15,5 @@ export interface sessionDataType {
     token_type: string;
     expires_in: number;
     countdown: boolean;
+    token: string;
 };

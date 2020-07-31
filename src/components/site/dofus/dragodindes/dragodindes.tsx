@@ -9,9 +9,8 @@ import { Tooltip } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHeart, faHeartBroken, faToggleOff, faToggleOn, faCheck, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import PropTypes from 'prop-types';
 import * as T from '../../../../@types/dragodindes';
-import { userType } from '../../../../@types/user';
+import Config from '../../../../../config.json';
 
 library.add(faHeart);
 library.add(faHeartBroken);
@@ -20,12 +19,7 @@ library.add(faToggleOn);
 library.add(faCheck);
 library.add(faTimesCircle);
 
-interface propsType {
-    user: userType;
-}
-
-const Dragodindes = (props: propsType): React.ReactElement => {
-    const [user] = useState(props.user || undefined);
+const Dragodindes = (): React.ReactElement => {
     const [dragodindes, setDragodindes] = useState([] as T.sortedDragoType[]);
     const [showedDragodindes, setShowedDragodindes] = useState([] as T.sortedDragoType[]);
     const [selectedDrago, setSelectedDrago] = useState([] as T.localDragodindesType[]);
@@ -41,9 +35,8 @@ const Dragodindes = (props: propsType): React.ReactElement => {
         if (wait && !loaded) {
             const getDragodindesAPI = async () => {
                 const res = await Axios.post('/api/dofus/dragodindes', {
-                    userId: user.id
+                    token: Config.security.token
                 });
-                console.log('res data mes dragodindes : ', res.data);
                 if (res.data && res.data.length) {
                     setDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
                     setShowedDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
@@ -55,8 +48,8 @@ const Dragodindes = (props: propsType): React.ReactElement => {
         }
     });
 
-    const updateDragodindesAPI = async (url: string, paramsObj: { userId: string, dragodindes: T.localDragodindesType[] }) => {
-        const res = await Axios.post(url, paramsObj);
+    const updateDragodindesAPI = async (url: string, paramsObj: { dragodindes: T.localDragodindesType[] }) => {
+        const res = await Axios.post(url, { ...paramsObj, token: Config.security.token });
         setDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
         setShowedDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
         setAction('default');
@@ -136,7 +129,6 @@ const Dragodindes = (props: propsType): React.ReactElement => {
     const handleCallAPI = (url: string) => {
         if (selectedDrago.length) {
             updateDragodindesAPI(url, {
-                userId: user.id,
                 dragodindes: selectedDrago
             });
             handleClose();
@@ -356,13 +348,6 @@ const Dragodindes = (props: propsType): React.ReactElement => {
                         </div> : <></>}
         </div>
     );
-};
-
-Dragodindes.propTypes = {
-    user: PropTypes.oneOfType([
-        PropTypes.object.isRequired,
-        PropTypes.bool.isRequired
-    ])
 };
 
 export default Dragodindes;

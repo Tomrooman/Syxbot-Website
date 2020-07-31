@@ -125,6 +125,7 @@ const Radio = (): React.ReactElement => {
             };
             setCookie('syxbot_radio', cookieData, {
                 path: '/',
+                httpOnly: false,
                 expires: expireDate,
                 secure: true,
                 sameSite: true

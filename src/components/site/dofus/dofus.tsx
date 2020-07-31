@@ -23,9 +23,9 @@ const Dofus = (props: propsType): React.ReactElement => {
     useEffect(() => {
         if (!loaded) {
             if (props.urlArg === 'notes' && props.user) {
-                setContent(<Notes user={props.user} />);
+                setContent(<Notes />);
             } else if (props.urlArg === 'dragodindes' && props.user) {
-                setContent(<Dragodindes user={props.user} />);
+                setContent(<Dragodindes />);
             } else if (props.urlArg === 'fecondator' && props.user) {
                 setContent(<Fecondator user={props.user} />);
             } else if (props.urlArg === 'craft') {

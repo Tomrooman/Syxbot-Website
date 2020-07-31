@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import Config from '../../../../config.json';
 
 library.add(faTimesCircle);
 
@@ -33,7 +34,8 @@ const Contact = () => {
             axios.post('/api/docs/contact', {
                 mail: mail,
                 object: object,
-                message: message
+                message: message,
+                token: Config.security.token
             })
                 .then(res => {
                     $('.contact-submit-div')[0].children[0].innerHTML = 'Envoyer mon message';
