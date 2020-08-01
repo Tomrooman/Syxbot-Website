@@ -1,12 +1,13 @@
 'use strict';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import $ from 'jquery';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import Config from '../../../../config.json';
 
 library.add(faTimesCircle);
 
@@ -14,7 +15,7 @@ const Contact = () => {
     const [mail, setMail] = useState('');
     const [object, setObject] = useState('');
     const [message, setMessage] = useState('');
-    const [loaded, setLoaded] = useState('');
+    const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
         if (!loaded) {
@@ -33,7 +34,8 @@ const Contact = () => {
             axios.post('/api/docs/contact', {
                 mail: mail,
                 object: object,
-                message: message
+                message: message,
+                token: Config.security.token
             })
                 .then(res => {
                     $('.contact-submit-div')[0].children[0].innerHTML = 'Envoyer mon message';
@@ -41,9 +43,9 @@ const Contact = () => {
                         setMail('');
                         setObject('');
                         setMessage('');
-                        $('input')[0].value = '';
-                        $('input')[1].value = '';
-                        $('textarea')[0].value = '';
+                        $('input')[0].textContent = '';
+                        $('input')[1].textContent = '';
+                        $('textarea')[0].textContent = '';
                         $('.alert').addClass('alert-success');
                         $('.alert').html('<span>' + $('.alert')[0].children[0].innerHTML + '</span><span style="display: none">' + $('.alert')[0].children[1].innerHTML + '</span> Message envoyé !');
                         $('.alert')[0].style.display = '';
@@ -67,7 +69,7 @@ const Contact = () => {
         $('.alert')[0].style.display = '';
     };
 
-    const handleOnChange = (type, e) => {
+    const handleOnChange = (type: string, e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (type === 'mail') {
             setMail(e.target.value);
         }
@@ -107,7 +109,7 @@ const Contact = () => {
                             label='Votre adresse mail'
                             placeholder='Exemple@hotmail.com'
                             variant='outlined'
-                            onChange={(e) => handleOnChange('mail', e)}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => handleOnChange('mail', e)}
                         />
                     </div>
                     <div className='contact-object'>
@@ -116,17 +118,16 @@ const Contact = () => {
                             id='required-object'
                             label='Objet'
                             variant='outlined'
-                            onChange={(e) => handleOnChange('object', e)}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => handleOnChange('object', e)}
                         />
                     </div>
                     <div className='contact-message'>
                         <label htmlFor='message'>Écrivez votre message ci-dessous *</label><br />
                         <textarea
-                            type='text'
-                            rows='4'
-                            cols='30'
+                            rows={4}
+                            cols={30}
                             id='message'
-                            onChange={(e) => handleOnChange('message', e)}
+                            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleOnChange('message', e)}
                         />
                     </div>
                     <div className='contact-submit-div'>

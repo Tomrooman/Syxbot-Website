@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-const Craft = () => {
+const Craft = (): React.ReactElement => {
     return (
         <div className='principal-container'>
             <h1 className='craft-title text-center col-12 col-md-6'>Crafts</h1>

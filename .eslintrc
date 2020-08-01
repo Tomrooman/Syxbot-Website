@@ -1,17 +1,26 @@
 {
+    "plugins": [
+        "@typescript-eslint"
+    ],
     "extends": [
         "standard",
         "standard-react",
-        "eslint:recommended"
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
     ],
     "env": {
         "browser": true,
         "es2020": true
     },
     "root": true,
-    "parser": "babel-eslint",
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "sourceType": "module"
+        "ecmaVersion": 2020,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
     },
     "ignorePatterns": [
         "serviceWorker.js",
@@ -19,8 +28,14 @@
         "node_modules",
         ".yarn/",
         "webpack.config.js",
-        "dist/"
+        "dist/",
+        "private/"
     ],
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
     "rules": {
         "react/jsx-indent-props": [
             2,
@@ -34,11 +49,7 @@
             4
         ],
         "brace-style": [
-            "error",
-            "stroustrup",
-            {
-                "allowSingleLine": true
-            }
+            2
         ],
         "comma-dangle": [
             "error",
@@ -78,6 +89,7 @@
                 "max": 2
             }
         ],
+        "@typescript-eslint/no-explicit-any": "off",
         "no-console": "off",
         "no-empty-function": "error",
         "no-floating-decimal": "error",

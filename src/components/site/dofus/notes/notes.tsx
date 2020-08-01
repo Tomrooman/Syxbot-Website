@@ -1,33 +1,33 @@
 'use strict';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import Axios from 'axios';
 import _ from 'lodash';
 import $ from 'jquery';
-import NotesModal from './modal.jsx';
+import NotesModal from './modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PropTypes from 'prop-types';
+import { noteType, createNoteType, modifyNoteType } from '../../../../@types/notes';
+import Config from '../../../../../config.json';
 
-const Notes = (props) => {
-    const [showInput, setShowInput] = useState(false);
-    const [showContent, setShowContent] = useState(false);
-    const [removeNote, setRemoveNote] = useState({});
+const Notes = (): React.ReactElement => {
+    const [showInput, setShowInput] = useState('');
+    const [showContent, setShowContent] = useState('');
+    const [removeNote, setRemoveNote] = useState({} as noteType);
     const [wait, setWait] = useState(true);
-    const [input, setInput] = useState(false);
-    const [notes, setNotes] = useState([]);
+    const [input, setInput] = useState('');
+    const [notes, setNotes] = useState([] as noteType[]);
     const [show, setShow] = useState(false);
     const [title, setTitle] = useState('');
     const [noteTitle, setNoteTitle] = useState('');
     const [content, setContent] = useState('');
-    const [user] = useState(props.user);
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
         if (wait && !loaded) {
             const getNotesAPI = async () => {
-                const res = await Axios.post('/api/dofus/notes', { userId: user.id });
-                if (res.data) {
-                    setNotes(_.orderBy(res.data, 'title', 'asc'));
+                const { data } = await Axios.post('/api/dofus/notes', { token: Config.security.token });
+                if (data) {
+                    setNotes(_.orderBy(data, 'title', 'asc'));
                 }
                 setWait(false);
             };
@@ -41,10 +41,9 @@ const Notes = (props) => {
         setTitle('');
     };
 
-    const handleClick = (newTitle, oldContent) => {
+    const handleClick = (newTitle: string, oldContent: string) => {
         if (input !== content) {
             updateNoteAPI('/api/dofus/notes/update', {
-                userId: user.id,
                 title: newTitle,
                 oldContent: oldContent,
                 newContent: input
@@ -52,24 +51,23 @@ const Notes = (props) => {
         }
     };
 
-    const updateNoteAPI = async (url, paramsObj) => {
-        const res = await Axios.post(url, paramsObj);
+    const updateNoteAPI = async (url: string, paramsObj: createNoteType | modifyNoteType) => {
+        const res = await Axios.post(url, { ...paramsObj, token: Config.security.token });
         if (res.data) {
             setNotes(_.orderBy(res.data, 'title', 'asc'));
         }
-        setShowInput(false);
-        setShowContent(false);
+        setShowInput('');
+        setShowContent('');
     };
 
-    const handleChange = (e) => {
+    const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
         setInput(e.target.value);
     };
 
-    const handleChangeModal = (e) => {
+    const handleChangeModal = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.tagName === 'INPUT') {
             setNoteTitle(e.target.value);
-        }
-        else {
+        } else {
             setContent(e.target.value);
         }
     };
@@ -77,7 +75,6 @@ const Notes = (props) => {
     const handleCreateNote = () => {
         if (noteTitle && content) {
             updateNoteAPI('/api/dofus/notes/create', {
-                userId: user.id,
                 title: noteTitle,
                 content: content
             });
@@ -87,28 +84,26 @@ const Notes = (props) => {
 
     const handleRemoveNote = () => {
         updateNoteAPI('/api/dofus/notes/remove', {
-            userId: user.id,
             title: removeNote.title,
             content: removeNote.content
         });
         handleClose();
     };
 
-    const handleModifyInfos = (e, newTitle, newContent) => {
+    const handleModifyInfos = (e: any, newTitle: string, newContent: string) => {
         if (e.target.tagName === 'svg' || e.target.tagName === 'SPAN' || e.target.tagName === 'path') {
             showModal('remove', { title: newTitle, content: newContent });
-        }
-        else if (e.target.type !== 'textarea') {
+        } else if (e.target.type !== 'textarea') {
             setInput(newContent);
-            setShowInput(showInput === newTitle ? false : newTitle);
-            setShowContent(showContent === newContent ? false : newContent);
+            setShowInput(showInput === newTitle ? '' : newTitle);
+            setShowContent(showContent === newContent ? '' : newContent);
             if ($('textarea')[0]) {
-                $('textarea')[0].value = input;
+                $('textarea')[0].setAttribute('value', String(input));
             }
         }
     };
 
-    const showModal = (choice, noteObj = {}) => {
+    const showModal = (choice: string, noteObj = {} as noteType) => {
         setShow(true);
         setNoteTitle('');
         setContent('');
@@ -139,7 +134,7 @@ const Notes = (props) => {
                         return (
                             <div
                                 className='one_infos text-center col-sm-12 col-md-5 col-lg-5'
-                                onClick={(e) => handleModifyInfos(e, note.title, note.content)}
+                                onClick={(e: any) => handleModifyInfos(e, note.title, note.content)}
                                 key={index}
                             >
                                 <h4>
@@ -152,8 +147,7 @@ const Notes = (props) => {
                                     <>
                                         <textarea
                                             className='infos-input'
-                                            type='text'
-                                            rows='3'
+                                            rows={3}
                                             autoFocus
                                             onChange={handleChange}
                                         />
@@ -178,13 +172,6 @@ const Notes = (props) => {
             </div>
         </div>
     );
-};
-
-Notes.propTypes = {
-    user: PropTypes.oneOfType([
-        PropTypes.object.isRequired,
-        PropTypes.bool.isRequired
-    ])
 };
 
 export default Notes;

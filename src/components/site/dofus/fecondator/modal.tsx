@@ -3,8 +3,16 @@
 import React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import PropTypes from 'prop-types';
+import { usedAndLastArrayDragoType } from '../../../../@types/dragodindes';
 
-const FecondatorModal = (props) => {
+interface propsType {
+    dragodindes: usedAndLastArrayDragoType;
+    handleCallAutomateAPI(): void;
+    handleClose(): void;
+    show: boolean;
+}
+
+const FecondatorModal = (props: propsType): React.ReactElement => {
     if (props.show) {
         return (
             <div>
@@ -25,12 +33,12 @@ const FecondatorModal = (props) => {
                                     {props.dragodindes.used.map((drago, index) => {
                                         return (
                                             <div
-                                                className={drago.last.status ? 'my-drago-line-last' : 'my-drago-line'}
+                                                className={drago.last?.status ? 'my-drago-line-last' : 'my-drago-line'}
                                                 key={index}
                                             >
                                                 <div className='my-dragodindes-name col-9'>
                                                     <img src={'/assets/img/dragodindes/' + drago.name.toLowerCase().split(' ').join('-') + '.png'} alt='dd_icon' />
-                                                    {drago.last.status ?
+                                                    {drago.last?.status ?
                                                         <p>{drago.name}<span className='my-drago-fecond-message'> - Fécondée</span></p> : drago.used ?
                                                             <p>{drago.name}<span className='my-drago-used-message'> - Utilisée</span></p> :
                                                             <p>{drago.name}</p>}
@@ -78,9 +86,8 @@ const FecondatorModal = (props) => {
                 </Modal>
             </div>
         );
-    }
-    else {
-        return (<></>);
+    } else {
+        return <></>;
     }
 };
 

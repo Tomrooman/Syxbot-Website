@@ -5,8 +5,8 @@ import _ from 'lodash';
 
 const VoiceRecognition = () => {
     const [listening, setListening] = useState(false);
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
+    const SpeechRecognition = window.SpeechRecognition;
+    const recognition: any = new SpeechRecognition();
 
     const handleToggleListen = () => {
         if (recognition) {
@@ -34,18 +34,18 @@ const VoiceRecognition = () => {
         recognition.onstart = () => {
             console.log('Listening!');
         };
-        recognition.onerror = event => {
+        recognition.onerror = (event: any) => {
             console.log('Error occurred in recognition: ' + event.error);
         };
-        recognition.onresult = event => {
+        recognition.onresult = (event: any) => {
             getCommands(event);
         };
     };
 
-    const getCommands = (event) => {
+    const getCommands = (event: any) => {
         const finalTranscript = _.find(event.results, { isFinal: true })[0].transcript;
         console.log('transcript : ', finalTranscript);
-        document.getElementById('final').innerHTML = finalTranscript;
+        document.getElementById('final')!.innerHTML = finalTranscript;
         const commands = finalTranscript.split(' ');
         console.log('Commandes : ', commands);
         if (commands[0] === 'stop' && commands[1] === 'listening') {
@@ -54,7 +54,7 @@ const VoiceRecognition = () => {
                 console.log('Stopped listening per command');
                 setListening(false);
                 const finalText = commands.join(' ');
-                document.getElementById('final').innerHTML = finalText;
+                document.getElementById('final')!.innerHTML = finalText;
             };
         }
     };

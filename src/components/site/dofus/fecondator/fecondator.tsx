@@ -1,32 +1,39 @@
 'use strict';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import Axios from 'axios';
 import _ from 'lodash';
 import dateFormat from 'dateformat';
 import $ from 'jquery';
-import FecondatorModal from './modal.jsx';
+import FecondatorModal from './modal';
 import { Tooltip } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
+import * as T from '../../../../@types/dragodindes';
+import { userType } from '../../../../@types/user';
+import Config from '../../../../../config.json';
 
 library.add(faSync);
 
-const Fecondator = (props) => {
-    const [user] = useState(props.user);
-    const [dragodindes, setDragodindes] = useState([]);
-    const [showedDragodindes, setShowedDragodindes] = useState([]);
-    const [selectedDrago, setSelectedDrago] = useState({ used: [], last: [] });
+interface propsType {
+    user: userType;
+}
+
+const Fecondator = (props: propsType): React.ReactElement => {
+    const [user] = useState(props.user || undefined);
+    const [dragodindes, setDragodindes] = useState([] as T.sortedDragoType[]);
+    const [showedDragodindes, setShowedDragodindes] = useState([] as T.sortedDragoType[]);
+    const [selectedDrago, setSelectedDrago] = useState({} as T.usedAndLastArrayDragoType);
     const [show, setShow] = useState(false);
-    const [accouchDate, setAccouchDate] = useState(false);
-    const [finishTime, setFinishTime] = useState(false);
-    const [lateCountdown, setLateCountdown] = useState(false);
-    const [last, setLast] = useState(false);
+    const [accouchDate, setAccouchDate] = useState('');
+    const [finishTime, setFinishTime] = useState('');
+    const [lateCountdown, setLateCountdown] = useState('');
+    const [last, setLast] = useState({} as T.ddFecondType);
     const [wait, setWait] = useState(true);
     const [loaded, setLoaded] = useState(false);
-    const interval = [{}];
+    let interval: any = {};
 
     useEffect(() => {
         if (wait && !loaded) {
@@ -36,16 +43,13 @@ const Fecondator = (props) => {
     });
 
     const getDataAndSetConst = async () => {
-        const res = await Axios.post('/api/dofus/dragodindes', {
-            userId: user.id
+        const res = await Axios.post('/api/dofus/dragodindes/fecondator', {
+            token: Config.security.token
         });
-        if (res.data && res.data.length) {
+        if (res.data && res.data.dragodindes) {
+            const sortedDragodindes = res.data.dragodindes;
             const now = Date.now();
-            let ddFecond = res.data.filter(d => d.last.status);
-            ddFecond = ddFecond && ddFecond[0] ? ddFecond[0] : false;
-            const filteredDrago = res.data.filter(d => !d.last.status && !d.used);
-            let sortedDragodindes = filteredDrago.length ? _.reverse(_.sortBy(filteredDrago, 'duration', 'asc')) : false;
-            sortedDragodindes = calculateTime(now, ddFecond, sortedDragodindes);
+            const ddFecond = res.data.ddFecond || false;
             setDragodindes(sortedDragodindes);
             setShowedDragodindes(sortedDragodindes);
             const newAccouchDate = getAccouchDate(now, ddFecond, sortedDragodindes);
@@ -53,39 +57,38 @@ const Fecondator = (props) => {
             if (ddFecond) {
                 setLast(ddFecond);
             }
-            countdown(sortedDragodindes);
+            countdown(Date.now(), ddFecond, sortedDragodindes);
             countDownInterval(ddFecond, sortedDragodindes);
             setWait(false);
-        }
-        else if (wait) {
+        } else if (wait) {
             setWait(false);
         }
     };
 
-    const countDownInterval = (ddFecond, sortedDragodindes) => {
+    const countDownInterval = (ddFecond: T.ddFecondType, sortedDragodindes: T.sortedDragoType[]) => {
         if (ddFecond && user.countdown) {
-            interval[0] = setInterval(() => {
+            interval = setInterval(() => {
                 if (user.countdown && (sortedDragodindes || ddFecond)) {
-                    countdown(calculateTime(Date.now(), ddFecond, sortedDragodindes));
+                    countdown(Date.now(), ddFecond, sortedDragodindes);
+                    calculateFinishAndLateTime(Date.now(), ddFecond, sortedDragodindes);
                 }
             }, 1000);
         }
     };
 
-    const countdown = (timedDragodindes) => {
+    const countdown = (now: number, ddFecond: T.ddFecondType, sortedDragodindes: T.sortedDragoType[]) => {
         let ended = false;
         if ($('.fecondator-line').length) {
-            $('.fecondator-line').map((index, line) => {
+            $('.fecondator-line').map((_index, line) => {
                 const fecondTimeDiv = $(line.children[1])[0].children;
                 if (fecondTimeDiv.length === 2) {
                     const dragoName = $(line.children[0])[0].children[1].innerHTML.trim();
                     const countdownContent = fecondTimeDiv[0].children[0];
-                    const findDrago = _.find(timedDragodindes, { name: dragoName });
-                    if (countdownContent.innerHTML.substr(0, 10) !== 'Maintenant') {
-                        if (findDrago.end.time.substr(0, 10) !== 'Maintenant') {
-                            countdownContent.innerHTML = findDrago.end.time;
-                        }
-                        else {
+                    const findDrago: T.sortedDragoType = _.find(sortedDragodindes, { name: dragoName }) || {} as T.sortedDragoType;
+                    if (countdownContent.innerHTML.substr(0, 10) !== 'Maintenant' && ddFecond) {
+                        const timeRemaining = setCountdownTime(now, findDrago);
+                        countdownContent.innerHTML = timeRemaining;
+                        if (timeRemaining === 'Maintenant') {
                             // Dragodindes prête(s)
                             ended = true;
                         }
@@ -93,49 +96,64 @@ const Fecondator = (props) => {
                 }
             });
             if (ended) {
-                clearInterval(interval[0]);
-                getDataAndSetConst();
+                clearInterval(interval);
+                window.location.reload();
             }
         }
     };
 
-    const getAccouchDate = (now, ddFecond, sortedDragodindes) => {
+    const setCountdownTime = (now: number, drago: T.sortedDragoType) => {
+        const timeDiff = getTimeDif(Number(drago.end.date), now);
+        if (timeDiff.hoursLate <= 0 && timeDiff.minDiff <= 0 && timeDiff.secondDiff <= 0) {
+            return 'Maintenant';
+        }
+        return setLateTimeRemaining(timeDiff.hoursLate, timeDiff.minDiff, timeDiff.secondDiff);
+    };
+
+    const getAccouchDate = (now: number, ddFecond: T.ddFecondType | false, sortedDragodindes: T.sortedDragoType[]) => {
         let date = sortedDragodindes.length ? dateFormat(now + (sortedDragodindes[0].duration * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss') : false;
         if (ddFecond) {
             const hoursDiff = Math.floor((now - Date.parse(ddFecond.last.date)) / (1000 * 60 * 60));
             if (sortedDragodindes.length && hoursDiff >= ddFecond.duration - sortedDragodindes[0].duration) {
                 date = dateFormat(Date.now() + (sortedDragodindes[0].duration * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
-            }
-            else {
+            } else {
                 date = dateFormat(Date.parse(ddFecond.last.date) + (ddFecond.duration * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
             }
         }
         return date;
     };
 
-    const calculateTime = (now, ddFecond, sortedDragodindes) => {
-        let setDrago = false;
-        const baseDate = ddFecond ? Date.parse(ddFecond.last.date) : now;
-        const hoursLate = ddFecond ? Math.floor((now - baseDate) / (1000 * 60 * 60)) : 0;
-        let secondDiff = ddFecond ? Math.floor((now - baseDate) / 1000) : 0;
-        secondDiff = ddFecond ? secondDiff - Math.floor(secondDiff / 60) * 60 : 0;
-        let minDiff = ddFecond ? Math.floor((now - baseDate) / (1000 * 60)) : 0;
-        minDiff = ddFecond ? minDiff - (Math.floor(minDiff / 60) * 60) : 0;
-        if (ddFecond && sortedDragodindes && hoursLate >= ddFecond.duration - sortedDragodindes[0].duration) {
+    const calculateFinishAndLateTime = (now: number, ddFecond: T.ddFecondType, sortedDragodindes: T.sortedDragoType[]): T.sortedDragoType[] => {
+        const baseDate = Date.parse(ddFecond.last.date);
+        const timeDif = getTimeDif(now, baseDate);
+        const hoursLate = timeDif.hoursLate;
+        let secondDiff = timeDif.secondDiff;
+        let minDiff = timeDif.minDiff;
+        if (ddFecond && sortedDragodindes.length && hoursLate >= ddFecond.duration - sortedDragodindes[0].duration) {
             getLateCountdown(secondDiff, minDiff, hoursLate, ddFecond, sortedDragodindes);
         }
         minDiff = 60 - minDiff;
         secondDiff = 60 - secondDiff;
-        if (sortedDragodindes) {
-            setDrago = makeDragodindesParams(baseDate, ddFecond, sortedDragodindes, hoursLate, minDiff, secondDiff);
-        }
-        else if (ddFecond && hoursLate <= ddFecond.duration && !sortedDragodindes) {
+        if (ddFecond && hoursLate <= ddFecond.duration && !sortedDragodindes.length) {
             calculateFinishTime(baseDate, now, ddFecond, hoursLate);
         }
-        return setDrago;
+        return sortedDragodindes;
     };
 
-    const calculateFinishTime = (baseDate, now, ddFecond, hoursLate) => {
+    const getTimeDif = (now: number, baseDate: number) => {
+        const hoursLate = Math.floor((now - baseDate) / (1000 * 60 * 60));
+        let secondDiff = Math.floor((now - baseDate) / 1000);
+        secondDiff = secondDiff - Math.floor(secondDiff / 60) * 60;
+        let minDiff = Math.floor((now - baseDate) / (1000 * 60));
+        minDiff = minDiff - (Math.floor(minDiff / 60) * 60);
+        return {
+            hoursLate,
+            secondDiff,
+            minDiff
+        };
+    };
+
+    const calculateFinishTime = (baseDate: number, now: number, ddFecond: T.ddFecondType, hoursLate: number) => {
         if (hoursLate < ddFecond.duration) {
             const endDate = (baseDate + (ddFecond.duration * 60 * 60 * 1000) - now);
             const endHours = Math.floor(endDate / (1000 * 60 * 60));
@@ -145,23 +163,20 @@ const Fecondator = (props) => {
             endSec -= Math.floor(endSec / 60) * 60;
             if (!finishTime) {
                 setFinishTime(setLateTimeRemaining(endHours, endMin, endSec));
-            }
-            else {
+            } else {
                 $('.finish-countdown')[0].innerHTML = setLateTimeRemaining(endHours, endMin, endSec);
             }
-        }
-        else {
+        } else {
             setFinishTime('Maintenant');
         }
     };
 
-    const getLateCountdown = (secondDiff, minDiff, hoursLate, ddFecond, sortedDragodindes) => {
+    const getLateCountdown = (secondDiff: number, minDiff: number, hoursLate: number, ddFecond: T.ddFecondType, sortedDragodindes: T.dragoType[] | T.sortedDragoType[]) => {
         if (ddFecond) {
-            let goodHours = '';
+            let goodHours = 0;
             if (sortedDragodindes && hoursLate >= ddFecond.duration - sortedDragodindes[0].duration) {
                 goodHours = hoursLate - (ddFecond.duration - sortedDragodindes[0].duration);
-            }
-            else if (!sortedDragodindes && hoursLate >= ddFecond.duration) {
+            } else if (!sortedDragodindes && hoursLate >= ddFecond.duration) {
                 goodHours = hoursLate - ddFecond.duration;
             }
             const stringDuration = setLateTimeRemaining(goodHours, minDiff, secondDiff);
@@ -174,89 +189,23 @@ const Fecondator = (props) => {
         }
     };
 
-    const makeDragodindesParams = (baseDate, ddFecond, sortedDragodindes, hoursDiff, minDiff, secondDiff) => {
-        let estimatedTime = 0;
-        let prevDrago = false;
-        let isEnded = false;
-        sortedDragodindes.map((drago, index) => {
-            let goodTime = '';
-            let goodDate = '';
-            if ((prevDrago && prevDrago.end.time.substr(0, 10) === 'Maintenant') || isEnded) {
-                estimatedTime += prevDrago.duration - drago.duration;
-                goodTime = estimatedTime === 0 ? 'Maintenant' : estimatedTime + 'H';
-                goodDate = dateFormat(Date.now() + (estimatedTime * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
-                isEnded = true;
-            }
-            else if (ddFecond && index === 0 && ddFecond.duration !== drago.duration && hoursDiff < ddFecond.duration - drago.duration) {
-                estimatedTime += ddFecond.duration - drago.duration;
-                goodDate = dateFormat(baseDate + ((ddFecond.duration - drago.duration) * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
-                const showedTime = setTimeRemaining(estimatedTime, hoursDiff, minDiff, secondDiff);
-                goodTime = showedTime;
-            }
-            else if ((!ddFecond && !prevDrago && index === 0) || (ddFecond && ddFecond.duration === drago.duration) || (hoursDiff >= ddFecond.duration - drago.duration)) {
-                goodTime = 'Maintenant';
-                goodDate = ddFecond && hoursDiff >= ddFecond.duration - drago.duration ? dateFormat(baseDate + (hoursDiff * 1000 * 60 * 60), 'dd/mm/yyyy HH:MM:ss') : dateFormat(baseDate, 'dd/mm/yyyy HH:MM:ss');
-                baseDate = ddFecond && hoursDiff >= ddFecond.duration - drago.duration ? baseDate + (hoursDiff * 60 * 60 * 1000) : baseDate;
-            }
-            else {
-                if (prevDrago.duration !== drago.duration) {
-                    estimatedTime += prevDrago.duration - drago.duration;
-                }
-                const showedTime = setTimeRemaining(estimatedTime, hoursDiff, minDiff, secondDiff);
-                goodTime = estimatedTime === 0 ? 'Maintenant' : showedTime;
-                goodDate = dateFormat(baseDate + (estimatedTime * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
-            }
-            drago.end = {
-                time: goodTime,
-                date: goodDate
-            };
-            prevDrago = drago;
-        });
-        return sortedDragodindes;
-    };
-
-    const setLateTimeRemaining = (hours, minutes, seconds) => {
+    const setLateTimeRemaining = (hours: number, minutes: number, seconds: number): string => {
         const goodMinutes = (minutes >= 0 && minutes < 10 ? '0' + minutes + 'M' : minutes + 'M');
         const goodSeconds = (seconds >= 0 && seconds < 10 ? '0' + seconds + 'S' : seconds + 'S');
         return hours > 0 ? hours + 'H' + goodMinutes + goodSeconds : goodMinutes + goodSeconds;
     };
 
-    const setTimeRemaining = (duration, hours, minutes, seconds) => {
-        let goodHours = duration - hours;
-        goodHours = minutes > 0 || seconds > 0 ? goodHours - 1 : goodHours;
-        minutes = seconds > 0 ? minutes - 1 : minutes;
-        if (seconds === 60) {
-            minutes += 1;
-        }
-        else if (minutes > 0 && seconds === 0) {
-            minutes -= 1;
-        }
-        const stringMinutes = (minutes > 0 && minutes < 10 ? '0' + minutes + 'M' : minutes + 'M');
-        const stringSeconds = (seconds > 0 && seconds < 10 ? '0' + seconds + 'S' : seconds + 'S');
-        if (seconds !== 60 && minutes !== 60) {
-            return goodHours > 0 ? goodHours + 'H' + stringMinutes + stringSeconds : stringMinutes + stringSeconds;
-        }
-        else if (seconds === 60 && minutes === 60) {
-            goodHours = goodHours <= 0 ? '1H' : goodHours + 1;
-            return goodHours === '1H' ? goodHours : goodHours + 'H';
-        }
-        else if (seconds === 60 && minutes !== 60) {
-            return goodHours <= 0 ? stringMinutes + '00S' : goodHours + 'H' + stringMinutes + '00S';
-        }
-    };
-
-    const handleAutomateFecond = (index) => {
-        const used = [];
-        const localLast = [];
+    const handleAutomateFecond = (index: number) => {
+        const used: T.dragoType[] = [];
+        const localLast: T.dragoType[] = [];
         dragodindes.map((drago, mapIndex) => {
             if (mapIndex < index) {
                 used.push(drago);
-            }
-            else if (mapIndex === index) {
+            } else if (mapIndex === index) {
                 localLast.push(drago);
             }
         });
-        if (last) {
+        if (Object.keys(last).length) {
             used.push(last);
         }
         setSelectedDrago({ used: used, last: localLast });
@@ -266,17 +215,17 @@ const Fecondator = (props) => {
     const handleCallAutomateAPI = () => {
         Promise.all([
             Axios.post('/api/dofus/dragodindes/status/used/update', {
-                userId: user.id,
-                dragodindes: selectedDrago.used
+                dragodindes: selectedDrago.used,
+                token: Config.security.token
             }),
             Axios.post('/api/dofus/dragodindes/status/last/update', {
-                userId: user.id,
-                dragodindes: selectedDrago.last
+                dragodindes: selectedDrago.last,
+                token: Config.security.token
             })
         ]).then(() => {
             handleClose();
             clearInterval(interval[0]);
-            getDataAndSetConst();
+            window.location.reload();
         }).catch(() => {
             setTimeout(() => {
                 handleCallAutomateAPI();
@@ -289,7 +238,7 @@ const Fecondator = (props) => {
         setSelectedDrago({ used: [], last: [] });
     };
 
-    const handleChange = (e) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const filtered = dragodindes.filter(d => d.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1);
         setShowedDragodindes(_.reverse(_.sortBy(filtered, 'duration', 'asc')));
     };
@@ -309,7 +258,7 @@ const Fecondator = (props) => {
                 </a>
             </div>
             <div className='text-center fecondator-last-dragodinde col-sm-11 col-md-10 col-lg-9 col-xl-8'>
-                {last ?
+                {Object.keys(last).length ?
                     <div className='fecondator-last-div col-9 col-sm-8 col-md-6'>
                         <h4 className='col-12'>Dragodinde fécondée</h4>
                         <img className='col-4' alt='dd_icon' src={'/assets/img/dragodindes/' + last.name.toLowerCase().split(' ').join('-') + '.png'} />
@@ -317,10 +266,10 @@ const Fecondator = (props) => {
                             <p className='label'>Nom</p>
                             <p className='value'>{last.name}</p>
                             <p className='label'>Fécondation</p>
-                            <p className='value'>{dateFormat(last.last.date, 'dd/mm/yyyy HH:MM:ss')}</p>
+                            <p className='value'>{dateFormat(last.last?.date, 'dd/mm/yyyy HH:MM:ss')}</p>
                         </div>
                     </div> : ''}
-                {accouchDate || lateCountdown || finishTime ?
+                {accouchDate !== '' || lateCountdown !== '' || finishTime !== '' ?
                     <div className='fecondator-infos col-7 col-sm-7 col-md-5'>
                         <h4 className='col-12'>Informations</h4>
                         <div className='fecondator-infos-content col-10'>
@@ -339,7 +288,7 @@ const Fecondator = (props) => {
                         </div>
                     </div> : ''}
             </div>
-            {dragodindes.length ?
+            {dragodindes && dragodindes.length ?
                 <div className='text-center principal-dragodindes-div col-sm-11 col-md-10 col-lg-8 col-xl-8'>
                     <input
                         className='input-parcho'
@@ -359,9 +308,9 @@ const Fecondator = (props) => {
                                             <p> {drago.name}</p>
                                         </div>
                                         <div className='fecondator-time col-4'>
-                                            {drago.end.time.substr(0, 10) === 'Maintenant' ?
+                                            {drago.end?.time.substr(0, 10) === 'Maintenant' ?
                                                 <div className='fecondator-time-now'>
-                                                    {(showedDragodindes[index + 1] && showedDragodindes[index + 1].end.time.substr(0, 10) !== 'Maintenant') || (!showedDragodindes[index + 1]) ?
+                                                    {(showedDragodindes[index + 1] && showedDragodindes[index + 1].end?.time.substr(0, 10) !== 'Maintenant') || (!showedDragodindes[index + 1]) ?
                                                         <>
                                                             <p className='fecondator-automate-time col-10 text-center'>Maintenant</p>
                                                             <Tooltip
@@ -380,10 +329,10 @@ const Fecondator = (props) => {
                                                 </div> :
                                                 <>
                                                     <div className='fecondator-time-duration'>
-                                                        <p>{drago.end.time}</p>
+                                                        <p>{drago.end?.time}</p>
                                                     </div>
                                                     <div className='fecondator-time-date'>
-                                                        <p>{drago.end.date}</p>
+                                                        <p> {dateFormat(drago.end.date, 'dd/mm/yyyy HH:MM:ss')} </p>
                                                     </div>
                                                 </>}
                                         </div>

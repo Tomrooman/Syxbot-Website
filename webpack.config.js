@@ -34,20 +34,34 @@ module.exports = {
     module: {
         rules: [
             {
-                enforce: 'pre',
-                test: /\.(js|jsx)$/,
-                loader: 'eslint-loader',
-                exclude: /cache/,
-                options: {
-                    cache: true
-                }
+                test: /\.ts(x?)$/,
+                exclude: [
+                    /cache/,
+                    /node_modules/
+                ],
+                use: [
+                    {
+                        loader: 'ts-loader'
+                    }
+                ]
             },
             {
-                test: /\.(js|jsx)$/,
+                enforce: 'pre',
+                test: /\.(ts|tsx)$/,
                 use: [
-                    { loader: 'babel-loader' }
+                    {
+                        options: {
+                            eslintPath: require.resolve('eslint')
+                        },
+                        loader: require.resolve('eslint-loader')
+                    }
                 ],
-                exclude: /cache/
+                exclude: /node_modules/
+            },
+            {
+                enforce: 'pre',
+                test: /\.js$/,
+                loader: 'source-map-loader'
             },
             {
                 test: /\.html$/,
@@ -80,6 +94,7 @@ module.exports = {
         plugins: [PnpPlugin.moduleLoader(module)]
     },
     resolve: {
+        extensions: ['.tsx', '.ts', '.js', '.json'],
         plugins: [PnpPlugin],
     },
     plugins: [
