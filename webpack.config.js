@@ -8,8 +8,11 @@ const path = require('path');
 module.exports = {
     output: {
         publicPath: '/',
-        filename: 'bundle.js',
+        filename: '[name].bundle.js',
         path: path.resolve(__dirname, 'dist')
+    },
+    entry: {
+        index: './src/index.tsx',
     },
     devServer: {
         historyApiFallback: true,
@@ -29,6 +32,14 @@ module.exports = {
     node: {
         Buffer: false,
         process: false
+    },
+    optimization: {
+        removeAvailableModules: true,
+        removeEmptyChunks: true,
+        mergeDuplicateChunks: true,
+        namedModules: true,
+        occurrenceOrder: true,
+        namedChunks: true
     },
     mode: process.env.NODE_ENV,
     module: {
