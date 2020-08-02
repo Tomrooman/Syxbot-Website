@@ -31,9 +31,9 @@ const Dragodindes = (): React.ReactElement => {
     const [input, setInput] = useState('');
     const [dragoJSONConst, setDragoJSONConst] = useState(dragoJSON.sort((a, b) => a.name.localeCompare(b.name)) as T.dragoSelectedtype[]);
 
-    useEffect(() => {
+    useEffect((): void => {
         if (wait && !loaded) {
-            const getDragodindesAPI = async () => {
+            const getDragodindesAPI = async (): Promise<void> => {
                 const res = await Axios.post('/api/dofus/dragodindes', {
                     token: Config.security.token
                 });
@@ -48,14 +48,14 @@ const Dragodindes = (): React.ReactElement => {
         }
     });
 
-    const updateDragodindesAPI = async (url: string, paramsObj: { dragodindes: T.localDragodindesType[] }) => {
+    const updateDragodindesAPI = async (url: string, paramsObj: { dragodindes: T.localDragodindesType[] }): Promise<void> => {
         const res = await Axios.post(url, { ...paramsObj, token: Config.security.token });
         setDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
         setShowedDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
         setAction('default');
     };
 
-    const handleAddModalDrago = (name: string, duration: number, generation: number, selected: boolean) => {
+    const handleAddModalDrago = (name: string, duration: number, generation: number, selected: boolean): void => {
         let localDragodindes: T.localDragodindesType[] = selectedDrago;
         let JSONselected: T.dragoSelectedtype[] = [];
         if (!selected) {
@@ -79,7 +79,7 @@ const Dragodindes = (): React.ReactElement => {
         return _.compact(arrayDrago);
     };
 
-    const setRemoveDragoJSON = (name: string) => {
+    const setRemoveDragoJSON = (name: string): T.dragoSelectedtype[] => {
         const JSONselected: T.dragoSelectedtype[] = [];
         dragoJSON.map(d => {
             const check = checkAlreadySelected(d);
@@ -92,7 +92,7 @@ const Dragodindes = (): React.ReactElement => {
         return JSONselected;
     };
 
-    const setDragoJSON = (array: T.dragoSelectedtype[], name: string) => {
+    const setDragoJSON = (array: T.dragoSelectedtype[], name: string): T.dragoSelectedtype[] => {
         const JSONselected: T.dragoSelectedtype[] = [];
         array.map(d => {
             const check = checkAlreadySelected(d);
@@ -105,7 +105,7 @@ const Dragodindes = (): React.ReactElement => {
         return JSONselected;
     };
 
-    const checkAlreadySelected = (dragodinde: T.dragoSelectedtype) => {
+    const checkAlreadySelected = (dragodinde: T.dragoSelectedtype): boolean => {
         let check = false;
         selectedDrago.map(drago => {
             if (drago.name === dragodinde.name) {
@@ -115,18 +115,18 @@ const Dragodindes = (): React.ReactElement => {
         return check;
     };
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
         const filtered = dragodindes.filter(d => d.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1);
         setShowedDragodindes(filtered.sort((a, b) => a.name.localeCompare(b.name)));
     };
 
-    const handleChangeModal = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleChangeModal = (e: ChangeEvent<HTMLInputElement>): void => {
         const filtered = dragoJSON.filter(d => d.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1);
         setDragoJSONConst(setDragoJSON(filtered, '').sort((a, b) => a.name.localeCompare(b.name)));
         setInput(e.target.value === '' ? '' : e.target.value.toLowerCase());
     };
 
-    const handleCallAPI = (url: string) => {
+    const handleCallAPI = (url: string): void => {
         if (selectedDrago.length) {
             updateDragodindesAPI(url, {
                 dragodindes: selectedDrago
@@ -135,7 +135,7 @@ const Dragodindes = (): React.ReactElement => {
         }
     };
 
-    const handleSelectMyDragodindes = (name: string, duration: number, generation: number, selected: boolean | undefined) => {
+    const handleSelectMyDragodindes = (name: string, duration: number, generation: number, selected: boolean | undefined): void => {
         const _showedDragodindes = showedDragodindes;
         let _selectedDrago = selectedDrago;
         _showedDragodindes.map(drago => {
@@ -159,7 +159,7 @@ const Dragodindes = (): React.ReactElement => {
         setAction(_selectedDrago.length === 0 ? 'default' : 'remove');
     };
 
-    const handleUnusedDragodindes = (drago: T.sortedDragoType) => {
+    const handleUnusedDragodindes = (drago: T.sortedDragoType): void => {
         const selected = selectedDrago;
         selected.push({ name: drago.name });
         setSelectedDrago(selected);
@@ -170,7 +170,7 @@ const Dragodindes = (): React.ReactElement => {
         }
     };
 
-    const handleLastDragodinde = (drago: T.sortedDragoType) => {
+    const handleLastDragodinde = (drago: T.sortedDragoType): void => {
         const selected = selectedDrago;
         selected.push({ name: drago.name });
         setSelectedDrago(selected);
@@ -181,7 +181,7 @@ const Dragodindes = (): React.ReactElement => {
         }
     };
 
-    const handleClose = () => {
+    const handleClose = (): void => {
         setShow(false);
         setTitle('');
         setSelectedDrago([]);
@@ -189,7 +189,7 @@ const Dragodindes = (): React.ReactElement => {
         setInput('');
     };
 
-    const showModal = (choice: string) => {
+    const showModal = (choice: string): void => {
         let goodTitle = '';
         if (choice === 'new') {
             goodTitle = 'Ajouter des dragodindes';

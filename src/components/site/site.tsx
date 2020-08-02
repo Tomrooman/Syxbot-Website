@@ -31,7 +31,7 @@ const Site = (props: propsType): React.ReactElement => {
     const [page, setPage] = useState(<></>);
     const [loaded, setLoaded] = useState(false);
 
-    useEffect(() => {
+    useEffect((): void => {
         if (!loaded) {
             window.document.addEventListener('scroll', (e: any) => {
                 $('.radio_container').css('transform', 'translateY(' + e.path[1].scrollY + 'px)');
@@ -51,7 +51,7 @@ const Site = (props: propsType): React.ReactElement => {
         }
     });
 
-    const verifyTokenExpiration = async () => {
+    const verifyTokenExpiration = async (): Promise<void> => {
         const diffH = Math.floor((user.expire_at - (Date.now() / 1000)) / 3600);
         // Max diffH => 167
         if (diffH <= 10) {
@@ -62,7 +62,7 @@ const Site = (props: propsType): React.ReactElement => {
         }
     };
 
-    const connectUser = async (fragment: URLSearchParams) => {
+    const connectUser = async (fragment: URLSearchParams): Promise<void> => {
         const urlState = String(fragment.get('state'));
         const code = fragment.get('code');
         const stateParameter = localStorage.getItem('stateParameter');
@@ -81,7 +81,7 @@ const Site = (props: propsType): React.ReactElement => {
         }
     };
 
-    const updateTokenAPI = async (tokenObj: sessionDataType) => {
+    const updateTokenAPI = async (tokenObj: sessionDataType): Promise<void> => {
         tokenObj.token = Config.security.token;
         const res = await Axios.post('/api/token/update', tokenObj);
         if (res.data) {
@@ -89,14 +89,14 @@ const Site = (props: propsType): React.ReactElement => {
         }
     };
 
-    const disconnect = async () => {
+    const disconnect = async (): Promise<void> => {
         const { data } = await Axios.post('/api/token/remove', { token: Config.security.token });
         if (data) {
             window.location.href = Config.OAuth.redirect_url;
         }
     };
 
-    const generateRandomString = () => {
+    const generateRandomString = (): void => {
         const rand = Math.floor(Math.random() * 10);
         let generateRandStr = '';
 

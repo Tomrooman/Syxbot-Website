@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-const Parchment = () => {
+const Parchment = (): React.ReactElement => {
     return (
         <></>
     );

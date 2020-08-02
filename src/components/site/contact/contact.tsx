@@ -11,20 +11,20 @@ import Config from '../../../../config.json';
 
 library.add(faTimesCircle);
 
-const Contact = () => {
+const Contact = (): React.ReactElement => {
     const [mail, setMail] = useState('');
     const [object, setObject] = useState('');
     const [message, setMessage] = useState('');
     const [loaded, setLoaded] = useState(false);
 
-    useEffect(() => {
+    useEffect((): void => {
         if (!loaded) {
             $('.alert')[0].style.display = 'none';
             setLoaded(true);
         }
     });
 
-    const sendMessage = () => {
+    const sendMessage = (): void => {
         if (mail.length >= 1 && object.length >= 1 && message.length >= 1) {
             $('.alert')[0].style.display = 'none';
             $('.contact-submit-div')[0].children[0].innerHTML = 'Envoi du message en cours ...';
@@ -37,7 +37,7 @@ const Contact = () => {
                 message: message,
                 token: Config.security.token
             })
-                .then(res => {
+                .then((res): void => {
                     $('.contact-submit-div')[0].children[0].innerHTML = 'Envoyer mon message';
                     if (res.data) {
                         setMail('');
@@ -61,7 +61,7 @@ const Contact = () => {
         }
     };
 
-    const handleError = () => {
+    const handleError = (): void => {
         $('.contact-submit-div button')[0].style.opacity = '1';
         $('.contact-submit-div button')[0].style.cursor = 'pointer';
         $('.alert').addClass('alert-danger');
@@ -69,7 +69,7 @@ const Contact = () => {
         $('.alert')[0].style.display = '';
     };
 
-    const handleOnChange = (type: string, e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleOnChange = (type: string, e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
         if (type === 'mail') {
             setMail(e.target.value);
         }

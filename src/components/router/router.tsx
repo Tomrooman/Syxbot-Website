@@ -9,7 +9,7 @@ const Router = (): React.ReactElement => {
     const [page, setPage] = useState(<></>);
     const [loaded, setLoaded] = useState(false);
 
-    useEffect(() => {
+    useEffect((): void => {
         if (!loaded) {
             const url = window.location.href.split('/');
             const wLocation = url[3] === '' || url[3] === '//' ? '/' : url[3];

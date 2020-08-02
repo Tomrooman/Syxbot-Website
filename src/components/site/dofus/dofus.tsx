@@ -20,7 +20,7 @@ const Dofus = (props: propsType): React.ReactElement => {
     const [content, setContent] = useState(<></>);
     const [loaded, setLoaded] = useState(false);
 
-    useEffect(() => {
+    useEffect((): void => {
         if (!loaded) {
             if (props.urlArg === 'notes' && props.user) {
                 setContent(<Notes />);
@@ -38,7 +38,7 @@ const Dofus = (props: propsType): React.ReactElement => {
     });
 
     return (
-        content || <></>
+        String(content.type) !== 'Symbol(react.fragment)' ? content : <></>
     );
 };
 

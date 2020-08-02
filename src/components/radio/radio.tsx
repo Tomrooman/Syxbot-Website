@@ -21,7 +21,7 @@ const Radio = (): React.ReactElement => {
     const [radio, setRadio] = useState(cookies.syxbot_radio || false);
     const [loaded, setLoaded] = useState(false);
 
-    useEffect(() => {
+    useEffect((): void => {
         if (!loaded) {
             $('.radio_png').css('display', 'none');
         }
@@ -45,7 +45,7 @@ const Radio = (): React.ReactElement => {
         }
     });
 
-    const getRadio = (_index: number) => {
+    const getRadio = (_index: number): { imagePath: string, radioUrl: string } => {
         const returnedObj = {
             imagePath: '',
             radioUrl: ''
@@ -59,14 +59,14 @@ const Radio = (): React.ReactElement => {
         return returnedObj;
     };
 
-    const handleClick = (image: string, _index: number, _radioName: string, url: string) => {
+    const handleClick = (image: string, _index: number, _radioName: string, url: string): void => {
         const _audio = $('audio')[0] as HTMLMediaElement;
         setRadioSourceAndInfos(image, url, _index, _radioName, _audio.volume);
         setRadioCookie(true, _index, _audio.volume, _radioName);
         _audio.play();
     };
 
-    const setRadioSourceAndInfos = (imagePath: string, radioUrl: string, _index: number, _radioName: string, volume: number) => {
+    const setRadioSourceAndInfos = (imagePath: string, radioUrl: string, _index: number, _radioName: string, volume: number): void => {
         $('.radio_png').css('display', 'initial');
         ($('audio')[0] as HTMLAudioElement).volume = volume;
         $('.slider')[0].setAttribute('value', String(volume * 100));
@@ -80,29 +80,28 @@ const Radio = (): React.ReactElement => {
         setRadioName(_radioName);
     };
 
-    const handleVolumeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleVolumeChange = (e: ChangeEvent<HTMLInputElement>): void => {
         const _audio = $('audio')[0] as HTMLMediaElement;
         const _radioName = radioName.indexOf('&amp;') !== -1 ? radioName.split('&amp;').join(' & ') : radioName;
         ($('audio')[0] as HTMLAudioElement).volume = parseInt(e.target.value, 10) / 100;
         if (_audio.paused) {
-            setRadioCookie(false, index, ($('audio')[0] as HTMLAudioElement).volume, _radioName);
-        } else {
-            setRadioCookie(true, index, ($('audio')[0] as HTMLAudioElement).volume, _radioName);
+            return setRadioCookie(false, index, ($('audio')[0] as HTMLAudioElement).volume, _radioName);
         }
+        return setRadioCookie(true, index, ($('audio')[0] as HTMLAudioElement).volume, _radioName);
     };
 
-    const handlePause = () => {
+    const handlePause = (): void => {
         const _radioName = radioName.indexOf('&amp;') !== -1 ? radioName.split('&amp;').join(' & ') : radioName;
         setRadioCookie(false, index, ($('audio')[0] as HTMLAudioElement).volume, _radioName);
     };
 
-    const handlePlay = () => {
+    const handlePlay = (): void => {
         const _radioName = radioName.indexOf('&amp;') !== -1 ? radioName.split('&amp;').join(' & ') : radioName;
         setDropdownTitle(_radioName);
         setRadioCookie(true, index, ($('audio')[0] as HTMLAudioElement).volume, _radioName);
     };
 
-    const handleTogglePlay = () => {
+    const handleTogglePlay = (): void => {
         if (radioName) {
             const _audio = $('audio')[0] as HTMLMediaElement;
             if (_audio.paused) {
@@ -113,7 +112,7 @@ const Radio = (): React.ReactElement => {
         }
     };
 
-    const setRadioCookie = (play: boolean, _index: number, volume: number, name: string) => {
+    const setRadioCookie = (play: boolean, _index: number, volume: number, name: string): void => {
         if (!radio || (radio && (radio.play !== play || radio.index !== _index || radio.volume !== volume || radio.name !== name))) {
             const oneDay = 1000 * 60 * 60 * 24;
             const expireDate = new Date(Date.now() + (oneDay * 10));
@@ -134,7 +133,7 @@ const Radio = (): React.ReactElement => {
         }
     };
 
-    const showMenu = () => {
+    const showMenu = (): void => {
         if ($('.radio_player').css('opacity') === '1') {
             $('.radio_player').css('opacity', 0);
             $('.radio_player').css('transform', 'translateY(-50px)');

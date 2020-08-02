@@ -22,9 +22,9 @@ const Notes = (): React.ReactElement => {
     const [content, setContent] = useState('');
     const [loaded, setLoaded] = useState(false);
 
-    useEffect(() => {
+    useEffect((): void => {
         if (wait && !loaded) {
-            const getNotesAPI = async () => {
+            const getNotesAPI = async (): Promise<void> => {
                 const { data } = await Axios.post('/api/dofus/notes', { token: Config.security.token });
                 if (data) {
                     setNotes(_.orderBy(data, 'title', 'asc'));
@@ -36,12 +36,12 @@ const Notes = (): React.ReactElement => {
         }
     });
 
-    const handleClose = () => {
+    const handleClose = (): void => {
         setShow(false);
         setTitle('');
     };
 
-    const handleClick = (newTitle: string, oldContent: string) => {
+    const handleClick = (newTitle: string, oldContent: string): void => {
         if (input !== content) {
             updateNoteAPI('/api/dofus/notes/update', {
                 title: newTitle,
@@ -51,7 +51,7 @@ const Notes = (): React.ReactElement => {
         }
     };
 
-    const updateNoteAPI = async (url: string, paramsObj: createNoteType | modifyNoteType) => {
+    const updateNoteAPI = async (url: string, paramsObj: createNoteType | modifyNoteType): Promise<void> => {
         const res = await Axios.post(url, { ...paramsObj, token: Config.security.token });
         if (res.data) {
             setNotes(_.orderBy(res.data, 'title', 'asc'));
@@ -60,11 +60,11 @@ const Notes = (): React.ReactElement => {
         setShowContent('');
     };
 
-    const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLTextAreaElement>): void => {
         setInput(e.target.value);
     };
 
-    const handleChangeModal = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleChangeModal = (e: ChangeEvent<HTMLInputElement>): void => {
         if (e.target.tagName === 'INPUT') {
             setNoteTitle(e.target.value);
         } else {
@@ -72,7 +72,7 @@ const Notes = (): React.ReactElement => {
         }
     };
 
-    const handleCreateNote = () => {
+    const handleCreateNote = (): void => {
         if (noteTitle && content) {
             updateNoteAPI('/api/dofus/notes/create', {
                 title: noteTitle,
@@ -82,7 +82,7 @@ const Notes = (): React.ReactElement => {
         }
     };
 
-    const handleRemoveNote = () => {
+    const handleRemoveNote = (): void => {
         updateNoteAPI('/api/dofus/notes/remove', {
             title: removeNote.title,
             content: removeNote.content
@@ -90,7 +90,7 @@ const Notes = (): React.ReactElement => {
         handleClose();
     };
 
-    const handleModifyInfos = (e: any, newTitle: string, newContent: string) => {
+    const handleModifyInfos = (e: any, newTitle: string, newContent: string): void => {
         if (e.target.tagName === 'svg' || e.target.tagName === 'SPAN' || e.target.tagName === 'path') {
             showModal('remove', { title: newTitle, content: newContent });
         } else if (e.target.type !== 'textarea') {
@@ -103,7 +103,7 @@ const Notes = (): React.ReactElement => {
         }
     };
 
-    const showModal = (choice: string, noteObj = {} as noteType) => {
+    const showModal = (choice: string, noteObj = {} as noteType): void => {
         setShow(true);
         setNoteTitle('');
         setContent('');
