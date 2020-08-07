@@ -70,7 +70,7 @@ audio {
 }
 
 .radio_icon{
-    background: linear-gradient(45deg, rgba(121,75,139,1) 0%, rgba(134,31,43,1) 100%);
+    background: linear-gradient(45deg, #7148b5 0%, rgba(134,31,43,1) 100%);
     color: rgb(224, 224, 224);
     border-radius: 50%;
     text-align: center;

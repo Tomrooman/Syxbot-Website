@@ -34,14 +34,19 @@ const Dragodindes = (): React.ReactElement => {
     useEffect((): void => {
         if (wait && !loaded) {
             const getDragodindesAPI = async (): Promise<void> => {
-                const res = await Axios.post('/api/dofus/dragodindes', {
-                    token: Config.security.token
-                });
-                if (res.data && res.data.length) {
-                    setDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
-                    setShowedDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
+                try {
+                    const res = await Axios.post('/api/dofus/dragodindes', {
+                        token: Config.security.token,
+                        type: 'site'
+                    });
+                    if (res.data && res.data.length) {
+                        setDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
+                        setShowedDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
+                    }
+                    setWait(false);
+                } catch (e) {
+                    console.log('Error /api/dofus/dragodindes : ', e.message);
                 }
-                setWait(false);
             };
             getDragodindesAPI();
             setLoaded(true);
@@ -49,10 +54,14 @@ const Dragodindes = (): React.ReactElement => {
     });
 
     const updateDragodindesAPI = async (url: string, paramsObj: { dragodindes: T.localDragodindesType[] }): Promise<void> => {
-        const res = await Axios.post(url, { ...paramsObj, token: Config.security.token });
-        setDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
-        setShowedDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
-        setAction('default');
+        try {
+            const res = await Axios.post(url, { ...paramsObj, token: Config.security.token, type: 'site' });
+            setDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
+            setShowedDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
+            setAction('default');
+        } catch (e) {
+            console.log(`Error ${url} : `, e.message);
+        }
     };
 
     const handleAddModalDrago = (name: string, duration: number, generation: number, selected: boolean): void => {
@@ -84,10 +93,9 @@ const Dragodindes = (): React.ReactElement => {
         dragoJSON.map(d => {
             const check = checkAlreadySelected(d);
             if (d.name === name || !check) {
-                JSONselected.push(d);
-            } else {
-                JSONselected.push({ ...d, selected: true });
+                return JSONselected.push(d);
             }
+            return JSONselected.push({ ...d, selected: true });
         });
         return JSONselected;
     };
@@ -97,10 +105,9 @@ const Dragodindes = (): React.ReactElement => {
         array.map(d => {
             const check = checkAlreadySelected(d);
             if (d.name === name || check) {
-                JSONselected.push({ ...d, selected: true });
-            } else {
-                JSONselected.push(d);
+                return JSONselected.push({ ...d, selected: true });
             }
+            return JSONselected.push(d);
         });
         return JSONselected;
     };
@@ -164,10 +171,9 @@ const Dragodindes = (): React.ReactElement => {
         selected.push({ name: drago.name });
         setSelectedDrago(selected);
         if (!drago.used) {
-            showModal('unused');
-        } else {
-            showModal('remove-unused');
+            return showModal('unused');
         }
+        return showModal('remove-unused');
     };
 
     const handleLastDragodinde = (drago: T.sortedDragoType): void => {
@@ -175,10 +181,9 @@ const Dragodindes = (): React.ReactElement => {
         selected.push({ name: drago.name });
         setSelectedDrago(selected);
         if (!drago.last.status) {
-            showModal('last');
-        } else {
-            showModal('remove-last');
+            return showModal('last');
         }
+        return showModal('remove-last');
     };
 
     const handleClose = (): void => {

@@ -12,8 +12,9 @@ const Router = (): React.ReactElement => {
     useEffect((): void => {
         if (!loaded) {
             const url = window.location.href.split('/');
-            const wLocation = url[3] === '' || url[3] === '//' ? '/' : url[3];
-            const pageArg = url[4] ? url[4] : '';
+            let wLocation = url[3] === '' || url[3] === '//' ? '/' : url[3];
+            wLocation = wLocation.indexOf('#') !== -1 ? wLocation.substr(0, wLocation.indexOf('#')) : wLocation;
+            const pageArg = url[3].split('#').length >= 2 ? url[3].split('#')[1] : '';
             setPage(<Site page={wLocation} urlArg={pageArg} />);
             setLoaded(true);
         }

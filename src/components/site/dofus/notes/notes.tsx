@@ -25,11 +25,15 @@ const Notes = (): React.ReactElement => {
     useEffect((): void => {
         if (wait && !loaded) {
             const getNotesAPI = async (): Promise<void> => {
-                const { data } = await Axios.post('/api/dofus/notes', { token: Config.security.token });
-                if (data) {
-                    setNotes(_.orderBy(data, 'title', 'asc'));
+                try {
+                    const { data } = await Axios.post('/api/dofus/notes', { token: Config.security.token, type: 'site' });
+                    if (data) {
+                        setNotes(_.orderBy(data, 'title', 'asc'));
+                    }
+                    setWait(false);
+                } catch (e) {
+                    console.log('Error /api/dofus/notes : ', e.message);
                 }
-                setWait(false);
             };
             getNotesAPI();
             setLoaded(true);
@@ -52,12 +56,16 @@ const Notes = (): React.ReactElement => {
     };
 
     const updateNoteAPI = async (url: string, paramsObj: createNoteType | modifyNoteType): Promise<void> => {
-        const res = await Axios.post(url, { ...paramsObj, token: Config.security.token });
-        if (res.data) {
-            setNotes(_.orderBy(res.data, 'title', 'asc'));
+        try {
+            const res = await Axios.post(url, { ...paramsObj, token: Config.security.token, type: 'site' });
+            if (res.data) {
+                setNotes(_.orderBy(res.data, 'title', 'asc'));
+            }
+            setShowInput('');
+            setShowContent('');
+        } catch (e) {
+            console.log(`Error ${url} : `, e.message);
         }
-        setShowInput('');
-        setShowContent('');
     };
 
     const handleChange = (e: ChangeEvent<HTMLTextAreaElement>): void => {
@@ -66,10 +74,9 @@ const Notes = (): React.ReactElement => {
 
     const handleChangeModal = (e: ChangeEvent<HTMLInputElement>): void => {
         if (e.target.tagName === 'INPUT') {
-            setNoteTitle(e.target.value);
-        } else {
-            setContent(e.target.value);
+            return setNoteTitle(e.target.value);
         }
+        setContent(e.target.value);
     };
 
     const handleCreateNote = (): void => {

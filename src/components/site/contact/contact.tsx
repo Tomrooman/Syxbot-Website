@@ -24,40 +24,40 @@ const Contact = (): React.ReactElement => {
         }
     });
 
-    const sendMessage = (): void => {
+    const sendMessage = async (): Promise<void> => {
         if (mail.length >= 1 && object.length >= 1 && message.length >= 1) {
             $('.alert')[0].style.display = 'none';
             $('.contact-submit-div')[0].children[0].innerHTML = 'Envoi du message en cours ...';
             $('.contact-submit-div button')[0].style.opacity = '';
             $('.contact-submit-div button')[0].style.cursor = '';
             $('.alert')[0].className = 'contact alert';
-            axios.post('/api/docs/contact', {
-                mail: mail,
-                object: object,
-                message: message,
-                token: Config.security.token
-            })
-                .then((res): void => {
-                    $('.contact-submit-div')[0].children[0].innerHTML = 'Envoyer mon message';
-                    if (res.data) {
-                        setMail('');
-                        setObject('');
-                        setMessage('');
-                        $('input')[0].textContent = '';
-                        $('input')[1].textContent = '';
-                        $('textarea')[0].textContent = '';
-                        $('.alert').addClass('alert-success');
-                        $('.alert').html('<span>' + $('.alert')[0].children[0].innerHTML + '</span><span style="display: none">' + $('.alert')[0].children[1].innerHTML + '</span> Message envoyé !');
-                        $('.alert')[0].style.display = '';
-                    }
-                    else {
-                        handleError();
-                    }
-                })
-                .catch(() => {
-                    $('.contact-submit-div')[0].children[0].innerHTML = 'Envoyer mon message';
-                    handleError();
+            try {
+                const { data } = await axios.post('/api/docs/contact', {
+                    mail: mail,
+                    object: object,
+                    message: message,
+                    token: Config.security.token,
+                    type: 'site'
                 });
+                $('.contact-submit-div')[0].children[0].innerHTML = 'Envoyer mon message';
+                if (data) {
+                    setMail('');
+                    setObject('');
+                    setMessage('');
+                    $('input')[0].textContent = '';
+                    $('input')[1].textContent = '';
+                    $('textarea')[0].textContent = '';
+                    $('.alert').addClass('alert-success');
+                    $('.alert').html('<span>' + $('.alert')[0].children[0].innerHTML + '</span><span style="display: none">' + $('.alert')[0].children[1].innerHTML + '</span> Message envoyé !');
+                    $('.alert')[0].style.display = '';
+                    return;
+                }
+                handleError();
+            } catch (e) {
+                console.log('Error /api/docs/contact : ', e.message);
+                $('.contact-submit-div')[0].children[0].innerHTML = 'Envoyer mon message';
+                handleError();
+            }
         }
     };
 

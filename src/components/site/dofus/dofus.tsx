@@ -6,10 +6,10 @@ import Notes from './notes/notes';
 import Dragodindes from './dragodindes/dragodindes';
 import Fecondator from './fecondator/fecondator';
 import Craft from './craft/craft';
-import Config from './../../../../config.json';
 import { userType } from '../../../@types/user';
 
 import './dofus.css';
+import './dofus_menu.css';
 
 interface propsType {
     user: userType;
@@ -30,15 +30,20 @@ const Dofus = (props: propsType): React.ReactElement => {
                 setContent(<Fecondator user={props.user} />);
             } else if (props.urlArg === 'craft') {
                 setContent(<Craft />);
-            } else {
-                window.location.href = Config.OAuth.redirect_url;
             }
             setLoaded(true);
         }
     });
 
+    // return (
+    //     String(content.type) !== 'Symbol(react.fragment)' ? content : <></>
+    // );
     return (
-        String(content.type) !== 'Symbol(react.fragment)' ? content : <></>
+        <div className='dofus-menu-container'>
+            <h5>Mes notes</h5>
+            <h5>Mes dragodindes</h5>
+            <h5>Fécondator</h5>
+        </div>
     );
 };
 

@@ -1,0 +1,20 @@
+.dofus-menu-container {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: 'Bree Serif', serif;
+}
+
+.dofus-menu-container h5 {
+    display: inline-block;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    color: rgb(31, 31, 31);
+    background: white;
+    /* background: linear-gradient(45deg, #644975d3 0%, #6b4646d8 100%); */
+    border: 1px solid rgba(109, 109, 109, 0.3);
+    margin-top : 1rem;
+    box-shadow: 0px 3px 3px 0px rgba(116, 69, 131, 0.5);
+}

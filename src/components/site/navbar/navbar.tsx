@@ -9,6 +9,8 @@ import { faSignOutAlt, faUserCircle, faBook } from '@fortawesome/free-solid-svg-
 import { faDiscord } from '@fortawesome/free-brands-svg-icons';
 import { userType } from '../../../@types/user';
 
+import './navbar.css';
+
 library.add(faSignOutAlt);
 library.add(faDiscord);
 library.add(faUserCircle);
@@ -17,74 +19,35 @@ library.add(faBook);
 interface propsType {
     page: string;
     randStr: string;
-    urlArg: string;
     user: userType;
     disconnect(): void;
 }
 
 const Navbar = (props: propsType): React.ReactElement => {
     return (
-        <nav className='navbar navbar-expand-lg navbar-dark navbar-site'>
+        <nav className='navbar navbar-expand-md navbar-dark navbar-site'>
             <a className='navbar-brand' href='/'>
                 Syxbot
             </a>
-            <button className='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation'>
-                <span className='navbar-toggler-icon' />
-            </button>
-            <div className='collapse navbar-collapse' id='navbarSupportedContent'>
-                <ul className='navbar-nav mr-auto'>
+            <ul className='nav navbar-nav mr-auto'>
+                <a href='/'>
                     <li className={props.page === '/' ? 'nav-item active' : 'nav-item'}>
-                        <a className='nav-link' href='/'><p> Accueil </p></a>
+                        <span className='nav-link'>
+                            <img src='/assets/img/ico/home.png' alt='home_icon' />
+                            <p> Accueil </p>
+                        </span>
                     </li>
+                </a>
+                <a href='/dofus'>
                     <li className={props.page === 'dofus' ? 'nav-item active' : 'nav-item'}>
-                        <div className='dropdown'>
-                            <button className='dofus-dropdown dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
-                                <img src='/assets/img/dofus.png' alt='dofus_icon' />
-                                <p>Dofus</p>
-                            </button>
-                            <div className='dropdown-menu dropdown-menu-left dofus-dropdown-list' aria-labelledby='dropdownMenuButton'>
-                                <a
-                                    href='/dofus/notes'
-                                    className={props.urlArg === 'notes' ? 'dropdown-item active' : 'dropdown-item'}
-                                >
-                                    Mes notes {!props.user ? <span className='dofus-need-connection'><p>(connexion nécessaire)</p></span> : ''}
-                                </a>
-                                <a
-                                    href='/dofus/craft'
-                                    className={props.urlArg === 'craft' ? 'dropdown-item active' : 'dropdown-item'}
-                                >
-                                    Crafts
-                                </a>
-                                <a
-                                    href='/dofus/parchment'
-                                    className={props.urlArg === 'parchment' ? 'dropdown-item active' : 'dropdown-item'}
-                                >
-                                    Parchemins
-                                </a>
-                                <a
-                                    href='/dofus/gestation'
-                                    className={props.urlArg === 'gestation' ? 'dropdown-item active' : 'dropdown-item'}
-                                >
-                                    Temps de gestation
-                                </a>
-                                <a
-                                    href='/dofus/dragodindes'
-                                    className={props.urlArg === 'dragodindes' ? 'dropdown-item active' : 'dropdown-item'}
-                                >
-                                    Mes dragodindes {!props.user ? <span className='dofus-need-connection'><p>(connexion nécessaire)</p></span> : ''}
-                                </a>
-                                <a
-                                    href='/dofus/fecondator'
-                                    className={props.urlArg === 'fecondator' ? 'dropdown-item active' : 'dropdown-item'}
-                                >
-                                    Fécondator {!props.user ? <span className='dofus-need-connection'><p>(connexion nécessaire)</p></span> : ''}
-                                </a>
-                            </div>
-                        </div>
+                        <span className='nav-link'>
+                            <img src='/assets/img/ico/dofus.png' alt='dofus_icon' />
+                            <p> Dofus </p>
+                        </span>
                     </li>
-                </ul>
-            </div>
-            <div className='form-inline my-2 my-lg-0'>
+                </a>
+            </ul>
+            <ul className='form-inline my-2 my-lg-0'>
                 {
                     props.user ?
                         <div className='dropdown'>
@@ -117,7 +80,7 @@ const Navbar = (props: propsType): React.ReactElement => {
                             </button>
                         </a>
                 }
-            </div>
+            </ul>
         </nav>
     );
 };
@@ -132,8 +95,7 @@ Navbar.propTypes = {
         PropTypes.object.isRequired,
         PropTypes.bool.isRequired
     ]),
-    disconnect: PropTypes.func.isRequired,
-    urlArg: PropTypes.string.isRequired
+    disconnect: PropTypes.func.isRequired
 };
 
 export default Navbar;

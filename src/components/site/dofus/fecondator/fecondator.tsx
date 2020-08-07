@@ -43,25 +43,30 @@ const Fecondator = (props: propsType): React.ReactElement => {
     });
 
     const getDataAndSetConst = async (): Promise<void> => {
-        const res = await Axios.post('/api/dofus/dragodindes/fecondator', {
-            token: Config.security.token
-        });
-        if (res.data && res.data.dragodindes) {
-            const sortedDragodindes = res.data.dragodindes;
-            const now = Date.now();
-            const ddFecond = res.data.ddFecond || false;
-            setDragodindes(sortedDragodindes);
-            setShowedDragodindes(sortedDragodindes);
-            const newAccouchDate = getAccouchDate(now, ddFecond, sortedDragodindes);
-            setAccouchDate(newAccouchDate);
-            if (ddFecond) {
-                setLast(ddFecond);
+        try {
+            const res = await Axios.post('/api/dofus/dragodindes/fecondator', {
+                token: Config.security.token,
+                type: 'site'
+            });
+            if (res.data && res.data.dragodindes) {
+                const sortedDragodindes = res.data.dragodindes;
+                const now = Date.now();
+                const ddFecond = res.data.ddFecond || false;
+                setDragodindes(sortedDragodindes);
+                setShowedDragodindes(sortedDragodindes);
+                const newAccouchDate = getAccouchDate(now, ddFecond, sortedDragodindes);
+                setAccouchDate(newAccouchDate);
+                if (ddFecond) {
+                    setLast(ddFecond);
+                }
+                countdown(Date.now(), ddFecond, sortedDragodindes);
+                countDownInterval(ddFecond, sortedDragodindes);
+                setWait(false);
+            } else if (wait) {
+                setWait(false);
             }
-            countdown(Date.now(), ddFecond, sortedDragodindes);
-            countDownInterval(ddFecond, sortedDragodindes);
-            setWait(false);
-        } else if (wait) {
-            setWait(false);
+        } catch (e) {
+            console.log('Error /api/dofus/dragodindes/fecondator : ', e.message);
         }
     };
 
@@ -162,10 +167,9 @@ const Fecondator = (props: propsType): React.ReactElement => {
             endMin -= Math.floor(endMin / 60) * 60;
             endSec -= Math.floor(endSec / 60) * 60;
             if (!finishTime) {
-                setFinishTime(setLateTimeRemaining(endHours, endMin, endSec));
-            } else {
-                $('.finish-countdown')[0].innerHTML = setLateTimeRemaining(endHours, endMin, endSec);
+                return setFinishTime(setLateTimeRemaining(endHours, endMin, endSec));
             }
+            $('.finish-countdown')[0].innerHTML = setLateTimeRemaining(endHours, endMin, endSec);
         } else {
             setFinishTime('Maintenant');
         }
@@ -212,25 +216,28 @@ const Fecondator = (props: propsType): React.ReactElement => {
         setShow(true);
     };
 
-    const handleCallAutomateAPI = (): void => {
-        Promise.all([
-            Axios.post('/api/dofus/dragodindes/status/used/update', {
-                dragodindes: selectedDrago.used,
-                token: Config.security.token
-            }),
-            Axios.post('/api/dofus/dragodindes/status/last/update', {
-                dragodindes: selectedDrago.last,
-                token: Config.security.token
-            })
-        ]).then((): void => {
+    const handleCallAutomateAPI = async (): Promise<void> => {
+        try {
+            await Promise.all([
+                Axios.post('/api/dofus/dragodindes/status/used/update', {
+                    dragodindes: selectedDrago.used,
+                    token: Config.security.token,
+                    type: 'site'
+                }),
+                Axios.post('/api/dofus/dragodindes/status/last/update', {
+                    dragodindes: selectedDrago.last,
+                    token: Config.security.token,
+                    type: 'site'
+                })]);
             handleClose();
             clearInterval(interval[0]);
             window.location.reload();
-        }).catch((): void => {
+        } catch (e) {
+            console.log('Error /api/dofus/dragodindes/status/:type/:action');
             setTimeout(() => {
                 handleCallAutomateAPI();
             }, 1500);
-        });
+        }
     };
 
     const handleClose = (): void => {
