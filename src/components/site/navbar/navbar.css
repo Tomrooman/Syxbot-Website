@@ -5,7 +5,7 @@
 /* ---------------------------- NAVBAR ---------------------------- */
 
 .navbar-site {
-    min-width: 390px;
+    min-width: 530px;
     padding-top : 0;
     padding-bottom : 0;
     vertical-align: middle;
@@ -104,11 +104,6 @@
     margin-right: 3px;
 }
 
-.discriminator {
-    font-size: 0.9rem;
-    color: rgb(226, 226, 226);
-}
-
 .user-dropdown:active {
     opacity: 0.8;
 }
@@ -130,6 +125,7 @@
     padding : .2rem 1rem;
     text-align: center;
     vertical-align: middle;
+    font-family: 'Bree Serif', serif;
 }
 
 .user-dropdown:hover {
@@ -138,6 +134,7 @@
 
 .user-dropdown p {
     margin : 0;
+    width: 6rem;
 }
 
 .user-dropdown svg {

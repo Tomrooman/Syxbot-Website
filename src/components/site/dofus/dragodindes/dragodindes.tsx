@@ -223,8 +223,7 @@ const Dragodindes = (): React.ReactElement => {
                 dragodindes={dragodindes}
                 dragoJSON={dragoJSONConst}
             />
-            <h2 className='craft-title text-center'>Mes dragodindes</h2>
-            <div className='notes-btn col-sm-12 text-center'>
+            <div className='top-btn col-sm-12 text-center'>
                 {!selectedDrago.length ?
                     <button
                         className='my-dragodindes-add-btn'
@@ -251,99 +250,103 @@ const Dragodindes = (): React.ReactElement => {
                     >
                         Supprimer la sélection
                     </button>}
-                <a href='/dofus/fecondator'>
-                    <button>Fécondator</button>
-                </a>
             </div>
             {dragodindes.length ?
-                <div className='text-center principal-dragodindes-div col-sm-11 col-md-10 col-lg-8 col-xl-6'>
-                    <input
-                        className='input-parcho'
-                        placeholder='Rechercher'
-                        onChange={handleChange}
-                    />
-                    <div className='my-dragodindes-container'>
-                        {showedDragodindes.length ?
-                            showedDragodindes.map((drago, index) => {
-                                return (
-                                    <div
-                                        className={drago.selected ? 'my-drago-line-selected' : drago.last?.status ? 'my-drago-line-last' : drago.used ? 'my-drago-line-used' : 'my-drago-line'}
-                                        key={index}
-                                    >
-                                        <div className='my-dragodindes-name col-9'>
-                                            <img src={'/assets/img/dragodindes/' + drago.name.toLowerCase().split(' ').join('-') + '.png'} alt='dd_icon' />
-                                            {drago.last?.status ?
-                                                <p>{drago.name}<span className='my-drago-fecond-message'> - Fécondée</span></p> : drago.used ?
-                                                    <p>{drago.name}<span className='my-drago-used-message'> - Utilisée</span></p> :
-                                                    <p>{drago.name}</p>}
-                                        </div>
-                                        <div className='my-dragodindes-icons col-3'>
-                                            {!drago.used && action !== 'remove' ?
-                                                <Tooltip
-                                                    title='Définir comme déjà utilisée'
-                                                    placement='top'
-                                                >
-                                                    <span
-                                                        className='icon-used'
-                                                        onClick={() => handleUnusedDragodindes(drago)}
-                                                    >
-                                                        <FontAwesomeIcon icon='toggle-off' />
-                                                    </span>
-                                                </Tooltip> : drago.used && action !== 'remove' ?
+                <>
+                    <div className='input-parcho-div'>
+                        <div className='input-parcho-label'>
+                            <h4>Recherche par nom</h4>
+                        </div>
+                        <input
+                            className='input-parcho'
+                            placeholder='Rechercher'
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className='text-center principal-dragodindes-div col-sm-11 col-md-10 col-lg-8 col-xl-6'>
+                        <div className='my-dragodindes-container'>
+                            {showedDragodindes.length ?
+                                showedDragodindes.map((drago, index) => {
+                                    return (
+                                        <div
+                                            className={drago.selected ? 'my-drago-line-selected' : drago.last?.status ? 'my-drago-line-last' : drago.used ? 'my-drago-line-used' : 'my-drago-line'}
+                                            key={index}
+                                        >
+                                            <div className='my-dragodindes-name col-9'>
+                                                <img src={'/assets/img/dragodindes/' + drago.name.toLowerCase().split(' ').join('-') + '.png'} alt='dd_icon' />
+                                                {drago.last?.status ?
+                                                    <p>{drago.name}<span className='my-drago-fecond-message'> - Fécondée</span></p> : drago.used ?
+                                                        <p>{drago.name}<span className='my-drago-used-message'> - Utilisée</span></p> :
+                                                        <p>{drago.name}</p>}
+                                            </div>
+                                            <div className='my-dragodindes-icons col-3'>
+                                                {!drago.used && action !== 'remove' ?
                                                     <Tooltip
-                                                        title='Définir comme disponible'
+                                                        title='Définir comme déjà utilisée'
                                                         placement='top'
                                                     >
                                                         <span
                                                             className='icon-used'
                                                             onClick={() => handleUnusedDragodindes(drago)}
                                                         >
-                                                            <FontAwesomeIcon icon='toggle-on' />
+                                                            <FontAwesomeIcon icon='toggle-off' />
                                                         </span>
-                                                    </Tooltip> : ''}
-                                            {(!selectedDrago.length || show) && !drago.last?.status ?
-                                                <Tooltip
-                                                    title='Définir comme la dernière dragodinde fécondée'
-                                                    placement='top'
-                                                >
-                                                    <span
-                                                        className='icon-heart'
-                                                        onClick={() => handleLastDragodinde(drago)}
-                                                    >
-                                                        <FontAwesomeIcon icon='heart' />
-                                                    </span>
-                                                </Tooltip> : (!selectedDrago.length || show) && drago.last?.status ?
+                                                    </Tooltip> : drago.used && action !== 'remove' ?
+                                                        <Tooltip
+                                                            title='Définir comme disponible'
+                                                            placement='top'
+                                                        >
+                                                            <span
+                                                                className='icon-used'
+                                                                onClick={() => handleUnusedDragodindes(drago)}
+                                                            >
+                                                                <FontAwesomeIcon icon='toggle-on' />
+                                                            </span>
+                                                        </Tooltip> : ''}
+                                                {(!selectedDrago.length || show) && !drago.last?.status ?
                                                     <Tooltip
-                                                        title='Retirer la fécondation'
+                                                        title='Définir comme la dernière dragodinde fécondée'
                                                         placement='top'
                                                     >
                                                         <span
                                                             className='icon-heart'
                                                             onClick={() => handleLastDragodinde(drago)}
                                                         >
-                                                            <FontAwesomeIcon icon='heart-broken' />
+                                                            <FontAwesomeIcon icon='heart' />
+                                                        </span>
+                                                    </Tooltip> : (!selectedDrago.length || show) && drago.last?.status ?
+                                                        <Tooltip
+                                                            title='Retirer la fécondation'
+                                                            placement='top'
+                                                        >
+                                                            <span
+                                                                className='icon-heart'
+                                                                onClick={() => handleLastDragodinde(drago)}
+                                                            >
+                                                                <FontAwesomeIcon icon='heart-broken' />
+                                                            </span>
+                                                        </Tooltip> : ''}
+                                                {action !== 'unused' ?
+                                                    <Tooltip title={drago.selected ? 'Retirer de la sélection' : 'Sélectionner pour la suppression'} placement='top'>
+                                                        <span
+                                                            className='icon-cross'
+                                                            onClick={() => handleSelectMyDragodindes(drago.name, drago.duration, drago.generation, drago.selected)}
+                                                        >
+                                                            <FontAwesomeIcon icon='times-circle' />
                                                         </span>
                                                     </Tooltip> : ''}
-                                            {action !== 'unused' ?
-                                                <Tooltip title={drago.selected ? 'Retirer de la sélection' : 'Sélectionner pour la suppression'} placement='top'>
-                                                    <span
-                                                        className='icon-cross'
-                                                        onClick={() => handleSelectMyDragodindes(drago.name, drago.duration, drago.generation, drago.selected)}
-                                                    >
-                                                        <FontAwesomeIcon icon='times-circle' />
-                                                    </span>
-                                                </Tooltip> : ''}
+                                            </div>
                                         </div>
+                                    );
+                                }) :
+                                <div className='empty-drago-line'>
+                                    <div className='my-dragodindes-name'>
+                                        <h1>Aucun résultat</h1>
                                     </div>
-                                );
-                            }) :
-                            <div className='empty-drago-line'>
-                                <div className='my-dragodindes-name'>
-                                    <p>Aucun résultat</p>
-                                </div>
-                            </div>}
+                                </div>}
+                        </div>
                     </div>
-                </div> :
+                </> :
                 wait ?
                     <div className='text-center loading-notes-message'>
                         <h1>Chargement des dragodindes <span className='custom-spinner-notes' /></h1>

@@ -19,31 +19,71 @@ interface propsType {
 const Dofus = (props: propsType): React.ReactElement => {
     const [content, setContent] = useState(<></>);
     const [loaded, setLoaded] = useState(false);
+    const [menuChoice, setMenuChoice] = useState(props.urlArg);
 
-    useEffect((): void => {
+    useEffect(() => {
         if (!loaded) {
-            if (props.urlArg === 'notes' && props.user) {
-                setContent(<Notes />);
-            } else if (props.urlArg === 'dragodindes' && props.user) {
-                setContent(<Dragodindes />);
-            } else if (props.urlArg === 'fecondator' && props.user) {
-                setContent(<Fecondator user={props.user} />);
-            } else if (props.urlArg === 'craft') {
-                setContent(<Craft />);
-            }
+            setContentFunc(menuChoice);
             setLoaded(true);
         }
     });
+
+    const setChoice = (choice: string): void => {
+        if (choice !== menuChoice) {
+            setMenuChoice(choice);
+            setContentFunc(choice);
+        }
+    };
+
+    const setContentFunc = (choice: string): void => {
+        if (choice === 'notes' && props.user) {
+            setContent(<Notes />);
+        } else if (choice === 'dragodindes' && props.user) {
+            setContent(<Dragodindes />);
+        } else if (choice === 'fecondator' && props.user) {
+            setContent(<Fecondator user={props.user} />);
+        } else if (choice === 'craft') {
+            setContent(<Craft />);
+        }
+    };
 
     // return (
     //     String(content.type) !== 'Symbol(react.fragment)' ? content : <></>
     // );
     return (
-        <div className='dofus-menu-container'>
-            <h5>Mes notes</h5>
-            <h5>Mes dragodindes</h5>
-            <h5>Fécondator</h5>
-        </div>
+        <>
+            <div className='dofus-menu-container'>
+                <a href='#notes'>
+                    <h5
+                        className={menuChoice === 'notes' ? 'active' : ''}
+                        onClick={() => setChoice('notes')}
+                    >
+                        Mes notes
+                    </h5>
+                </a>
+                <a href='#dragodindes'>
+                    <h5
+                        className={menuChoice === 'dragodindes' ? 'active' : ''}
+                        onClick={() => setChoice('dragodindes')}
+                    >
+                        Mes dragodindes
+                    </h5>
+                </a>
+                <a href='#fecondator'>
+                    <h5
+                        className={menuChoice === 'fecondator' ? 'active' : ''}
+                        onClick={() => setChoice('fecondator')}
+                    >
+                        Fécondator
+                    </h5>
+                </a>
+            </div>
+            {String(content.type) !== 'Symbol(react.fragment)' ?
+                content :
+                <div>
+                    <h1>Veuillez faire un choix</h1>
+                </div>}
+        </>
     );
 };
 

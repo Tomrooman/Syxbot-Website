@@ -129,10 +129,7 @@ const Notes = (): React.ReactElement => {
                 title={title}
                 removeNote={removeNote}
             />
-            <h2 className='infos-title text-center'>
-                Mes notes
-            </h2>
-            <div className='notes-btn col-sm-12 text-center'>
+            <div className='top-btn col-sm-12 text-center'>
                 <button onClick={() => showModal('new')}>Ajouter une note</button>
             </div>
             <div className='container col-10 notes-container row'>

@@ -29,7 +29,10 @@ const Navbar = (props: propsType): React.ReactElement => {
             <a className='navbar-brand' href='/'>
                 Syxbot
             </a>
-            <ul className='nav navbar-nav mr-auto'>
+            <button className='navbar-toggler' type='button' data-toggle='collapse' data-target='#toHide' aria-controls='toHide' aria-expanded='false' aria-label='Toggle navigation'>
+                <span className='navbar-toggler-icon' />
+            </button>
+            <ul className='nav navbar-nav mr-auto collapse navbar-collapse' id='toHide'>
                 <a href='/'>
                     <li className={props.page === '/' ? 'nav-item active' : 'nav-item'}>
                         <span className='nav-link'>
@@ -56,10 +59,7 @@ const Navbar = (props: propsType): React.ReactElement => {
                                     <FontAwesomeIcon icon='user-circle' />
                                     <p>
                                         <span className='username'>
-                                            {props.user.username}
-                                        </span>
-                                        <span className='discriminator'>
-                                            #{props.user.discriminator}
+                                            {props.user.username.length > 10 ? props.user.username.substr(0, 9) + '...' : props.user.username}
                                         </span>
                                     </p>
                                 </div>

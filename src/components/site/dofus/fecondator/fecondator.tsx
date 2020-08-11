@@ -35,12 +35,15 @@ const Fecondator = (props: propsType): React.ReactElement => {
     const [loaded, setLoaded] = useState(false);
     let interval: any = {};
 
-    useEffect((): void => {
+    useEffect(() => {
         if (wait && !loaded) {
             getDataAndSetConst();
             setLoaded(true);
         }
-    });
+        return () => {
+            clearInterval(interval);
+        };
+    }, [props]);
 
     const getDataAndSetConst = async (): Promise<void> => {
         try {
@@ -51,7 +54,7 @@ const Fecondator = (props: propsType): React.ReactElement => {
             if (res.data && res.data.dragodindes) {
                 const sortedDragodindes = res.data.dragodindes;
                 const now = Date.now();
-                const ddFecond = res.data.ddFecond || false;
+                const ddFecond = res.data.ddFecond && Object.keys(res.data.ddFecond).length ? res.data.ddFecond : false;
                 setDragodindes(sortedDragodindes);
                 setShowedDragodindes(sortedDragodindes);
                 const newAccouchDate = getAccouchDate(now, ddFecond, sortedDragodindes);
@@ -218,25 +221,16 @@ const Fecondator = (props: propsType): React.ReactElement => {
 
     const handleCallAutomateAPI = async (): Promise<void> => {
         try {
-            await Promise.all([
-                Axios.post('/api/dofus/dragodindes/status/used/update', {
-                    dragodindes: selectedDrago.used,
-                    token: Config.security.token,
-                    type: 'site'
-                }),
-                Axios.post('/api/dofus/dragodindes/status/last/update', {
-                    dragodindes: selectedDrago.last,
-                    token: Config.security.token,
-                    type: 'site'
-                })]);
+            await Axios.post('/api/dofus/dragodindes/fecondator/automate', {
+                dragodindes: selectedDrago,
+                token: Config.security.token,
+                type: 'site'
+            });
             handleClose();
             clearInterval(interval[0]);
             window.location.reload();
         } catch (e) {
-            console.log('Error /api/dofus/dragodindes/status/:type/:action');
-            setTimeout(() => {
-                handleCallAutomateAPI();
-            }, 1500);
+            console.log('Error /api/dofus/dragodindes/status/:type/:action : ', e.message);
         }
     };
 
@@ -258,12 +252,6 @@ const Fecondator = (props: propsType): React.ReactElement => {
                 show={show}
                 dragodindes={selectedDrago}
             />
-            <h1 className='craft-title text-center col-12 col-md-6'>Fécondator</h1>
-            <div className='notes-btn col-sm-12 text-center'>
-                <a href='/dofus/dragodindes'>
-                    <button>Mes dragodindes</button>
-                </a>
-            </div>
             <div className='text-center fecondator-last-dragodinde col-sm-11 col-md-10 col-lg-9 col-xl-8'>
                 {Object.keys(last).length ?
                     <div className='fecondator-last-div col-9 col-sm-8 col-md-6'>

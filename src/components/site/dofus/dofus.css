@@ -20,13 +20,13 @@
 
 input {
     background-color: rgb(34, 34, 34);
-    color : rgb(167, 63, 60);
+    color : white;
     border-color : rgb(102, 46, 44);
 }
 
 .principal-container {
     /* height: 90.5vh; */
-    min-width: 390px;
+    min-width: 530px;
     width : 100%;
 }
 
@@ -123,11 +123,10 @@ input {
 }
 
 .principal-dragodindes-div {
-    border : 1px solid rgba(92, 92, 92, 0.733);
-    border-radius : 10px;
+    /* border : 1px solid rgba(92, 92, 92, 0.733);
+    border-radius : 10px; */
     margin-left : auto;
     margin-right : auto;
-    box-shadow: 0px 0px 5px rgba(92, 92, 92, 0.733);
     margin-bottom : 7rem;
     padding-left: 0;
     padding-right: 0;
@@ -169,25 +168,28 @@ input {
     margin-top : 2rem;
 }
 
-.my-drago-line {
-    padding-top : 5px;
-    padding-bottom : 5px;
-    padding-right: 10px;
-    border-left: 1px solid rgba(29, 29, 29, 0);
-    border-right: 1px solid rgba(29, 29, 29, 0);
-    border-bottom : 1px solid rgb(184, 184, 184);
-    border-top : 1px solid rgba(0, 128, 0, 0);
-    transition: all 0.2s;
-    vertical-align: middle;
+.my-drago-line-last {
     color: rgb(39, 39, 39);
-    margin-bottom : 0px;
-    background : rgb(255, 255, 255);
-    position: relative;
+    background : rgb(166, 190, 201);
+    border: 1px solid rgb(24, 100, 134);
 }
 
-.fecondator-line:last-child {
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+.my-drago-line, .my-drago-line-last {
+    padding-top : 5px;
+    padding-bottom : 5px;
+    padding-right: 10px; 
+    transition: all 0.2s;
+    vertical-align: middle;
+    margin-bottom : 0px;
+    position: relative;
+    border-radius: 5px;
+}
+
+.my-drago-line {
+    background : rgb(255, 255, 255);
+    box-shadow: 0px 0px 4px rgba(126, 126, 126, 0.452);
+    color: rgb(39, 39, 39);
+    border : 1px solid rgb(145, 145, 145);
 }
 
 .fecondator-line {
@@ -195,8 +197,8 @@ input {
     padding-bottom : 5px;
     padding-left: 10px;
     padding-right: 10px;
-    border-bottom : 1px solid rgb(184, 184, 184);
-    border-top : 1px solid rgba(0, 128, 0, 0);
+    border : 1px solid rgb(145, 145, 145);
+    box-shadow: 0px 0px 4px rgba(126, 126, 126, 0.452);
     transition: all 0.2s;
     vertical-align: middle;
     color: rgb(39, 39, 39);
@@ -207,6 +209,7 @@ input {
 .fecondator-line p {
     margin-bottom : 0;
     color: rgb(39, 39, 39);
+    font-family: 'Roboto', serif;
 }
 
 .fecondator-time-now {
@@ -271,7 +274,6 @@ input {
     padding-top : 5px;
     padding-bottom : 5px;
     padding-right: 10px;
-    border-bottom : 1px solid grey;
     vertical-align: middle;
     color: rgb(39, 39, 39);
     margin-bottom : 0px;
@@ -288,7 +290,6 @@ input {
     padding-top : 5px;
     padding-bottom : 5px;
     padding-right: 10px;
-    border-bottom : 1px solid grey;
     transition: all 0.2s;
     vertical-align: middle;
     color: rgb(39, 39, 39);
@@ -303,36 +304,17 @@ input {
     color : rgb(107, 20, 17);
 }
 
-.my-dragodindes-container div:last-child {
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+.my-dragodindes-container div {
+    border-radius: 5px;
+    margin-bottom: .25rem;
 }
 
 .my-drago-fecond-message, .my-drago-used-message {
     font-size: 0.8rem;
 }
 
-.my-drago-line-last {
-    background : rgb(166, 190, 201);
-    border: 1px solid rgb(24, 100, 134);
-    transition: all 0.2s;
-    padding-top : 5px;
-    padding-bottom : 5px;
-    padding-right: 10px;
-    border-bottom : 1px solid grey;
-    transition: all 0.2s;
-    vertical-align: middle;
-    color: rgb(39, 39, 39);
-    margin-bottom : 0px;
-}
-
 .my-drago-line-last .my-dragodindes-name p {
     color : rgb(21, 72, 95) !important;
-}
-
-.my-drago-line-selected:last-child {
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
 }
 
 .my-dragodindes-name {
@@ -437,37 +419,17 @@ input {
     opacity : .5;
 }
 
-.my-drago-line:first-child, .fecondator-line:first-child {
-    border-top : 1px solid grey;
-}
-
-.my-drago-line:last-child {
-    border-bottom : 1px solid rgba(0, 0, 0, 0);
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
-
-.drago-line:last-child {
-    border-bottom : hidden;
-}
-
-.my-drago-line:hover {
-    /* background : rgba(105, 75, 141, 0.247) !important; */
-    transition: all 0.2s;
-    box-shadow: 0px 0px 4px rgb(17, 17, 17);
-    z-index: 2;
-}
-
 .my-dragodindes-name p {
     color: rgb(39, 39, 39);
     display: inline-block;
     vertical-align: middle;
     margin-bottom : 0px;
+    font-family: 'Roboto', serif;
 }
 
 .empty-drago-line {
-    padding-top : 10px;
-    padding-bottom : 10px;
+    padding-top : 3rem;
+    color: rgb(77, 77, 77);
 }
 
 .add-drago-list .empty-drago-line {
@@ -618,16 +580,8 @@ input:focus {
     justify-content: center;
 }
 
-.notes-btn {
+.top-btn {
     margin-bottom  :2rem;
-}
-
-.infos-title {
-    padding-top : 1rem;
-    padding-bottom : 1rem;
-    margin-bottom : 2rem;
-    color : rgb(206, 194, 193);
-    letter-spacing: 0.3rem;
 }
 
 .one_infos:hover {
@@ -669,19 +623,6 @@ input:focus {
     margin-bottom : 1rem;
 }
 
-.parcho-title {
-    padding-top : 0.7rem;
-    padding-bottom : 0.3rem;
-    color : rgb(206, 194, 193);
-}
-
-.craft-title {
-    color : rgb(206, 194, 193);
-    padding-top : 1rem;
-    padding-bottom : 1rem;
-    margin-bottom : 2rem;
-}
-
 .category {
     color : rgb(206, 194, 193);
     padding-top : 0.8rem;
@@ -692,19 +633,6 @@ input:focus {
     border-radius : 10px;
     box-shadow: 0px 0px 5px rgba(92, 92, 92, 0.733);
     cursor : pointer;
-}
-
-.craft-title, .infos-title {
-    /* background-color : rgb(61, 61, 61); */
-    color: rgb(29, 29, 29);
-    letter-spacing : 5px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom : 15px;
-    /* border-botrgb(36, 36, 36)id rgba(92, 92, 92, 0.733);
-    border-top : 1px solid rgba(92, 92, 92, 0.733); */
-    font-family: 'Bree Serif', serif;
-    /* font-family: 'Rakkas', cursive; */
 }
 
 .category:hover {
@@ -777,9 +705,19 @@ input:focus {
     margin-bottom : 2rem;
 }
 
+.input-parcho-div {
+    max-width: 830px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.input-parcho-label {
+    font-family: 'Bree Serif', serif;
+}
+
 .input-parcho {
     margin-bottom :1rem;
-    margin-top: 1rem;
     width : 50%;
 }
 

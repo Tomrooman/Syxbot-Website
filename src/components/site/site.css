@@ -48,7 +48,7 @@
 
 .website-container {
     width : 100%;
-    display: flex;
+    /* display: flex; */
 }
 
 .custom-spinner {
@@ -128,7 +128,8 @@
 /* ---------------------------- HOME ---------------------------- */
 
 body {
-    background: rgb(231, 231, 231);;
+    font-family: 'Roboto', serif;
+    background: rgb(228, 228, 228);
 }
 
 #container {

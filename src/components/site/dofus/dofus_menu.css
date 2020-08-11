@@ -1,20 +1,37 @@
 .dofus-menu-container {
     text-align: center;
-    margin-left: auto;
-    margin-right: auto;
+    /* margin-left: auto;
+    margin-right: auto; */
     font-family: 'Bree Serif', serif;
+    min-width: 530px;
+    margin-bottom: 2rem;
+    padding-bottom: .5rem;
 }
 
 .dofus-menu-container h5 {
+    transition: all .3s;
     display: inline-block;
-    margin-right: 1rem;
-    margin-left: 1rem;
+    margin-right: .7rem;
+    margin-left: .7rem;
     padding: 0.5rem 1rem;
     border-radius: 5px;
     color: rgb(31, 31, 31);
-    background: white;
-    /* background: linear-gradient(45deg, #644975d3 0%, #6b4646d8 100%); */
+    background: linear-gradient(45deg, #7248b51e 0%, #d041411c 100%);
     border: 1px solid rgba(109, 109, 109, 0.3);
-    margin-top : 1rem;
-    box-shadow: 0px 3px 3px 0px rgba(116, 69, 131, 0.5);
+    margin-top : .7rem;
+    box-shadow: 0px 3px 7px 0px rgba(37, 37, 37, 0.5);
+}
+
+.dofus-menu-container h5:hover {
+    transition: all .3s;
+    cursor: pointer;
+    color: white;
+    box-shadow: 0px 3px 7px 0px rgba(93, 51, 109, 0.993);
+    background: linear-gradient(45deg, #7248b57a 0%, #d0414175 100%);
+}
+
+.dofus-menu-container h5.active {
+    background: linear-gradient(45deg, #7248b5 0%, #d04141 100%);
+    box-shadow: 0px 3px 7px 0px rgba(93, 51, 109, 0.993);
+    color: white;
 }
