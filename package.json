@@ -12,7 +12,7 @@
     "cp:ssl:files": "rm -rf cert/ && mkdir cert/ && cp /etc/letsencrypt/live/syxbot.com/privkey.pem cert/ && cp /etc/letsencrypt/live/syxbot.com/fullchain.pem cert/",
     "start:container": "docker run --restart=always --network=host --name syxbot-website-nginx -d syxbot-website-nginx",
     "stop:container": "docker stop syxbot-website-nginx && docker container rm syxbot-website-nginx",
-    "build:container": "yarn cp:master:config && yarn build && yarn cp:ssl:files && cp /etc/nginx/sites-enabled/default cert/ && docker build -t syxbot-website-nginx -f ./nginx/Dockerfile . && yarn cp:dev:config",
+    "build:container": "docker image prune -f && yarn cp:master:config && yarn build && yarn cp:ssl:files && cp /etc/nginx/sites-enabled/default cert/ && docker build -t syxbot-website-nginx -f ./nginx/Dockerfile . && yarn cp:dev:config",
     "deploy:container": "yarn build:container && yarn tag:container && yarn push:container",
     "cp:master:config": "rm config.json && cp 'private/config - master.json' ./ && mv 'config - master.json' config.json",
     "cp:dev:config": "rm config.json && cp 'private/config - dev.json' ./ && mv 'config - dev.json' config.json",
