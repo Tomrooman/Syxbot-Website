@@ -4,38 +4,38 @@ import React, { useState, useEffect, ChangeEvent } from 'react';
 import Axios from 'axios';
 import _ from 'lodash';
 import $ from 'jquery';
-import NotesModal from './modal';
+import EnclosModal from './modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { noteType, createNoteType, modifyNoteType } from '../../../../@types/notes';
+import { enclosType, createEnclosType, modifyEnclosType } from '../../../../@types/enclos';
 import Config from '../../../../../config.json';
 
-const Notes = (): React.ReactElement => {
+const Enclos = (): React.ReactElement => {
     const [showInput, setShowInput] = useState('');
     const [showContent, setShowContent] = useState('');
-    const [removeNote, setRemoveNote] = useState({} as noteType);
+    const [removeEnclos, setRemoveEnclos] = useState({} as enclosType);
     const [wait, setWait] = useState(true);
     const [input, setInput] = useState('');
-    const [notes, setNotes] = useState([] as noteType[]);
+    const [enclos, setEnclos] = useState([] as enclosType[]);
     const [show, setShow] = useState(false);
     const [title, setTitle] = useState('');
-    const [noteTitle, setNoteTitle] = useState('');
+    const [enclosTitle, setEnclosTitle] = useState('');
     const [content, setContent] = useState('');
     const [loaded, setLoaded] = useState(false);
 
     useEffect((): void => {
         if (wait && !loaded) {
-            const getNotesAPI = async (): Promise<void> => {
+            const getEnclosAPI = async (): Promise<void> => {
                 try {
-                    const { data } = await Axios.post('/api/dofus/notes', { token: Config.security.token, type: 'site' });
+                    const { data } = await Axios.post('/api/dofus/enclos', { token: Config.security.token, type: 'site' });
                     if (data) {
-                        setNotes(_.orderBy(data, 'title', 'asc'));
+                        setEnclos(_.orderBy(data, 'title', 'asc'));
                     }
                     setWait(false);
                 } catch (e) {
-                    console.log('Error /api/dofus/notes : ', e.message);
+                    console.log('Error /api/dofus/enclos : ', e.message);
                 }
             };
-            getNotesAPI();
+            getEnclosAPI();
             setLoaded(true);
         }
     });
@@ -47,7 +47,7 @@ const Notes = (): React.ReactElement => {
 
     const handleClick = (newTitle: string, oldContent: string): void => {
         if (input !== content) {
-            updateNoteAPI('/api/dofus/notes/update', {
+            updateEnclosAPI('/api/dofus/enclos/update', {
                 title: newTitle,
                 oldContent: oldContent,
                 newContent: input
@@ -55,11 +55,11 @@ const Notes = (): React.ReactElement => {
         }
     };
 
-    const updateNoteAPI = async (url: string, paramsObj: createNoteType | modifyNoteType): Promise<void> => {
+    const updateEnclosAPI = async (url: string, paramsObj: createEnclosType | modifyEnclosType): Promise<void> => {
         try {
             const res = await Axios.post(url, { ...paramsObj, token: Config.security.token, type: 'site' });
             if (res.data) {
-                setNotes(_.orderBy(res.data, 'title', 'asc'));
+                setEnclos(_.orderBy(res.data, 'title', 'asc'));
             }
             setShowInput('');
             setShowContent('');
@@ -74,25 +74,25 @@ const Notes = (): React.ReactElement => {
 
     const handleChangeModal = (e: ChangeEvent<HTMLInputElement>): void => {
         if (e.target.tagName === 'INPUT') {
-            return setNoteTitle(e.target.value);
+            return setEnclosTitle(e.target.value);
         }
         setContent(e.target.value);
     };
 
-    const handleCreateNote = (): void => {
-        if (noteTitle && content) {
-            updateNoteAPI('/api/dofus/notes/create', {
-                title: noteTitle,
+    const handleCreateEnclos = (): void => {
+        if (enclosTitle && content) {
+            updateEnclosAPI('/api/dofus/enclos/create', {
+                title: enclosTitle,
                 content: content
             });
             handleClose();
         }
     };
 
-    const handleRemoveNote = (): void => {
-        updateNoteAPI('/api/dofus/notes/remove', {
-            title: removeNote.title,
-            content: removeNote.content
+    const handleRemoveEnclos = (): void => {
+        updateEnclosAPI('/api/dofus/enclos/remove', {
+            title: removeEnclos.title,
+            content: removeEnclos.content
         });
         handleClose();
     };
@@ -110,44 +110,44 @@ const Notes = (): React.ReactElement => {
         }
     };
 
-    const showModal = (choice: string, noteObj = {} as noteType): void => {
+    const showModal = (choice: string, enclosObj = {} as enclosType): void => {
         setShow(true);
-        setNoteTitle('');
+        setEnclosTitle('');
         setContent('');
-        setRemoveNote(noteObj);
-        setTitle(choice === 'new' ? 'Créer une note' : 'Supprimer la note');
+        setRemoveEnclos(enclosObj);
+        setTitle(choice === 'new' ? 'Rajouter un enclos' : 'Supprimer l\'enclos');
     };
 
     return (
         <div className='principal-container'>
-            <NotesModal
+            <EnclosModal
                 handleClose={handleClose}
                 handleChangeModal={handleChangeModal}
-                handleCreateNote={handleCreateNote}
-                handleRemoveNote={handleRemoveNote}
+                handleCreateEnclos={handleCreateEnclos}
+                handleRemoveEnclos={handleRemoveEnclos}
                 show={show}
                 title={title}
-                removeNote={removeNote}
+                removeEnclos={removeEnclos}
             />
             <div className='top-btn col-sm-12 text-center'>
-                <button onClick={() => showModal('new')}>Ajouter une note</button>
+                <button onClick={() => showModal('new')}>Ajouter un enclos</button>
             </div>
-            <div className='container col-10 notes-container row'>
-                {notes && notes.length ?
-                    notes.map((note, index) => {
+            <div className='container col-10 enclos-container row'>
+                {enclos && enclos.length ?
+                    enclos.map((enclo, index) => {
                         return (
                             <div
                                 className='one_infos text-center col-sm-12 col-md-5 col-lg-5'
-                                onClick={(e: any) => handleModifyInfos(e, note.title, note.content)}
+                                onClick={(e: any) => handleModifyInfos(e, enclo.title, enclo.content)}
                                 key={index}
                             >
                                 <h4>
-                                    {note.title}
+                                    {enclo.title}
                                     <span className='infos-remove-svg'>
                                         <FontAwesomeIcon icon='times-circle' />
                                     </span>
                                 </h4>
-                                {showInput === note.title && showContent === note.content ?
+                                {showInput === enclo.title && showContent === enclo.content ?
                                     <>
                                         <textarea
                                             className='infos-input'
@@ -156,26 +156,26 @@ const Notes = (): React.ReactElement => {
                                             onChange={handleChange}
                                         />
                                         <button
-                                            onClick={() => handleClick(note.title, note.content)}
+                                            onClick={() => handleClick(enclo.title, enclo.content)}
                                         >
                                             Valider
                                         </button>
                                     </> :
-                                    <p>{note.content}</p>}
+                                    <p>{enclo.content}</p>}
                             </div>
                         );
                     }) :
                     wait ?
-                        <div className='text-center loading-notes-message'>
-                            <h1>Chargement des notes <span className='custom-spinner-notes' /></h1>
+                        <div className='text-center loading-enclos-message'>
+                            <h1>Chargement des enclos <span className='custom-spinner-enclos' /></h1>
                         </div> :
                         !wait && loaded ?
-                            <div className='text-center no-notes-message'>
-                                <h1>Pas de notes actuellement</h1>
+                            <div className='text-center no-enclos-message'>
+                                <h1>Pas d'enclos actuellement</h1>
                             </div> : <></>}
             </div>
         </div>
     );
 };
 
-export default Notes;
+export default Enclos;

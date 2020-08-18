@@ -10,6 +10,7 @@ coverage
 yarn-error.log
 server.key
 server.crt
+cert/
 
 .yarn/*
 !.yarn/releases

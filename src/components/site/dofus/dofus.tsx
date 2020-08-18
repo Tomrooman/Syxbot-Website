@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Notes from './notes/notes';
+import Enclos from './enclos/enclos';
 import Dragodindes from './dragodindes/dragodindes';
 import Fecondator from './fecondator/fecondator';
 import Craft from './craft/craft';
@@ -36,8 +36,8 @@ const Dofus = (props: propsType): React.ReactElement => {
     };
 
     const setContentFunc = (choice: string): void => {
-        if (choice === 'notes' && props.user) {
-            setContent(<Notes />);
+        if (choice === 'enclos' && props.user) {
+            setContent(<Enclos />);
         } else if (choice === 'dragodindes' && props.user) {
             setContent(<Dragodindes />);
         } else if (choice === 'fecondator' && props.user) {
@@ -53,12 +53,12 @@ const Dofus = (props: propsType): React.ReactElement => {
     return (
         <>
             <div className='dofus-menu-container'>
-                <a href='#notes'>
+                <a href='#enclos'>
                     <h5
-                        className={menuChoice === 'notes' ? 'active' : ''}
-                        onClick={() => setChoice('notes')}
+                        className={menuChoice === 'enclos' ? 'active' : ''}
+                        onClick={() => setChoice('enclos')}
                     >
-                        Mes notes
+                        Mes enclos
                     </h5>
                 </a>
                 <a href='#dragodindes'>
@@ -77,11 +77,19 @@ const Dofus = (props: propsType): React.ReactElement => {
                         Fécondator
                     </h5>
                 </a>
+                <a href='#craft'>
+                    <h5
+                        className={menuChoice === 'craft' ? 'active' : ''}
+                        onClick={() => setChoice('craft')}
+                    >
+                        Craft
+                    </h5>
+                </a>
             </div>
             {String(content.type) !== 'Symbol(react.fragment)' ?
                 content :
-                <div>
-                    <h1>Veuillez faire un choix</h1>
+                <div className='dofus-no-choice'>
+                    <h1>Aucune catégorie sélectionnée</h1>
                 </div>}
         </>
     );

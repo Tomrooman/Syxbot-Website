@@ -3,27 +3,27 @@
 import React, { ChangeEvent } from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import PropTypes from 'prop-types';
-import { noteType } from '../../../../@types/notes';
+import { enclosType } from '../../../../@types/enclos';
 
 interface propsType {
     handleChangeModal(e: ChangeEvent): void;
     handleClose(): void;
-    handleCreateNote(): void;
-    handleRemoveNote(): void;
-    removeNote: noteType;
+    handleCreateEnclos(): void;
+    handleRemoveEnclos(): void;
+    removeEnclos: enclosType;
     show: boolean;
     title: string;
 }
 
-const NotesModal = (props: propsType): React.ReactElement => {
-    if (props.show && props.title === 'Créer une note') {
+const EnclosModal = (props: propsType): React.ReactElement => {
+    if (props.show && props.title === 'Rajouter un enclos') {
         return (
             <div>
                 <Modal
                     isOpen={props.show}
                     toggle={props.handleClose}
                 >
-                    <span className='notes-modal-title col-12'>
+                    <span className='enclos-modal-title col-12'>
                         <ModalHeader>
                             {props.title}
                         </ModalHeader>
@@ -46,15 +46,15 @@ const NotesModal = (props: propsType): React.ReactElement => {
                     <ModalFooter>
                         <span className='col-6 text-left'>
                             <button
-                                className='notes-modal-create-btn'
-                                onClick={props.handleCreateNote}
+                                className='enclos-modal-create-btn'
+                                onClick={props.handleCreateEnclos}
                             >
                                 Créer
                             </button>
                         </span>
                         <span className='col-6 text-right'>
                             <button
-                                className='notes-modal-close-btn'
+                                className='enclos-modal-close-btn'
                                 onClick={props.handleClose}
                             >
                                 Fermer
@@ -64,14 +64,14 @@ const NotesModal = (props: propsType): React.ReactElement => {
                 </Modal>
             </div>
         );
-    } else if (props.show && props.title === 'Supprimer la note') {
+    } else if (props.show && props.title === 'Supprimer l\'enclos') {
         return (
             <div>
                 <Modal
                     isOpen={props.show}
                     toggle={props.handleClose}
                 >
-                    <span className='notes-modal-title col-12'>
+                    <span className='enclos-modal-title col-12'>
                         <ModalHeader>
                             {props.title}
                         </ModalHeader>
@@ -80,13 +80,13 @@ const NotesModal = (props: propsType): React.ReactElement => {
                         <div className='row'>
                             <div className='form-group col-8'>
                                 <h3>Titre</h3>
-                                <p>{props.removeNote.title}</p>
+                                <p>{props.removeEnclos.title}</p>
                             </div>
                         </div>
                         <div className='row'>
                             <div className='form-group col-12'>
                                 <h3>Contenu</h3>
-                                <p>{props.removeNote.content}</p>
+                                <p>{props.removeEnclos.content}</p>
                             </div>
                         </div>
 
@@ -94,15 +94,15 @@ const NotesModal = (props: propsType): React.ReactElement => {
                     <ModalFooter>
                         <span className='col-6 text-left'>
                             <button
-                                className='notes-modal-create-btn'
-                                onClick={props.handleRemoveNote}
+                                className='enclos-modal-create-btn'
+                                onClick={props.handleRemoveEnclos}
                             >
                                 Supprimer
                             </button>
                         </span>
                         <span className='col-6 text-right'>
                             <button
-                                className='notes-modal-close-btn'
+                                className='enclos-modal-close-btn'
                                 onClick={props.handleClose}
                             >
                                 Annuler
@@ -117,14 +117,14 @@ const NotesModal = (props: propsType): React.ReactElement => {
     }
 };
 
-NotesModal.propTypes = {
+EnclosModal.propTypes = {
     show: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
     handleChangeModal: PropTypes.func.isRequired,
-    handleCreateNote: PropTypes.func.isRequired,
-    handleRemoveNote: PropTypes.func.isRequired,
+    handleCreateEnclos: PropTypes.func.isRequired,
+    handleRemoveEnclos: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
-    removeNote: PropTypes.object.isRequired
+    removeEnclos: PropTypes.object.isRequired
 };
 
-export default NotesModal;
+export default EnclosModal;

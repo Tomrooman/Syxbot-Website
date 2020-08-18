@@ -20,7 +20,7 @@ const FecondatorModal = (props: propsType): React.ReactElement => {
                     isOpen={props.show}
                     toggle={props.handleClose}
                 >
-                    <span className='notes-modal-title col-12'>
+                    <span className='enclos-modal-title col-12'>
                         <ModalHeader>
                             Mettre à jour
                         </ModalHeader>
@@ -68,7 +68,7 @@ const FecondatorModal = (props: propsType): React.ReactElement => {
                     <ModalFooter>
                         <span className='col-6 text-left'>
                             <button
-                                className='notes-modal-create-btn'
+                                className='enclos-modal-create-btn'
                                 onClick={props.handleCallAutomateAPI}
                             >
                                 Mettre à jour
@@ -76,7 +76,7 @@ const FecondatorModal = (props: propsType): React.ReactElement => {
                         </span>
                         <span className='col-6 text-right'>
                             <button
-                                className='notes-modal-close-btn'
+                                className='enclos-modal-close-btn'
                                 onClick={props.handleClose}
                             >
                                 Annuler

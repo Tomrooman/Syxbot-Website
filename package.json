@@ -7,8 +7,15 @@
   "scripts": {
     "eslint": "eslint ./",
     "start": "webpack-dev-server --open --mode development",
-    "remove-modules": "yarn rimraf node_modules .yarn/build-state.yml .yarn/cache .yarn/install-state.gz .yarn/unplugged .pnp.js yarn.lock package-lock.json",
-    "build": "yarn rimraf dist && yarn webpack --mode production"
+    "remove-modules": "rm -rf node_modules .yarn/build-state.yml .yarn/cache .yarn/install-state.gz .yarn/unplugged .pnp.js yarn.lock package-lock.json",
+    "build": "rm -rf dist && yarn webpack --mode production",
+    "cp:ssl:files": "rm -rf cert/ && mkdir cert/ && cp /etc/letsencrypt/live/syxbot.com/privkey.pem cert/ && cp /etc/letsencrypt/live/syxbot.com/fullchain.pem cert/",
+    "start:container": "docker run --restart=always --network=host --name syxbot-website-nginx -d syxbot-website-nginx",
+    "stop:container": "docker stop syxbot-website-nginx && docker container rm syxbot-website-nginx",
+    "build:container": "yarn build && yarn cp:ssl:files && cp /etc/nginx/sites-enabled/default cert/ && docker build -t syxbot-website-nginx -f ./nginx/Dockerfile .",
+    "deploy:container": "yarn build:container && yarn tag:container && yarn push:container",
+    "tag:container": "docker tag syxbot-website-nginx syxbot.com:5000/syxbot-website-nginx",
+    "push:container": "docker push syxbot.com:5000/syxbot-website-nginx"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.29",
@@ -34,7 +41,6 @@
     "react-dom": "^16.13.1",
     "react-scripts": "^3.4.1",
     "reactstrap": "^8.5.1",
-    "rimraf": "^3.0.2",
     "style-loader": "^1.2.1",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12",

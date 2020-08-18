@@ -348,10 +348,10 @@ const Dragodindes = (): React.ReactElement => {
                     </div>
                 </> :
                 wait ?
-                    <div className='text-center loading-notes-message'>
-                        <h1>Chargement des dragodindes <span className='custom-spinner-notes' /></h1>
+                    <div className='text-center loading-enclos-message'>
+                        <h1>Chargement des dragodindes <span className='custom-spinner-enclos' /></h1>
                     </div> : !wait && loaded ?
-                        <div className='text-center no-notes-message'>
+                        <div className='text-center no-enclos-message'>
                             <h1>Pas de dragodindes actuellement</h1>
                         </div> : <></>}
         </div>

@@ -16,22 +16,23 @@
     padding: 0.5rem 1rem;
     border-radius: 5px;
     color: rgb(31, 31, 31);
-    background: linear-gradient(45deg, #7248b51e 0%, #d041411c 100%);
+    /* background: linear-gradient(45deg, #7248b51e 0%, #d041411c 100%); */
+    background: rgb(255, 255, 255);
     border: 1px solid rgba(109, 109, 109, 0.3);
     margin-top : .7rem;
-    box-shadow: 0px 3px 7px 0px rgba(37, 37, 37, 0.5);
+    box-shadow: 0px 3px 1px 0px rgba(53, 53, 53, 0.5);
 }
 
 .dofus-menu-container h5:hover {
     transition: all .3s;
     cursor: pointer;
     color: white;
-    box-shadow: 0px 3px 7px 0px rgba(93, 51, 109, 0.993);
+    box-shadow: 0px 3px 1px 0px rgba(93, 51, 109, 0.993);
     background: linear-gradient(45deg, #7248b57a 0%, #d0414175 100%);
 }
 
 .dofus-menu-container h5.active {
     background: linear-gradient(45deg, #7248b5 0%, #d04141 100%);
-    box-shadow: 0px 3px 7px 0px rgba(93, 51, 109, 0.993);
+    box-shadow: 0px 3px 1px 0px rgba(93, 51, 109, 0.993);
     color: white;
 }

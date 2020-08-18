@@ -9,11 +9,11 @@
     color : rgb(64, 143, 163);
 }
 
-.notes-modal-create-btn {
+.enclos-modal-create-btn {
     float: left;
 }
 
-.notes-modal-title h5 {
+.enclos-modal-title h5 {
     margin-right :auto;
     margin-left: auto;
 }
@@ -28,6 +28,7 @@ input {
     /* height: 90.5vh; */
     min-width: 530px;
     width : 100%;
+    text-align: center;
 }
 
 .add-drago-list, .automate-list {
@@ -440,7 +441,7 @@ input {
     background: rgb(223, 223, 223);
 }
 
-.custom-spinner-notes {
+.custom-spinner-enclos {
     display: inline-block;
     width: 3rem;
     height: 3rem;
@@ -455,36 +456,6 @@ input {
 
 input:focus {
     outline: none;
-}
-
-.home-menu {
-    display: flex;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 5rem;
-}
-
-.dofus-menu-choice {
-    border: 1px solid rgb(128, 128, 128);
-    color : rgb(61, 61, 61);
-    margin-left: 2.5rem;
-    margin-right: 2.5rem;
-    width: 250px;
-    margin-top : 2.5rem;
-    margin-bottom: 2.5rem;
-    padding: 1rem;
-    font-family: 'Bree Serif', serif;
-    box-shadow: 0px 0px 3px black;
-    font-size: 1.5rem;
-    border-radius: 5px;
-}
-
-.dofus-menu-choice:hover {
-    color : rgb(29, 29, 29);
-    transform: scale(1.2);
 }
 
 .infos-input {
@@ -509,6 +480,12 @@ input:focus {
 
 .label-add-infos {
     color : rgb(187, 174, 172);
+}
+
+.dofus-no-choice {
+    margin-top : 3rem;
+    color: rgba(255, 0, 0, 0.705);
+    text-align: center;
 }
 
 .center-div {
@@ -555,25 +532,25 @@ input:focus {
     transform: scale(1.5);
 }
 
-.loading-notes-message {
+.loading-enclos-message {
     text-align: center;
     margin-left: auto;
     margin-right : auto;
     color: black;
 }
 
-.loading-notes-message h1 {
+.loading-enclos-message h1 {
     color: black;
 }
 
-.no-notes-message {
+.no-enclos-message {
     text-align: center;
     margin-left: auto;
     margin-right : auto;
     color: rgba(255, 0, 0, 0.705);
 }
 
-.notes-container {
+.enclos-container {
     margin-left: auto;
     margin-right: auto;
     display: flex;
@@ -746,23 +723,6 @@ input:focus {
     margin-bottom : 2rem;
 }
 
-.div-input-craft {
-    margin-left : auto;
-    margin-right : auto;
-    width : 70%;
-}
-
-.div-input-craft p {
-    color : rgb(206, 194, 193);
-    margin-left : 15%;
-    margin-right : 2rem;
-}
-
-.input-craft {
-    width : 5rem;
-    margin-bottom : 1rem;
-}
-
 .principal-ressource-div div:nth-child(2n+2), .gestation-container div:nth-child(2n+2) {
     background-color : rgba(231, 231, 231, 0.788);
 }
@@ -831,4 +791,25 @@ input:focus {
     color : rgb(185, 57, 52);
     padding-top : 1rem;
     font-size : 1.5rem;
+}
+
+/* ---------------------------------------- CRAFTS ---------------------------------------- */
+
+.craft-category {
+    border : 1px solid rgb(190, 190, 190);
+    box-shadow: 0px 3px 5px rgb(190, 190, 190);
+    background: white;
+    display: inline-block;
+    margin-left: .5rem;
+    margin-right: .5rem;
+    margin-top : .5rem;
+    margin-bottom : .5rem;
+    width : 15rem;
+    padding-top: 1rem;
+    padding-bottom : 1rem;
+    border-radius: 5px;
+}
+
+.craft-category p {
+    margin-bottom : 0;
 }

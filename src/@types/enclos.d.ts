@@ -1,14 +1,14 @@
-export interface noteType {
+export interface enclosType {
     title: string;
     content: string;
 };
 
-export interface createNoteType {
+export interface createEnclosType {
     title: string;
     content: string;
 };
 
-export interface modifyNoteType {
+export interface modifyEnclosType {
     title: string;
     oldContent: string;
     newContent: string;
