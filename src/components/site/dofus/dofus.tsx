@@ -13,13 +13,13 @@ import './dofus_menu.css';
 
 interface propsType {
     user: userType;
-    urlArg: string;
+    urlArg: URLSearchParams | boolean;
 }
 
 const Dofus = (props: propsType): React.ReactElement => {
     const [content, setContent] = useState(<></>);
     const [loaded, setLoaded] = useState(false);
-    const [menuChoice, setMenuChoice] = useState(props.urlArg);
+    const [menuChoice, setMenuChoice] = useState((props.urlArg as URLSearchParams).get('p') || '');
 
     useEffect(() => {
         if (!loaded) {
@@ -29,31 +29,29 @@ const Dofus = (props: propsType): React.ReactElement => {
     });
 
     const setChoice = (choice: string): void => {
-        if (choice !== menuChoice) {
+        if (choice !== menuChoice || choice === 'craft') {
             setMenuChoice(choice);
             setContentFunc(choice);
         }
     };
 
     const setContentFunc = (choice: string): void => {
-        if (choice === 'enclos' && props.user) {
+        if (choice === 'enclos' && props.user && (menuChoice !== choice || !loaded)) {
             setContent(<Enclos />);
-        } else if (choice === 'dragodindes' && props.user) {
+        } else if (choice === 'dragodindes' && props.user && (menuChoice !== choice || !loaded)) {
             setContent(<Dragodindes />);
-        } else if (choice === 'fecondator' && props.user) {
+        } else if (choice === 'fecondator' && props.user && (menuChoice !== choice || !loaded)) {
             setContent(<Fecondator user={props.user} />);
         } else if (choice === 'craft') {
-            setContent(<Craft />);
+            // setContent(<Craft user={props.user} urlArg={props.urlArg} />);
+            setContent(<Craft urlArg={props.urlArg} />);
         }
     };
 
-    // return (
-    //     String(content.type) !== 'Symbol(react.fragment)' ? content : <></>
-    // );
     return (
         <>
             <div className='dofus-menu-container'>
-                <a href='#enclos'>
+                <a href='#?p=enclos'>
                     <h5
                         className={menuChoice === 'enclos' ? 'active' : ''}
                         onClick={() => setChoice('enclos')}
@@ -61,7 +59,7 @@ const Dofus = (props: propsType): React.ReactElement => {
                         Mes enclos
                     </h5>
                 </a>
-                <a href='#dragodindes'>
+                <a href='#?p=dragodindes'>
                     <h5
                         className={menuChoice === 'dragodindes' ? 'active' : ''}
                         onClick={() => setChoice('dragodindes')}
@@ -69,7 +67,7 @@ const Dofus = (props: propsType): React.ReactElement => {
                         Mes dragodindes
                     </h5>
                 </a>
-                <a href='#fecondator'>
+                <a href='#?p=fecondator'>
                     <h5
                         className={menuChoice === 'fecondator' ? 'active' : ''}
                         onClick={() => setChoice('fecondator')}
@@ -77,7 +75,7 @@ const Dofus = (props: propsType): React.ReactElement => {
                         Fécondator
                     </h5>
                 </a>
-                <a href='#craft'>
+                <a href='#?p=craft'>
                     <h5
                         className={menuChoice === 'craft' ? 'active' : ''}
                         onClick={() => setChoice('craft')}
@@ -100,7 +98,10 @@ Dofus.propTypes = {
         PropTypes.object.isRequired,
         PropTypes.bool.isRequired
     ]),
-    urlArg: PropTypes.string.isRequired
+    urlArg: PropTypes.oneOfType([
+        PropTypes.object.isRequired,
+        PropTypes.bool.isRequired
+    ])
 };
 
 export default Dofus;

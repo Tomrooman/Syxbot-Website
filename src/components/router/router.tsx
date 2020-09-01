@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import Site from '../site/site';
 import Radio from '../radio/radio';
-import './scrollbar.css';
 
 const Router = (): React.ReactElement => {
     const [page, setPage] = useState(<></>);
@@ -14,8 +13,8 @@ const Router = (): React.ReactElement => {
             const url = window.location.href.split('/');
             let wLocation = url[3] === '' || url[3] === '//' ? '/' : url[3];
             wLocation = wLocation.indexOf('#') !== -1 ? wLocation.substr(0, wLocation.indexOf('#')) : wLocation;
-            const pageArg = url[3].split('#').length >= 2 ? url[3].split('#')[1] : '';
-            setPage(<Site page={wLocation} urlArg={pageArg} />);
+            const params = new URLSearchParams(window.location.hash.substr(1, window.location.hash.length - 1));
+            setPage(<Site page={wLocation} urlArg={params} />);
             setLoaded(true);
         }
     });

@@ -1,0 +1,120 @@
+.sidenav {
+    font-family: 'Bree Serif', serif;
+    height: 100%;
+    width: 100px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgb(53, 53, 53);
+}
+
+.sidenav a:hover {
+    text-decoration: none;
+}
+
+.nav-link {
+    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
+    margin-right: 1px;
+    color: white;
+    width: 100%;
+}
+
+.nav-link.active {
+    color: #a176e7;
+}
+
+.nav-category {
+    letter-spacing: 2px;
+    text-align: center;
+    border: 1px solid rgb(24, 24, 24);
+    color: #a176e7;
+    background: rgb(34, 34, 34);
+    padding-bottom: .3rem;
+}
+
+.nav-category-bottom-arrow {
+    position: absolute;
+    width: 30%;
+    left: 35%;
+    font-size: .8rem;
+    margin-top: -2px;
+    background: rgb(34, 34, 34);
+    border-bottom: 1px solid rgb(24, 24, 24);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.nav-link p, .nav-category p {
+    margin-bottom : 0;
+}
+
+.nav-link.home {
+    background: linear-gradient(45deg, #7148b5 0%, rgba(134,31,43,1) 100%);
+    border: 1px solid rgb(56, 56, 56);
+}
+
+.nav-link.connexion {
+    background: linear-gradient(45deg, #6665b1 0%, #54539e 100%);
+    border: 1px solid #353469;
+    position: absolute;
+    bottom : 0;
+}
+
+.nav-bottom {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+
+.nav-disconnect {
+    transition: all .2s;
+    padding-bottom: .7rem;
+    padding-top: .7rem;
+    margin-top : 1rem;
+    margin-bottom : 0;
+    background: rgb(34, 34, 34);
+    color: rgb(221, 62, 62);
+    text-align: center;
+}
+
+.nav-disconnect:hover {
+    transition: all .2s;
+    cursor: pointer;
+    background: rgb(221, 62, 62);
+    color: white;
+}
+
+.nav-link.dofus {
+    border-top: 1px solid rgb(26, 26, 26);
+    border-bottom: 1px solid rgb(26, 26, 26);
+}
+
+.nav-link.warframe {
+    border-bottom: 1px solid rgb(26, 26, 26);
+}
+
+.nav-link.profile {
+    border-top: 1px solid rgb(26, 26, 26);
+    border-bottom: 1px solid rgb(26, 26, 26);
+}
+
+.nav-link.dofus, .nav-link.profile {
+    margin-top : 1rem;
+}
+
+.nav-link.dofus, .nav-link.warframe, .nav-link.profile {
+    background: rgb(46, 46, 46);
+}
+
+.nav-link svg {
+    height: 35px !important;
+    width: 35px !important;
+}
+
+.nav-link.dofus img, .nav-link.warframe img {
+    height: 50px;
+    width : auto;
+}

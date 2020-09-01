@@ -11,7 +11,7 @@ import Config from './../../../config.json';
 import Axios from 'axios';
 import $ from 'jquery';
 import './site.css';
-import Navbar from './navbar/navbar';
+import Sidebar from './sidebar/sidebar';
 import Dofus from './dofus/dofus';
 import { sessionDataType } from '../../@types/user';
 
@@ -21,7 +21,7 @@ library.add(faPlusCircle);
 
 interface propsType {
     page: string;
-    urlArg: string;
+    urlArg: URLSearchParams | boolean;
 }
 
 const Site = (props: propsType): React.ReactElement => {
@@ -124,7 +124,7 @@ const Site = (props: propsType): React.ReactElement => {
     if (loaded && (randStr || user)) {
         return (
             <>
-                <Navbar
+                <Sidebar
                     randStr={randStr}
                     user={user}
                     disconnect={disconnect}
@@ -159,7 +159,10 @@ const Site = (props: propsType): React.ReactElement => {
 
 Site.propTypes = {
     page: PropTypes.string.isRequired,
-    urlArg: PropTypes.string.isRequired
+    urlArg: PropTypes.oneOfType([
+        PropTypes.object.isRequired,
+        PropTypes.bool.isRequired
+    ])
 };
 
 export default Site;

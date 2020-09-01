@@ -256,7 +256,7 @@ const Fecondator = (props: propsType): React.ReactElement => {
                 {Object.keys(last).length ?
                     <div className='fecondator-last-div col-9 col-sm-8 col-md-6'>
                         <h4 className='col-12'>Dragodinde fécondée</h4>
-                        <img className='col-4' alt='dd_icon' src={'/assets/img/dragodindes/' + last.name.toLowerCase().split(' ').join('-') + '.png'} />
+                        <img className='col-4' alt='dd_icon' src={'/assets/img/dofus/dragodindes/' + last.name.toLowerCase().split(' ').join('-') + '.png'} />
                         <div className='fecondator-last-infos col-7'>
                             <p className='label'>Nom</p>
                             <p className='value'>{last.name}</p>
@@ -299,7 +299,7 @@ const Fecondator = (props: propsType): React.ReactElement => {
                                         key={index}
                                     >
                                         <div className='fecondator-name col-8'>
-                                            <img src={'/assets/img/dragodindes/' + drago.name.toLowerCase().split(' ').join('-') + '.png'} alt='dd_icon' />
+                                            <img src={'/assets/img/dofus/dragodindes/' + drago.name.toLowerCase().split(' ').join('-') + '.png'} alt='dd_icon' />
                                             <p> {drago.name}</p>
                                         </div>
                                         <div className='fecondator-time col-4'>

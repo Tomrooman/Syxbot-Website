@@ -51,14 +51,14 @@ const DragodindesModal = (props: propsType): React.ReactElement => {
                                                 {drago.selected ?
                                                     <span>
                                                         <FontAwesomeIcon icon='check' />
-                                                        <img src={'/assets/img/dragodindes/' + drago.name.toLowerCase().split(' ').join('-') + '.png'} alt='dd_icon' />
+                                                        <img src={'/assets/img/dofus/dragodindes/' + drago.name.toLowerCase().split(' ').join('-') + '.png'} alt='dd_icon' />
                                                         {drago.name}
                                                     </span> :
                                                     <>
                                                         <span className='add-drago-check-over'>
                                                             <FontAwesomeIcon icon='check' />
                                                         </span>
-                                                        <img src={'/assets/img/dragodindes/' + drago.name.toLowerCase().split(' ').join('-') + '.png'} alt='dd_icon' />
+                                                        <img src={'/assets/img/dofus/dragodindes/' + drago.name.toLowerCase().split(' ').join('-') + '.png'} alt='dd_icon' />
                                                         {drago.name}
                                                     </>}
                                             </div>

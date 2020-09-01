@@ -37,7 +37,7 @@ const FecondatorModal = (props: propsType): React.ReactElement => {
                                                 key={index}
                                             >
                                                 <div className='my-dragodindes-name col-9'>
-                                                    <img src={'/assets/img/dragodindes/' + drago.name.toLowerCase().split(' ').join('-') + '.png'} alt='dd_icon' />
+                                                    <img src={'/assets/img/dofus/dragodindes/' + drago.name.toLowerCase().split(' ').join('-') + '.png'} alt='dd_icon' />
                                                     {drago.last?.status ?
                                                         <p>{drago.name}<span className='my-drago-fecond-message'> - Fécondée</span></p> : drago.used ?
                                                             <p>{drago.name}<span className='my-drago-used-message'> - Utilisée</span></p> :
@@ -57,7 +57,7 @@ const FecondatorModal = (props: propsType): React.ReactElement => {
                                         key={index}
                                     >
                                         <div className='my-dragodindes-name col-9'>
-                                            <img src={'/assets/img/dragodindes/' + drago.name.toLowerCase().split(' ').join('-') + '.png'} alt='dd_icon' />
+                                            <img src={'/assets/img/dofus/dragodindes/' + drago.name.toLowerCase().split(' ').join('-') + '.png'} alt='dd_icon' />
                                             <p>{drago.name}</p>
                                         </div>
                                     </div>
