@@ -13,6 +13,7 @@ import $ from 'jquery';
 import './site.css';
 import Sidebar from './sidebar/sidebar';
 import Dofus from './dofus/dofus';
+import Warframe from './warframe/warframe';
 import { sessionDataType } from '../../@types/user';
 
 library.add(faAssistiveListeningSystems);
@@ -47,6 +48,8 @@ const Site = (props: propsType): React.ReactElement => {
             }
             if (props.page === 'dofus') {
                 setPage(<Dofus user={user} urlArg={props.urlArg} />);
+            } else if (props.page === 'warframe') {
+                setPage(<Warframe user={user} urlArg={props.urlArg} />);
             }
             setLoaded(true);
         }

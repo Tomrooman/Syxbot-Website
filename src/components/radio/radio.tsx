@@ -199,7 +199,9 @@ const Radio = (): React.ReactElement => {
             >
                 <div className='radio_name'>
                     <div className='radio_png'>
-                        <img src='#' alt='radio_img' />
+                        <span className='radio_picture_span'>
+                            <img src='#' alt='radio_img' />
+                        </span>
                     </div>
                     {radioName ?
                         dropdownTitle === 'Chargement' ? <div className='custom-spinner-radio' /> : radioName :

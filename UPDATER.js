@@ -61,7 +61,8 @@ const execDependency = (index) => {
     execStr = 'yarn add ' + allDependencies[index].dep + (yarnVersion === '2' ? '' : '@latest');
     execStr = allDependencies[index].type === 'default' ? execStr : execStr + ' --dev';
     return new Promise((resolve, reject) => {
-        exec(execStr, (err, stdout, stderr) => {
+        // Max buffer set to 2 MB
+        exec(execStr, { maxBuffer: 1024 * 2000 }, (err, stdout, stderr) => {
             if (err) return reject(err);
             if (stdout) console.log(stdout);
             if (stderr) return console.log(stderr);

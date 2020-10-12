@@ -44,8 +44,9 @@ audio {
 }
 
 .radio_name {
-    padding : 0 1rem;
+    padding : 0 .5rem;
     color : black;
+    position: absolute;
 }
 
 .radio_floating {
@@ -56,6 +57,7 @@ audio {
     border-bottom-left-radius: 10px;
     box-shadow: 0px 0px 2px rgb(55, 107, 138);
     width: 269.2px;
+    height: 70px;
 }
 
 .radio_click_text {
@@ -73,6 +75,8 @@ audio {
     background: linear-gradient(45deg, #7148b5 0%, rgba(134,31,43,1) 100%);
     color: rgb(224, 224, 224);
     border-radius: 50%;
+    right: 0;
+    position: absolute;
     text-align: center;
     height : 70px;
     width: 70px;
@@ -92,7 +96,6 @@ audio {
     border-radius: 10px;
     background: rgb(255, 255, 255);
     transform : translateY(-50px);
-    /* border: 1px solid rgb(146, 146, 146); */
     box-shadow: 0px 0px 2px rgb(55, 107, 138);
     opacity: 0;
     transition: all 0.2s;
@@ -107,12 +110,6 @@ audio {
 }
 
 .radio_container {
-    /* background: rgb(236, 236, 236);
-    border: 1px solid rgb(146, 146, 146);
-    border-top-right-radius: 50px;
-    border-bottom-right-radius: 50px;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px; */
     max-width : 301px;
     z-index: 4;
     position : absolute;
@@ -124,8 +121,6 @@ audio {
 .radio_select {
     text-align: center;
     width : 100%;
-    /* background: linear-gradient(45deg, rgb(22, 22, 22) 0%, rgb(117, 31, 134) 100%); */
-    /* background: rgb(180, 180, 180); */
     background: rgba(236, 236, 236, 0);
     border: none;
     border-bottom : 1px solid grey;
@@ -210,41 +205,40 @@ audio:focus, audio:active {
     width: 100%; /* Width of the outside container */
   }
   
-  /* The slider itself */
-  .slider {
-    -webkit-appearance: none;  /* Override default CSS styles */
+
+.slider {
+    -webkit-appearance: none;
     appearance: none;
     height: 15px;
     border-radius: 5px;  
-    width: 100%; /* Full-width */
-    background: #d3d3d3; /* Grey background */
-    outline: none; /* Remove outline */
-    opacity: 0.85; /* Set transparency (for mouse-over effects on hover) */
-    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    width: 100%;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.85;
+    -webkit-transition: .2s;
     transition: opacity .2s;
     border: 1px solid rgb(92, 92, 92);
-  }
+}
   
-  /* Mouse-over effects */
-  .slider:hover {
-    opacity: 1; /* Fully shown on mouse-over */
-  }
+.slider:hover {
+    opacity: 1;
+}
   
   /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
-  .slider::-webkit-slider-thumb {
-    -webkit-appearance: none; /* Override default look */
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
     appearance: none;
-    width: 25px; /* Set a specific slider handle width */
-    height: 25px; /* Slider handle height */
+    width: 25px;
+    height: 25px;
     border-radius: 50%; 
     background: linear-gradient(45deg, rgba(121,75,139,1) 0%, rgba(134,31,43,1) 100%);
-    cursor: pointer; /* Cursor on hover */
-  }
+    cursor: pointer;
+}
   
-  .slider::-moz-range-thumb {
-    width: 25px; /* Set a specific slider handle width */
+.slider::-moz-range-thumb {
+    width: 25px;
     height: 25px;
     border-radius: 50%;
     background: linear-gradient(45deg, rgba(121,75,139,1) 0%, rgba(134,31,43,1) 100%);
-    cursor: pointer; /* Cursor on hover */
-  }
+    cursor: pointer;
+}

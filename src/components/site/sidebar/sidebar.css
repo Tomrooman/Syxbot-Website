@@ -14,16 +14,13 @@
 }
 
 .nav-link {
+    transition: all .2s;
     text-align: center;
     padding-left: 0;
     padding-right: 0;
     margin-right: 1px;
-    color: white;
+    color: rgb(199, 199, 199);
     width: 100%;
-}
-
-.nav-link.active {
-    color: #a176e7;
 }
 
 .nav-category {
@@ -53,6 +50,7 @@
 
 .nav-link.home {
     background: linear-gradient(45deg, #7148b5 0%, rgba(134,31,43,1) 100%);
+    color: rgb(221, 221, 221);
     border: 1px solid rgb(56, 56, 56);
 }
 
@@ -117,4 +115,51 @@
 .nav-link.dofus img, .nav-link.warframe img {
     height: 50px;
     width : auto;
+    transition: all .2s;
+    opacity: 0.8;
+}
+
+.nav-link:hover {
+    transition: all .2s;
+    color: white;
+}
+
+.nav-link:hover .sidebar-point {
+    transition: all .2s;
+    background: white;
+    opacity: 1;
+}
+
+.nav-link:hover img {
+    transition: all .2s;
+    opacity: 1;
+}
+
+.nav-link.active {
+    text-shadow: 0px 0px 4px #5c3c64;
+    color: white;
+}
+
+.nav-link.active .sidebar-point {
+    box-shadow: 0px 0px 4px 1px #c14ddf;
+    background: #b476e7;
+    opacity: 1;
+}
+
+.nav-link.active img {
+    opacity: 1;
+}
+
+.sidebar-point {
+    transition: all .2s;
+    opacity: .5;
+    height: 5px;
+    width: 5px;
+    border-radius: 50%;
+    background: rgb(199, 199, 199);
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+    margin-top: -15px;
+    right: 10px;
 }

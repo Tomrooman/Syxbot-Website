@@ -26,65 +26,6 @@ interface propsType {
 }
 
 const Sidebar = (props: propsType): React.ReactElement => {
-    // return (
-    //     <nav className='navbar navbar-expand-md navbar-dark navbar-site'>
-    //         <a className='navbar-brand' href='/'>
-    //             Syxbot
-    //         </a>
-    //         <button className='navbar-toggler' type='button' data-toggle='collapse' data-target='#toHide' aria-controls='toHide' aria-expanded='false' aria-label='Toggle navigation'>
-    //             <span className='navbar-toggler-icon' />
-    //         </button>
-    //         <ul className='nav navbar-nav mr-auto collapse navbar-collapse' id='toHide'>
-    //             <a href='/'>
-    //                 <li className={props.page === '/' ? 'nav-item active' : 'nav-item'}>
-    //                     <span className='nav-link'>
-    //                         <img src='/assets/img/ico/home.png' alt='home_icon' />
-    //                         <p> Accueil </p>
-    //                     </span>
-    //                 </li>
-    //             </a>
-    //             <a href='/dofus'>
-    //                 <li className={props.page === 'dofus' ? 'nav-item active' : 'nav-item'}>
-    //                     <span className='nav-link'>
-    //                         <img src='/assets/img/ico/dofus.png' alt='dofus_icon' />
-    //                         <p> Dofus </p>
-    //                     </span>
-    //                 </li>
-    //             </a>
-    //         </ul>
-    //         <ul className='form-inline my-2 my-lg-0'>
-    //             {
-    //                 props.user ?
-    //                     <div className='dropdown'>
-    //                         <div className='user-dropdown dropdown-toggle' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
-    //                             <div className='user-dropdown-nav'>
-    //                                 <FontAwesomeIcon icon='user-circle' />
-    //                                 <p>
-    //                                     <span className='username'>
-    //                                         {props.user.username.length > 10 ? props.user.username.substr(0, 9) + '...' : props.user.username}
-    //                                     </span>
-    //                                 </p>
-    //                             </div>
-    //                         </div>
-    //                         <div className='dropdown-menu dropdown-menu-right user-dropdown-list' aria-labelledby='dropdownMenuButton'>
-    //                             <p
-    //                                 className='dropdown-item dropdown-disconnect'
-    //                                 onClick={() => props.disconnect()}
-    //                             >
-    //                                 <FontAwesomeIcon icon='sign-out-alt' /> Se déconnecter
-    //                             </p>
-    //                         </div>
-    //                     </div> :
-    //                     <a href={`${Config.OAuth.connection_url}&state=${props.randStr}`}>
-    //                         <button className='connect-btn'>
-    //                             <FontAwesomeIcon icon={['fab', 'discord']} />
-    //                             <p>Se connecter</p>
-    //                         </button>
-    //                     </a>
-    //             }
-    //         </ul>
-    //     </nav>
-    // );
     return (
         <div className='sidenav'>
             <a href='/'>
@@ -102,12 +43,14 @@ const Sidebar = (props: propsType): React.ReactElement => {
             <a href='/dofus'>
                 <div className={props.page === 'dofus' ? 'nav-link dofus active' : 'nav-link dofus'}>
                     <img src='/assets/img/dofus/logo.png' alt='dofus_icon' />
+                    <div className='sidebar-point' />
                     <p> Dofus </p>
                 </div>
             </a>
             <a href='/warframe'>
                 <div className={props.page === 'warframe' ? 'nav-link warframe active' : 'nav-link warframe'}>
                     <img src='/assets/img/warframe/logo.png' alt='warframe_icon' />
+                    <div className='sidebar-point' />
                     <p> Warframe </p>
                 </div>
             </a>
