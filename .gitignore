@@ -11,6 +11,7 @@ yarn-error.log
 server.key
 server.crt
 cert/
+UPDATER.js
 
 .yarn/*
 !.yarn/releases
