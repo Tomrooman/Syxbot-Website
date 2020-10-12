@@ -1,6 +1,6 @@
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const PnpPlugin = require("pnp-webpack-plugin");
+const PnpPlugin = require('pnp-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const path = require('path');
@@ -28,10 +28,6 @@ module.exports = {
         contentBase: './src',
         compress: true,
         clientLogLevel: 'warn',
-    },
-    node: {
-        Buffer: false,
-        process: false
     },
     optimization: {
         removeAvailableModules: true,
@@ -122,5 +118,6 @@ module.exports = {
                 { from: 'assets', to: 'assets' },
             ],
         })
+        // new webpack.ProgressPlugin({ percentBy: "entries" })
     ]
 };
