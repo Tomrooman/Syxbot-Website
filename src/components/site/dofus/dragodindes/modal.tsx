@@ -46,7 +46,7 @@ const DragodindesModal = (props: propsType): React.ReactElement => {
                                             <div
                                                 className={drago.selected ? 'drago-line-selected' : 'drago-line'}
                                                 key={index}
-                                                onClick={() => props.handleAddModalDrago(drago.name, drago.duration, drago.generation, drago.selected || false)}
+                                                onClick={(): void => props.handleAddModalDrago(drago.name, drago.duration, drago.generation, drago.selected || false)}
                                             >
                                                 {drago.selected ?
                                                     <span>
@@ -76,7 +76,7 @@ const DragodindesModal = (props: propsType): React.ReactElement => {
                         <span className='col-6 text-left'>
                             <button
                                 className='enclos-modal-create-btn'
-                                onClick={() => props.handleCallAPI('/api/dofus/dragodindes/create')}
+                                onClick={(): void => props.handleCallAPI('/api/dofus/dragodindes/create')}
                             >
                                 Ajouter
                             </button>
@@ -93,7 +93,8 @@ const DragodindesModal = (props: propsType): React.ReactElement => {
                 </Modal>
             </div>
         );
-    } else if (props.show && props.title === 'Définir comme fécondée ?') {
+    }
+    else if (props.show && props.title === 'Définir comme fécondée ?') {
         return (
             <div>
                 <Modal
@@ -114,7 +115,7 @@ const DragodindesModal = (props: propsType): React.ReactElement => {
                         <span className='col-6 text-left'>
                             <button
                                 className='enclos-modal-create-btn'
-                                onClick={() => props.handleCallAPI('/api/dofus/dragodindes/status/last/update')}
+                                onClick={(): void => props.handleCallAPI('/api/dofus/dragodindes/status/last/update')}
                             >
                                 Confirmer
                             </button>
@@ -131,7 +132,8 @@ const DragodindesModal = (props: propsType): React.ReactElement => {
                 </Modal>
             </div>
         );
-    } else if (props.show && props.title === 'Retirer la fécondation ?') {
+    }
+    else if (props.show && props.title === 'Retirer la fécondation ?') {
         return (
             <div>
                 <Modal
@@ -147,7 +149,7 @@ const DragodindesModal = (props: propsType): React.ReactElement => {
                         <span className='col-6 text-left'>
                             <button
                                 className='enclos-modal-create-btn'
-                                onClick={() => props.handleCallAPI('/api/dofus/dragodindes/status/last/remove')}
+                                onClick={(): void => props.handleCallAPI('/api/dofus/dragodindes/status/last/remove')}
                             >
                                 Retirer la fécondation
                             </button>
@@ -164,7 +166,8 @@ const DragodindesModal = (props: propsType): React.ReactElement => {
                 </Modal>
             </div>
         );
-    } else if (props.show && props.title === 'Définir comme déjà utilisée ?') {
+    }
+    else if (props.show && props.title === 'Définir comme déjà utilisée ?') {
         return (
             <div>
                 <Modal
@@ -180,7 +183,7 @@ const DragodindesModal = (props: propsType): React.ReactElement => {
                         <span className='col-6 text-left'>
                             <button
                                 className='enclos-modal-create-btn'
-                                onClick={() => props.handleCallAPI('/api/dofus/dragodindes/status/used/update')}
+                                onClick={(): void => props.handleCallAPI('/api/dofus/dragodindes/status/used/update')}
                             >
                                 Définir comme déjà utilisée
                             </button>
@@ -197,7 +200,8 @@ const DragodindesModal = (props: propsType): React.ReactElement => {
                 </Modal>
             </div>
         );
-    } else if (props.show && props.title === 'Définir comme disponible ?') {
+    }
+    else if (props.show && props.title === 'Définir comme disponible ?') {
         return (
             <div>
                 <Modal
@@ -213,7 +217,7 @@ const DragodindesModal = (props: propsType): React.ReactElement => {
                         <span className='col-6 text-left'>
                             <button
                                 className='enclos-modal-create-btn'
-                                onClick={() => props.handleCallAPI('/api/dofus/dragodindes/status/used/remove')}
+                                onClick={(): void => props.handleCallAPI('/api/dofus/dragodindes/status/used/remove')}
                             >
                                 Définir comme disponible
                             </button>
@@ -230,7 +234,8 @@ const DragodindesModal = (props: propsType): React.ReactElement => {
                 </Modal>
             </div>
         );
-    } else {
+    }
+    else {
         return (<></>);
     }
 };

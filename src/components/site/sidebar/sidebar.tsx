@@ -70,7 +70,7 @@ const Sidebar = (props: propsType): React.ReactElement => {
                     </a>
                     <p
                         className='nav-disconnect'
-                        onClick={() => props.disconnect()}
+                        onClick={(): void => props.disconnect()}
                     >
                         {/* <FontAwesomeIcon icon='sign-out-alt' /> */}
                         Déconnexion

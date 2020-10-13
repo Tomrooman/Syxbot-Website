@@ -40,7 +40,7 @@ const Fecondator = (props: propsType): React.ReactElement => {
             getDataAndSetConst();
             setLoaded(true);
         }
-        return () => {
+        return (): void => {
             clearInterval(interval);
         };
     }, [props]);
@@ -65,10 +65,12 @@ const Fecondator = (props: propsType): React.ReactElement => {
                 countdown(Date.now(), ddFecond, sortedDragodindes);
                 countDownInterval(ddFecond, sortedDragodindes);
                 setWait(false);
-            } else if (wait) {
+            }
+            else if (wait) {
                 setWait(false);
             }
-        } catch (e) {
+        }
+        catch (e) {
             console.log('Error /api/dofus/dragodindes/fecondator : ', e.message);
         }
     };
@@ -124,7 +126,8 @@ const Fecondator = (props: propsType): React.ReactElement => {
             const hoursDiff = Math.floor((now - Date.parse(ddFecond.last.date)) / (1000 * 60 * 60));
             if (sortedDragodindes.length && hoursDiff >= ddFecond.duration - sortedDragodindes[0].duration) {
                 date = dateFormat(Date.now() + (sortedDragodindes[0].duration * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
-            } else {
+            }
+            else {
                 date = dateFormat(Date.parse(ddFecond.last.date) + (ddFecond.duration * 60 * 60 * 1000), 'dd/mm/yyyy HH:MM:ss');
             }
         }
@@ -173,7 +176,8 @@ const Fecondator = (props: propsType): React.ReactElement => {
                 return setFinishTime(setLateTimeRemaining(endHours, endMin, endSec));
             }
             $('.finish-countdown')[0].innerHTML = setLateTimeRemaining(endHours, endMin, endSec);
-        } else {
+        }
+        else {
             setFinishTime('Maintenant');
         }
     };
@@ -183,7 +187,8 @@ const Fecondator = (props: propsType): React.ReactElement => {
             let goodHours = 0;
             if (sortedDragodindes && hoursLate >= ddFecond.duration - sortedDragodindes[0].duration) {
                 goodHours = hoursLate - (ddFecond.duration - sortedDragodindes[0].duration);
-            } else if (!sortedDragodindes && hoursLate >= ddFecond.duration) {
+            }
+            else if (!sortedDragodindes && hoursLate >= ddFecond.duration) {
                 goodHours = hoursLate - ddFecond.duration;
             }
             const stringDuration = setLateTimeRemaining(goodHours, minDiff, secondDiff);
@@ -208,7 +213,8 @@ const Fecondator = (props: propsType): React.ReactElement => {
         dragodindes.map((drago, mapIndex) => {
             if (mapIndex < index) {
                 used.push(drago);
-            } else if (mapIndex === index) {
+            }
+            else if (mapIndex === index) {
                 localLast.push(drago);
             }
         });
@@ -229,7 +235,8 @@ const Fecondator = (props: propsType): React.ReactElement => {
             handleClose();
             clearInterval(interval[0]);
             window.location.reload();
-        } catch (e) {
+        }
+        catch (e) {
             console.log('Error /api/dofus/dragodindes/status/:type/:action : ', e.message);
         }
     };
@@ -314,7 +321,7 @@ const Fecondator = (props: propsType): React.ReactElement => {
                                                             >
                                                                 <span
                                                                     className='fecondator-automate-icon col-2'
-                                                                    onClick={() => handleAutomateFecond(index)}
+                                                                    onClick={(): void => handleAutomateFecond(index)}
                                                                 >
                                                                     <FontAwesomeIcon icon='sync' />
                                                                 </span>

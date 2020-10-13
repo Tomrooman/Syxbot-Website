@@ -40,15 +40,18 @@ const Site = (props: propsType): React.ReactElement => {
             const fragment = new URLSearchParams(window.location.search);
             if (fragment.has('code')) {
                 connectUser(fragment);
-            } else if (user) {
+            }
+            else if (user) {
                 localStorage.removeItem('stateParameter');
                 verifyTokenExpiration();
-            } else {
+            }
+            else {
                 generateRandomString();
             }
             if (props.page === 'dofus') {
                 setPage(<Dofus user={user} urlArg={props.urlArg} />);
-            } else if (props.page === 'warframe') {
+            }
+            else if (props.page === 'warframe') {
                 setPage(<Warframe user={user} urlArg={props.urlArg} />);
             }
             setLoaded(true);
@@ -64,7 +67,8 @@ const Site = (props: propsType): React.ReactElement => {
                 if (data) {
                     updateTokenAPI(data);
                 }
-            } catch (e) {
+            }
+            catch (e) {
                 console.log('Error /api/token/expiration : ', e.message);
             }
         }
@@ -81,10 +85,12 @@ const Site = (props: propsType): React.ReactElement => {
                     return updateTokenAPI(data);
                 }
                 window.location.href = Config.OAuth.redirect_url;
-            } catch (e) {
+            }
+            catch (e) {
                 console.log('Error /api/token/connect : ', e.message);
             }
-        } else {
+        }
+        else {
             alert('Bad state parameter ! Réessayez de vous connecter');
             generateRandomString();
         }
@@ -97,7 +103,8 @@ const Site = (props: propsType): React.ReactElement => {
             if (res.data) {
                 window.location.href = Config.OAuth.redirect_url;
             }
-        } catch (e) {
+        }
+        catch (e) {
             console.log('Error /api/token/update : ', e.message);
         }
     };
@@ -108,7 +115,8 @@ const Site = (props: propsType): React.ReactElement => {
             if (data) {
                 window.location.href = Config.OAuth.redirect_url;
             }
-        } catch (e) {
+        }
+        catch (e) {
             console.log('Error /api/token/remove : ', e.message);
         }
     };
@@ -139,7 +147,8 @@ const Site = (props: propsType): React.ReactElement => {
                         <div className='home-container' />}
                 </div>
             </>);
-    } else if (props.page === '/') {
+    }
+    else if (props.page === '/') {
         return (
             <table className='loading-table'>
                 <tbody>
@@ -152,7 +161,8 @@ const Site = (props: propsType): React.ReactElement => {
                 </tbody>
             </table>
         );
-    } else {
+    }
+    else {
         return (
             <>
             </>

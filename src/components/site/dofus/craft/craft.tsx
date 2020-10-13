@@ -23,7 +23,8 @@ const Craft = (props: propsType): React.ReactElement => {
         if (selectedCategory !== '' && !loaded) {
             if (_.indexOf(categories, selectedCategory) === -1) {
                 setSelectedCategory('');
-            } else {
+            }
+            else {
                 setShowedItems(Crafts.filter(c => c.category === selectedCategory)[0]);
             }
         }
@@ -31,7 +32,7 @@ const Craft = (props: propsType): React.ReactElement => {
             setLoaded(true);
         }
 
-        return () => {
+        return (): void => {
             setSelectedCategory('');
         };
     }, [props]);
@@ -61,7 +62,7 @@ const Craft = (props: propsType): React.ReactElement => {
                             className={'craft-category' + (selectedCategory === category ? ' active' : '')}
                         >
                             <div
-                                onClick={() => handleClickCategory(category)}
+                                onClick={(): void => handleClickCategory(category)}
                             >
                                 <img src={`/assets/img/dofus/items/categories/${category.toLowerCase()}.png`} alt={category.toLowerCase()} />
                                 <p>{category}</p>

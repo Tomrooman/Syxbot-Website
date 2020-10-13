@@ -43,7 +43,7 @@ const Warframe = (props: propsType): React.ReactElement => {
                 <a href='#?p=craft'>
                     <h5
                         className={menuChoice === 'craft' ? 'active' : ''}
-                        onClick={() => setChoice('craft')}
+                        onClick={(): void => setChoice('craft')}
                     >
                         Craft
                     </h5>

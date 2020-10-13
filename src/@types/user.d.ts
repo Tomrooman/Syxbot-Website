@@ -6,7 +6,7 @@ export interface userType {
     token_type: string;
     username: string;
 
-};
+}
 
 export interface sessionDataType {
     username: string;
@@ -16,4 +16,4 @@ export interface sessionDataType {
     expires_in: number;
     countdown: boolean;
     token: string;
-};
+}

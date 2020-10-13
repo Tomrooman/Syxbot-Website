@@ -38,11 +38,14 @@ const Dofus = (props: propsType): React.ReactElement => {
     const setContentFunc = (choice: string): void => {
         if (choice === 'enclos' && props.user && (menuChoice !== choice || !loaded)) {
             setContent(<Enclos />);
-        } else if (choice === 'dragodindes' && props.user && (menuChoice !== choice || !loaded)) {
+        }
+        else if (choice === 'dragodindes' && props.user && (menuChoice !== choice || !loaded)) {
             setContent(<Dragodindes />);
-        } else if (choice === 'fecondator' && props.user && (menuChoice !== choice || !loaded)) {
+        }
+        else if (choice === 'fecondator' && props.user && (menuChoice !== choice || !loaded)) {
             setContent(<Fecondator user={props.user} />);
-        } else if (choice === 'craft') {
+        }
+        else if (choice === 'craft') {
             // setContent(<Craft user={props.user} urlArg={props.urlArg} />);
             setContent(<Craft urlArg={props.urlArg} />);
         }
@@ -54,7 +57,7 @@ const Dofus = (props: propsType): React.ReactElement => {
                 <a href='#?p=enclos'>
                     <h5
                         className={menuChoice === 'enclos' ? 'active' : ''}
-                        onClick={() => setChoice('enclos')}
+                        onClick={(): void => setChoice('enclos')}
                     >
                         Mes enclos
                     </h5>
@@ -62,7 +65,7 @@ const Dofus = (props: propsType): React.ReactElement => {
                 <a href='#?p=dragodindes'>
                     <h5
                         className={menuChoice === 'dragodindes' ? 'active' : ''}
-                        onClick={() => setChoice('dragodindes')}
+                        onClick={(): void => setChoice('dragodindes')}
                     >
                         Mes dragodindes
                     </h5>
@@ -70,7 +73,7 @@ const Dofus = (props: propsType): React.ReactElement => {
                 <a href='#?p=fecondator'>
                     <h5
                         className={menuChoice === 'fecondator' ? 'active' : ''}
-                        onClick={() => setChoice('fecondator')}
+                        onClick={(): void => setChoice('fecondator')}
                     >
                         Fécondator
                     </h5>
@@ -78,7 +81,7 @@ const Dofus = (props: propsType): React.ReactElement => {
                 <a href='#?p=craft'>
                     <h5
                         className={menuChoice === 'craft' ? 'active' : ''}
-                        onClick={() => setChoice('craft')}
+                        onClick={(): void => setChoice('craft')}
                     >
                         Craft
                     </h5>

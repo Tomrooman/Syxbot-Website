@@ -64,7 +64,8 @@ const EnclosModal = (props: propsType): React.ReactElement => {
                 </Modal>
             </div>
         );
-    } else if (props.show && props.title === 'Supprimer l\'enclos') {
+    }
+    else if (props.show && props.title === 'Supprimer l\'enclos') {
         return (
             <div>
                 <Modal
@@ -112,7 +113,8 @@ const EnclosModal = (props: propsType): React.ReactElement => {
                 </Modal>
             </div>
         );
-    } else {
+    }
+    else {
         return <></>;
     }
 };

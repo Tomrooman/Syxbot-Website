@@ -3,12 +3,12 @@
 import React, { useState } from 'react';
 import _ from 'lodash';
 
-const VoiceRecognition = () => {
+const VoiceRecognition = (): React.ReactElement => {
     const [listening, setListening] = useState(false);
     const SpeechRecognition = window.SpeechRecognition;
     const recognition: any = new SpeechRecognition();
 
-    const handleToggleListen = () => {
+    const handleToggleListen = (): void => {
         if (recognition) {
             setListening(!listening);
             handleListen();
@@ -18,11 +18,11 @@ const VoiceRecognition = () => {
         }
     };
 
-    const handleListen = () => {
+    const handleListen = (): void => {
         console.log('listening : ', listening);
         if (listening) {
             recognition.start();
-            recognition.onend = () => {
+            recognition.onend = (): void => {
                 console.log('...continue listening...');
                 recognition.start();
             };
@@ -31,30 +31,32 @@ const VoiceRecognition = () => {
             recognition.stop();
             recognition.onend = {};
         }
-        recognition.onstart = () => {
+        recognition.onstart = (): void => {
             console.log('Listening!');
         };
-        recognition.onerror = (event: any) => {
+        recognition.onerror = (event: any): void => {
             console.log('Error occurred in recognition: ' + event.error);
         };
-        recognition.onresult = (event: any) => {
+        recognition.onresult = (event: any): void => {
             getCommands(event);
         };
     };
 
-    const getCommands = (event: any) => {
+    const getCommands = (event: any): void => {
         const finalTranscript = _.find(event.results, { isFinal: true })[0].transcript;
         console.log('transcript : ', finalTranscript);
-        document.getElementById('final')!.innerHTML = finalTranscript;
+        const finalDiv = document.getElementById('final');
+        if (!finalDiv) return;
+        finalDiv.innerHTML = finalTranscript;
         const commands = finalTranscript.split(' ');
         console.log('Commandes : ', commands);
         if (commands[0] === 'stop' && commands[1] === 'listening') {
             recognition.stop();
-            recognition.onend = () => {
+            recognition.onend = (): void => {
                 console.log('Stopped listening per command');
                 setListening(false);
-                const finalText = commands.join(' ');
-                document.getElementById('final')!.innerHTML = finalText;
+                const finalText = finalTranscript;
+                finalDiv.innerHTML = finalText;
             };
         }
     };

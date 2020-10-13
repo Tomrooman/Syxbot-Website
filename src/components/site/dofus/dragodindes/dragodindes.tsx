@@ -44,7 +44,8 @@ const Dragodindes = (): React.ReactElement => {
                         setShowedDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
                     }
                     setWait(false);
-                } catch (e) {
+                }
+                catch (e) {
                     console.log('Error /api/dofus/dragodindes : ', e.message);
                 }
             };
@@ -59,7 +60,8 @@ const Dragodindes = (): React.ReactElement => {
             setDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
             setShowedDragodindes(res.data.sort((a: T.dragoType, b: T.dragoType) => a.name.localeCompare(b.name)));
             setAction('default');
-        } catch (e) {
+        }
+        catch (e) {
             console.log(`Error ${url} : `, e.message);
         }
     };
@@ -70,7 +72,8 @@ const Dragodindes = (): React.ReactElement => {
         if (!selected) {
             JSONselected = setDragoJSON(dragoJSON, name);
             localDragodindes.push({ name: name, duration: duration, generation: generation });
-        } else {
+        }
+        else {
             localDragodindes = removeDragodindeFromArray(name, localDragodindes);
             JSONselected = setRemoveDragoJSON(name);
         }
@@ -157,7 +160,8 @@ const Dragodindes = (): React.ReactElement => {
                     _selectedDrago = _.compact(_selectedDrago);
                 }
             });
-        } else {
+        }
+        else {
             _selectedDrago.push({ name: name, duration: duration, generation: generation });
             _selectedDrago = _.compact(_selectedDrago);
         }
@@ -198,13 +202,17 @@ const Dragodindes = (): React.ReactElement => {
         let goodTitle = '';
         if (choice === 'new') {
             goodTitle = 'Ajouter des dragodindes';
-        } else if (choice === 'last') {
+        }
+        else if (choice === 'last') {
             goodTitle = 'Définir comme fécondée ?';
-        } else if (choice === 'remove-last') {
+        }
+        else if (choice === 'remove-last') {
             goodTitle = 'Retirer la fécondation ?';
-        } else if (choice === 'unused') {
+        }
+        else if (choice === 'unused') {
             goodTitle = 'Définir comme déjà utilisée ?';
-        } else if (choice === 'remove-unused') {
+        }
+        else if (choice === 'remove-unused') {
             goodTitle = 'Définir comme disponible ?';
         }
         setShow(true);
@@ -227,7 +235,7 @@ const Dragodindes = (): React.ReactElement => {
                 {!selectedDrago.length ?
                     <button
                         className='my-dragodindes-add-btn'
-                        onClick={() => showModal('new')}
+                        onClick={(): void => showModal('new')}
                     >
                         Ajouter des dragodindes
                     </button> :
@@ -240,7 +248,7 @@ const Dragodindes = (): React.ReactElement => {
                 {action === 'remove' ?
                     <button
                         className='my-dragodindes-add-btn'
-                        onClick={() => handleCallAPI('/api/dofus/dragodindes/remove')}
+                        onClick={(): void => handleCallAPI('/api/dofus/dragodindes/remove')}
                     >
                         Supprimer la sélection
                     </button> :
@@ -287,7 +295,7 @@ const Dragodindes = (): React.ReactElement => {
                                                     >
                                                         <span
                                                             className='icon-used'
-                                                            onClick={() => handleUnusedDragodindes(drago)}
+                                                            onClick={(): void => handleUnusedDragodindes(drago)}
                                                         >
                                                             <FontAwesomeIcon icon='toggle-off' />
                                                         </span>
@@ -298,7 +306,7 @@ const Dragodindes = (): React.ReactElement => {
                                                         >
                                                             <span
                                                                 className='icon-used'
-                                                                onClick={() => handleUnusedDragodindes(drago)}
+                                                                onClick={(): void => handleUnusedDragodindes(drago)}
                                                             >
                                                                 <FontAwesomeIcon icon='toggle-on' />
                                                             </span>
@@ -310,7 +318,7 @@ const Dragodindes = (): React.ReactElement => {
                                                     >
                                                         <span
                                                             className='icon-heart'
-                                                            onClick={() => handleLastDragodinde(drago)}
+                                                            onClick={(): void => handleLastDragodinde(drago)}
                                                         >
                                                             <FontAwesomeIcon icon='heart' />
                                                         </span>
@@ -321,7 +329,7 @@ const Dragodindes = (): React.ReactElement => {
                                                         >
                                                             <span
                                                                 className='icon-heart'
-                                                                onClick={() => handleLastDragodinde(drago)}
+                                                                onClick={(): void => handleLastDragodinde(drago)}
                                                             >
                                                                 <FontAwesomeIcon icon='heart-broken' />
                                                             </span>
@@ -330,7 +338,7 @@ const Dragodindes = (): React.ReactElement => {
                                                     <Tooltip title={drago.selected ? 'Retirer de la sélection' : 'Sélectionner pour la suppression'} placement='top'>
                                                         <span
                                                             className='icon-cross'
-                                                            onClick={() => handleSelectMyDragodindes(drago.name, drago.duration, drago.generation, drago.selected)}
+                                                            onClick={(): void => handleSelectMyDragodindes(drago.name, drago.duration, drago.generation, drago.selected)}
                                                         >
                                                             <FontAwesomeIcon icon='times-circle' />
                                                         </span>

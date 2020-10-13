@@ -31,7 +31,8 @@ const Enclos = (): React.ReactElement => {
                         setEnclos(_.orderBy(data, 'title', 'asc'));
                     }
                     setWait(false);
-                } catch (e) {
+                }
+                catch (e) {
                     console.log('Error /api/dofus/enclos : ', e.message);
                 }
             };
@@ -63,7 +64,8 @@ const Enclos = (): React.ReactElement => {
             }
             setShowInput('');
             setShowContent('');
-        } catch (e) {
+        }
+        catch (e) {
             console.log(`Error ${url} : `, e.message);
         }
     };
@@ -100,7 +102,8 @@ const Enclos = (): React.ReactElement => {
     const handleModifyInfos = (e: any, newTitle: string, newContent: string): void => {
         if (e.target.tagName === 'svg' || e.target.tagName === 'SPAN' || e.target.tagName === 'path') {
             showModal('remove', { title: newTitle, content: newContent });
-        } else if (e.target.type !== 'textarea') {
+        }
+        else if (e.target.type !== 'textarea') {
             setInput(newContent);
             setShowInput(showInput === newTitle ? '' : newTitle);
             setShowContent(showContent === newContent ? '' : newContent);
@@ -130,7 +133,7 @@ const Enclos = (): React.ReactElement => {
                 removeEnclos={removeEnclos}
             />
             <div className='top-btn col-sm-12 text-center'>
-                <button onClick={() => showModal('new')}>Ajouter un enclos</button>
+                <button onClick={(): void => showModal('new')}>Ajouter un enclos</button>
             </div>
             <div className='container col-10 enclos-container row'>
                 {enclos && enclos.length ?
@@ -138,7 +141,7 @@ const Enclos = (): React.ReactElement => {
                         return (
                             <div
                                 className='one_infos text-center col-sm-12 col-md-5 col-lg-5'
-                                onClick={(e: any) => handleModifyInfos(e, enclo.title, enclo.content)}
+                                onClick={(e: any): void => handleModifyInfos(e, enclo.title, enclo.content)}
                                 key={index}
                             >
                                 <h4>
@@ -156,7 +159,7 @@ const Enclos = (): React.ReactElement => {
                                             onChange={handleChange}
                                         />
                                         <button
-                                            onClick={() => handleClick(enclo.title, enclo.content)}
+                                            onClick={(): void => handleClick(enclo.title, enclo.content)}
                                         >
                                             Valider
                                         </button>

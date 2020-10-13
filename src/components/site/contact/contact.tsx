@@ -53,7 +53,8 @@ const Contact = (): React.ReactElement => {
                     return;
                 }
                 handleError();
-            } catch (e) {
+            }
+            catch (e) {
                 console.log('Error /api/docs/contact : ', e.message);
                 $('.contact-submit-div')[0].children[0].innerHTML = 'Envoyer mon message';
                 handleError();
@@ -109,7 +110,7 @@ const Contact = (): React.ReactElement => {
                             label='Votre adresse mail'
                             placeholder='Exemple@hotmail.com'
                             variant='outlined'
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => handleOnChange('mail', e)}
+                            onChange={(e: ChangeEvent<HTMLInputElement>): void => handleOnChange('mail', e)}
                         />
                     </div>
                     <div className='contact-object'>
@@ -118,7 +119,7 @@ const Contact = (): React.ReactElement => {
                             id='required-object'
                             label='Objet'
                             variant='outlined'
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => handleOnChange('object', e)}
+                            onChange={(e: ChangeEvent<HTMLInputElement>): void => handleOnChange('object', e)}
                         />
                     </div>
                     <div className='contact-message'>
@@ -127,11 +128,11 @@ const Contact = (): React.ReactElement => {
                             rows={4}
                             cols={30}
                             id='message'
-                            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => handleOnChange('message', e)}
+                            onChange={(e: ChangeEvent<HTMLTextAreaElement>): void => handleOnChange('message', e)}
                         />
                     </div>
                     <div className='contact-submit-div'>
-                        <button onClick={() => sendMessage()}>Envoyer mon message</button>
+                        <button onClick={(): Promise<void> => sendMessage()}>Envoyer mon message</button>
                     </div>
                 </div>
             </div>

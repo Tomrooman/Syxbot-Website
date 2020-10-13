@@ -38,6 +38,9 @@
         }
     },
     "rules": {
+        "camelcase": [
+            "off"
+        ],
         "react/jsx-indent-props": [
             2,
             "first"
@@ -50,7 +53,11 @@
             4
         ],
         "brace-style": [
-            2
+            "error",
+            "stroustrup",
+            {
+                "allowSingleLine": true
+            }
         ],
         "comma-dangle": [
             "error",

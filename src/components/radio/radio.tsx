@@ -34,11 +34,13 @@ const Radio = (): React.ReactElement => {
                 $('audio')[0].removeAttribute('autoPlay');
                 setDropdownTitle(radio.name.indexOf('&amp;') !== -1 ? radio.name.split('&amp;').join(' & ') : radio.name);
             }
-        } else if (radio && radio.volume && !loaded) {
+        }
+        else if (radio && radio.volume && !loaded) {
             ($('audio')[0] as HTMLAudioElement).volume = radio.volume;
             $('.slider')[0].setAttribute('value', String(radio.volume * 100));
             setLoaded(true);
-        } else if (!loaded) {
+        }
+        else if (!loaded) {
             ($('audio')[0] as HTMLAudioElement).volume = 0.2;
             $('.slider')[0].setAttribute('value', String(20));
             setLoaded(true);
@@ -106,7 +108,8 @@ const Radio = (): React.ReactElement => {
             const _audio = $('audio')[0] as HTMLMediaElement;
             if (_audio.paused) {
                 _audio.play();
-            } else {
+            }
+            else {
                 _audio.pause();
             }
         }
@@ -138,7 +141,8 @@ const Radio = (): React.ReactElement => {
             $('.radio_player').css('opacity', 0);
             $('.radio_player').css('transform', 'translateY(-50px)');
             $('.radio_player').css('visibility', 'hidden');
-        } else {
+        }
+        else {
             $('.radio_player').css('opacity', 1);
             $('.radio_player').css('transform', 'translateY(0px)');
             $('.radio_player').css('visibility', 'visible');
@@ -161,7 +165,7 @@ const Radio = (): React.ReactElement => {
                                 <button
                                     className='dropdown-item'
                                     key={_index}
-                                    onClick={() => { handleClick(`/assets/img/radio/${obj.name.toLowerCase()}.png`, _index, obj.name, obj.url); }}
+                                    onClick={(): void => { handleClick(`/assets/img/radio/${obj.name.toLowerCase()}.png`, _index, obj.name, obj.url); }}
                                 >
                                     {obj.name}
                                 </button>

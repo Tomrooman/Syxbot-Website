@@ -86,7 +86,8 @@ const FecondatorModal = (props: propsType): React.ReactElement => {
                 </Modal>
             </div>
         );
-    } else {
+    }
+    else {
         return <></>;
     }
 };

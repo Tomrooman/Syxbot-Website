@@ -50,7 +50,8 @@ export const register = (config: { onUpdate: FunctionConstructor, onSucces: Func
                         'worker. To learn more, visit https://bit.ly/CRA-PWA'
                     );
                 });
-            } else {
+            }
+            else {
                 // Is not localhost. Just register service worker
                 registerValidSW(swUrl, config);
             }
@@ -58,16 +59,16 @@ export const register = (config: { onUpdate: FunctionConstructor, onSucces: Func
     }
 };
 
-const registerValidSW = (swUrl: string, config: any) => {
+const registerValidSW = (swUrl: string, config: any): void => {
     navigator.serviceWorker
         .register(swUrl)
         .then(registration => {
-            registration.onupdatefound = () => {
+            registration.onupdatefound = (): void => {
                 const installingWorker = registration.installing;
                 if (installingWorker == null) {
                     return;
                 }
-                installingWorker.onstatechange = () => {
+                installingWorker.onstatechange = (): void => {
                     if (installingWorker.state === 'installed') {
                         if (navigator.serviceWorker.controller) {
                             // At this point, the updated precached content has been fetched,
@@ -82,7 +83,8 @@ const registerValidSW = (swUrl: string, config: any) => {
                             if (config && config.onUpdate) {
                                 config.onUpdate(registration);
                             }
-                        } else {
+                        }
+                        else {
                             // At this point, everything has been precached.
                             // It's the perfect time to display a
                             // "Content is cached for offline use." message.
@@ -102,7 +104,7 @@ const registerValidSW = (swUrl: string, config: any) => {
         });
 };
 
-const checkValidServiceWorker = (swUrl: string, config: any) => {
+const checkValidServiceWorker = (swUrl: string, config: any): void => {
     // Check if the service worker can be found. If it can't reload the page.
     fetch(swUrl)
         .then(response => {
@@ -118,7 +120,8 @@ const checkValidServiceWorker = (swUrl: string, config: any) => {
                         window.location.reload();
                     });
                 });
-            } else {
+            }
+            else {
                 // Service worker found. Proceed as normal.
                 registerValidSW(swUrl, config);
             }
