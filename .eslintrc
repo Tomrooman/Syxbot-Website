@@ -82,7 +82,7 @@
             "error",
             {
                 "code": 120,
-                "ignorePattern": "^(\\w[a-zA-Z]+(.| ))+= [a-zA-Z()\\[\\]=_:,<>|{ ]*"
+                "ignorePattern": "^\\s*[a-zA-Z]+.+= [a-zA-Z()\\[\\]=_:.,<>|{ ]*"
             }
         ],
         "max-nested-callbacks": [
