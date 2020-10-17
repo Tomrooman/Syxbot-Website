@@ -22,9 +22,7 @@ const Radio = (): React.ReactElement => {
     const [loaded, setLoaded] = useState(false);
 
     useEffect((): void => {
-        if (!loaded) {
-            $('.radio_png').css('display', 'none');
-        }
+        if (!loaded) $('.radio_png').css('display', 'none');
         if (radio && radio.index !== 99 && !loaded) {
             const playArg = radio.play;
             const { imagePath, radioUrl } = getRadio(radio.index);
@@ -32,7 +30,10 @@ const Radio = (): React.ReactElement => {
             setRadioSourceAndInfos(imagePath, radioUrl, radio.index, radio.name, radio.volume);
             if (!playArg) {
                 $('audio')[0].removeAttribute('autoPlay');
-                setDropdownTitle(radio.name.indexOf('&amp;') !== -1 ? radio.name.split('&amp;').join(' & ') : radio.name);
+                const strRadio = radio.name.indexOf('&amp;') !== -1 ?
+                    radio.name.split('&amp;').join(' & ') :
+                    radio.name;
+                setDropdownTitle(strRadio);
             }
         }
         else if (radio && radio.volume && !loaded) {
@@ -86,9 +87,8 @@ const Radio = (): React.ReactElement => {
         const _audio = $('audio')[0] as HTMLMediaElement;
         const _radioName = radioName.indexOf('&amp;') !== -1 ? radioName.split('&amp;').join(' & ') : radioName;
         ($('audio')[0] as HTMLAudioElement).volume = parseInt(e.target.value, 10) / 100;
-        if (_audio.paused) {
+        if (_audio.paused)
             return setRadioCookie(false, index, ($('audio')[0] as HTMLAudioElement).volume, _radioName);
-        }
         return setRadioCookie(true, index, ($('audio')[0] as HTMLAudioElement).volume, _radioName);
     };
 
@@ -106,17 +106,17 @@ const Radio = (): React.ReactElement => {
     const handleTogglePlay = (): void => {
         if (radioName) {
             const _audio = $('audio')[0] as HTMLMediaElement;
-            if (_audio.paused) {
-                _audio.play();
-            }
-            else {
-                _audio.pause();
-            }
+            if (_audio.paused) _audio.play();
+            else _audio.pause();
         }
     };
 
     const setRadioCookie = (play: boolean, _index: number, volume: number, name: string): void => {
-        if (!radio || (radio && (radio.play !== play || radio.index !== _index || radio.volume !== volume || radio.name !== name))) {
+        if (!radio ||
+            (radio && (radio.play !== play ||
+                radio.index !== _index ||
+                radio.volume !== volume ||
+                radio.name !== name))) {
             const oneDay = 1000 * 60 * 60 * 24;
             const expireDate = new Date(Date.now() + (oneDay * 10));
             const cookieData = {
@@ -149,6 +149,7 @@ const Radio = (): React.ReactElement => {
         }
     };
 
+    /* eslint-disable max-len */
     return (
         <div className='radio_container'>
             <div className='radio_player'>

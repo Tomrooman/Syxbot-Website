@@ -14,6 +14,7 @@ interface propsType {
 
 const FecondatorModal = (props: propsType): React.ReactElement => {
     if (props.show) {
+        /* eslint-disable max-len */
         return (
             <div>
                 <Modal
@@ -87,9 +88,7 @@ const FecondatorModal = (props: propsType): React.ReactElement => {
             </div>
         );
     }
-    else {
-        return <></>;
-    }
+    else return <></>;
 };
 
 FecondatorModal.propTypes = {

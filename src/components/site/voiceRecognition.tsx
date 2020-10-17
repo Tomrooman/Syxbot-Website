@@ -13,9 +13,8 @@ const VoiceRecognition = (): React.ReactElement => {
             setListening(!listening);
             handleListen();
         }
-        else {
+        else
             alert('Les commandes vocales ne fonctionnent pas avec ce navigateur ! Utilisez google chrome');
-        }
     };
 
     const handleListen = (): void => {

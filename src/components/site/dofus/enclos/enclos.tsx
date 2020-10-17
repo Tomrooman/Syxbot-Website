@@ -26,10 +26,12 @@ const Enclos = (): React.ReactElement => {
         if (wait && !loaded) {
             const getEnclosAPI = async (): Promise<void> => {
                 try {
-                    const { data } = await Axios.post('/api/dofus/enclos', { token: Config.security.token, type: 'site' });
-                    if (data) {
-                        setEnclos(_.orderBy(data, 'title', 'asc'));
-                    }
+                    const security = {
+                        token: Config.security.token,
+                        type: 'site'
+                    };
+                    const { data } = await Axios.post('/api/dofus/enclos', security);
+                    if (data) setEnclos(_.orderBy(data, 'title', 'asc'));
                     setWait(false);
                 }
                 catch (e) {
@@ -59,9 +61,7 @@ const Enclos = (): React.ReactElement => {
     const updateEnclosAPI = async (url: string, paramsObj: createEnclosType | modifyEnclosType): Promise<void> => {
         try {
             const res = await Axios.post(url, { ...paramsObj, token: Config.security.token, type: 'site' });
-            if (res.data) {
-                setEnclos(_.orderBy(res.data, 'title', 'asc'));
-            }
+            if (res.data) setEnclos(_.orderBy(res.data, 'title', 'asc'));
             setShowInput('');
             setShowContent('');
         }
@@ -75,9 +75,7 @@ const Enclos = (): React.ReactElement => {
     };
 
     const handleChangeModal = (e: ChangeEvent<HTMLInputElement>): void => {
-        if (e.target.tagName === 'INPUT') {
-            return setEnclosTitle(e.target.value);
-        }
+        if (e.target.tagName === 'INPUT') return setEnclosTitle(e.target.value);
         setContent(e.target.value);
     };
 
@@ -100,16 +98,13 @@ const Enclos = (): React.ReactElement => {
     };
 
     const handleModifyInfos = (e: any, newTitle: string, newContent: string): void => {
-        if (e.target.tagName === 'svg' || e.target.tagName === 'SPAN' || e.target.tagName === 'path') {
+        if (e.target.tagName === 'svg' || e.target.tagName === 'SPAN' || e.target.tagName === 'path')
             showModal('remove', { title: newTitle, content: newContent });
-        }
         else if (e.target.type !== 'textarea') {
             setInput(newContent);
             setShowInput(showInput === newTitle ? '' : newTitle);
             setShowContent(showContent === newContent ? '' : newContent);
-            if ($('textarea')[0]) {
-                $('textarea')[0].setAttribute('value', String(input));
-            }
+            if ($('textarea')[0]) $('textarea')[0].setAttribute('value', String(input));
         }
     };
 

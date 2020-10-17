@@ -38,22 +38,14 @@ const Site = (props: propsType): React.ReactElement => {
                 $('.radio_container').css('transform', 'translateY(' + e.path[1].scrollY + 'px)');
             });
             const fragment = new URLSearchParams(window.location.search);
-            if (fragment.has('code')) {
-                connectUser(fragment);
-            }
+            if (fragment.has('code')) connectUser(fragment);
             else if (user) {
                 localStorage.removeItem('stateParameter');
                 verifyTokenExpiration();
             }
-            else {
-                generateRandomString();
-            }
-            if (props.page === 'dofus') {
-                setPage(<Dofus user={user} urlArg={props.urlArg} />);
-            }
-            else if (props.page === 'warframe') {
-                setPage(<Warframe user={user} urlArg={props.urlArg} />);
-            }
+            else generateRandomString();
+            if (props.page === 'dofus') setPage(<Dofus user={user} urlArg={props.urlArg} />);
+            else if (props.page === 'warframe') setPage(<Warframe user={user} urlArg={props.urlArg} />);
             setLoaded(true);
         }
     });
@@ -63,10 +55,12 @@ const Site = (props: propsType): React.ReactElement => {
         // Max diffH => 167
         if (diffH <= 10) {
             try {
-                const { data } = await Axios.post('/api/token/expiration', { token: Config.security.token, type: 'site' });
-                if (data) {
-                    updateTokenAPI(data);
-                }
+                const security = {
+                    token: Config.security.token,
+                    type: 'site'
+                };
+                const { data } = await Axios.post('/api/token/expiration', security);
+                if (data) updateTokenAPI(data);
             }
             catch (e) {
                 console.log('Error /api/token/expiration : ', e.message);
@@ -80,14 +74,17 @@ const Site = (props: propsType): React.ReactElement => {
         const stateParameter = localStorage.getItem('stateParameter');
         if (stateParameter === encodeURIComponent(urlState)) {
             try {
-                const { data } = await Axios.post('/api/token/connect', { code: code, token: Config.security.token, type: 'site' });
-                if (data) {
-                    return updateTokenAPI(data);
-                }
+                const sendData = {
+                    code: code,
+                    token: Config.security.token,
+                    type: 'site'
+                };
+                const { data } = await Axios.post('/api/token/createCookie', sendData);
+                if (data) return updateTokenAPI(data);
                 window.location.href = Config.OAuth.redirect_url;
             }
             catch (e) {
-                console.log('Error /api/token/connect : ', e.message);
+                console.log('Error /api/token/createCookie : ', e.message);
             }
         }
         else {
@@ -99,10 +96,8 @@ const Site = (props: propsType): React.ReactElement => {
     const updateTokenAPI = async (tokenObj: sessionDataType): Promise<void> => {
         tokenObj.token = Config.security.token;
         try {
-            const res = await Axios.post('/api/token/update', tokenObj);
-            if (res.data) {
-                window.location.href = Config.OAuth.redirect_url;
-            }
+            const res = await Axios.put('/api/token/update', tokenObj);
+            if (res.data) window.location.href = Config.OAuth.redirect_url;
         }
         catch (e) {
             console.log('Error /api/token/update : ', e.message);
@@ -111,10 +106,14 @@ const Site = (props: propsType): React.ReactElement => {
 
     const disconnect = async (): Promise<void> => {
         try {
-            const { data } = await Axios.post('/api/token/remove', { token: Config.security.token, type: 'site' });
-            if (data) {
-                window.location.href = Config.OAuth.redirect_url;
-            }
+            const sendData = {
+                data: {
+                    token: Config.security.token,
+                    type: 'site'
+                }
+            };
+            const { data } = await Axios.delete('/api/token/remove', sendData);
+            if (data) window.location.href = Config.OAuth.redirect_url;
         }
         catch (e) {
             console.log('Error /api/token/remove : ', e.message);
@@ -124,9 +123,8 @@ const Site = (props: propsType): React.ReactElement => {
     const generateRandomString = (): void => {
         const rand = Math.floor(Math.random() * 10);
         let generateRandStr = '';
-        for (let i = 0; i < 20 + rand; i++) {
+        for (let i = 0; i < 20 + rand; i++)
             generateRandStr += String.fromCharCode(33 + Math.floor(Math.random() * 94));
-        }
         generateRandStr = encodeURIComponent(generateRandStr);
         setRandStr(generateRandStr);
         localStorage.setItem('stateParameter', generateRandStr);

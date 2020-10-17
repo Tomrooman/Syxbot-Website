@@ -48,7 +48,9 @@ const Contact = (): React.ReactElement => {
                     $('input')[1].textContent = '';
                     $('textarea')[0].textContent = '';
                     $('.alert').addClass('alert-success');
-                    $('.alert').html('<span>' + $('.alert')[0].children[0].innerHTML + '</span><span style="display: none">' + $('.alert')[0].children[1].innerHTML + '</span> Message envoyé !');
+                    $('.alert').html('<span>' + $('.alert')[0].children[0].innerHTML +
+                        '</span><span style="display: none">' + $('.alert')[0].children[1].innerHTML +
+                        '</span> Message envoyé !');
                     $('.alert')[0].style.display = '';
                     return;
                 }
@@ -66,20 +68,17 @@ const Contact = (): React.ReactElement => {
         $('.contact-submit-div button')[0].style.opacity = '1';
         $('.contact-submit-div button')[0].style.cursor = 'pointer';
         $('.alert').addClass('alert-danger');
-        $('.alert').html('<span style="display: none">' + $('.alert')[0].children[0].innerHTML + '</span><span>' + $('.alert')[0].children[1].innerHTML + '</span> Une erreur est survenue, veuillez réessayer ou me contacter à cette adresse : syxbot@hotmail.com');
+        $('.alert').html('<span style="display: none">' +
+            $('.alert')[0].children[0].innerHTML + '</span><span>' +
+            $('.alert')[0].children[1].innerHTML +
+            '</span> Une erreur est survenue, veuillez réessayer ou me contacter à cette adresse : syxbot@hotmail.com');
         $('.alert')[0].style.display = '';
     };
 
     const handleOnChange = (type: string, e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-        if (type === 'mail') {
-            setMail(e.target.value);
-        }
-        else if (type === 'object') {
-            setObject(e.target.value);
-        }
-        else if (type === 'message') {
-            setMessage(e.target.value);
-        }
+        if (type === 'mail') setMail(e.target.value);
+        else if (type === 'object') setObject(e.target.value);
+        else if (type === 'message') setMessage(e.target.value);
 
         if (mail.length >= 1 && object.length >= 1 && message.length >= 1) {
             if ($('.contact-submit-div button')[0].style.opacity === '') {

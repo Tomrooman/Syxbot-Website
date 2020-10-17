@@ -16,6 +16,7 @@ interface propsType {
 }
 
 const EnclosModal = (props: propsType): React.ReactElement => {
+    /* eslint-disable max-len */
     if (props.show && props.title === 'Rajouter un enclos') {
         return (
             <div>
@@ -114,9 +115,7 @@ const EnclosModal = (props: propsType): React.ReactElement => {
             </div>
         );
     }
-    else {
-        return <></>;
-    }
+    else return <></>;
 };
 
 EnclosModal.propTypes = {

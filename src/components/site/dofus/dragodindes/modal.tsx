@@ -18,6 +18,7 @@ interface propsType {
 }
 
 const DragodindesModal = (props: propsType): React.ReactElement => {
+    /* eslint-disable max-len */
     if (props.show && props.title === 'Ajouter des dragodindes') {
         return (
             <div>
@@ -235,9 +236,7 @@ const DragodindesModal = (props: propsType): React.ReactElement => {
             </div>
         );
     }
-    else {
-        return (<></>);
-    }
+    else return (<></>);
 };
 
 DragodindesModal.propTypes = {

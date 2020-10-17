@@ -26,6 +26,7 @@ interface propsType {
 }
 
 const Sidebar = (props: propsType): React.ReactElement => {
+    /* eslint-disable max-len */
     return (
         <div className='sidenav'>
             <a href='/'>

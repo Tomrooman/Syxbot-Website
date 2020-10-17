@@ -36,15 +36,12 @@ const Dofus = (props: propsType): React.ReactElement => {
     };
 
     const setContentFunc = (choice: string): void => {
-        if (choice === 'enclos' && props.user && (menuChoice !== choice || !loaded)) {
+        if (choice === 'enclos' && props.user && (menuChoice !== choice || !loaded))
             setContent(<Enclos />);
-        }
-        else if (choice === 'dragodindes' && props.user && (menuChoice !== choice || !loaded)) {
+        else if (choice === 'dragodindes' && props.user && (menuChoice !== choice || !loaded))
             setContent(<Dragodindes />);
-        }
-        else if (choice === 'fecondator' && props.user && (menuChoice !== choice || !loaded)) {
+        else if (choice === 'fecondator' && props.user && (menuChoice !== choice || !loaded))
             setContent(<Fecondator user={props.user} />);
-        }
         else if (choice === 'craft') {
             // setContent(<Craft user={props.user} urlArg={props.urlArg} />);
             setContent(<Craft urlArg={props.urlArg} />);

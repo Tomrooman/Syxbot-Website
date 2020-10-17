@@ -21,16 +21,10 @@ const Craft = (props: propsType): React.ReactElement => {
 
     useEffect(() => {
         if (selectedCategory !== '' && !loaded) {
-            if (_.indexOf(categories, selectedCategory) === -1) {
-                setSelectedCategory('');
-            }
-            else {
-                setShowedItems(Crafts.filter(c => c.category === selectedCategory)[0]);
-            }
+            if (_.indexOf(categories, selectedCategory) === -1) setSelectedCategory('');
+            else setShowedItems(Crafts.filter(c => c.category === selectedCategory)[0]);
         }
-        if (!loaded) {
-            setLoaded(true);
-        }
+        if (!loaded) setLoaded(true);
 
         return (): void => {
             setSelectedCategory('');
@@ -43,11 +37,11 @@ const Craft = (props: propsType): React.ReactElement => {
     };
 
     const handleOnScroll = (e: React.WheelEvent<HTMLDivElement>): void => {
-        if (e.currentTarget.className.indexOf('little') !== -1) {
+        if (e.currentTarget.className.indexOf('little') !== -1)
             $(e.currentTarget).scrollLeft(Number($(e.currentTarget).scrollLeft()) + e.deltaY);
-        }
     };
 
+    /* eslint-disable max-len */
     return (
         <div className='principal-container'>
             <div
