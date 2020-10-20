@@ -1,15 +1,11 @@
 export interface enclosType {
+    _id: string;
     title: string;
     content: string;
 }
 
-export interface createEnclosType {
-    title: string;
-    content: string;
-}
-
-export interface modifyEnclosType {
-    title: string;
-    oldContent: string;
-    newContent: string;
+export interface callEnclosAPIType {
+    id?: string;
+    title?: string;
+    content?: string;
 }
