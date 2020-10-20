@@ -6,7 +6,7 @@ import _ from 'lodash';
 import $ from 'jquery';
 import EnclosModal from './modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { enclosType, createEnclosType, modifyEnclosType } from '../../../../@types/enclos';
+import { enclosType, callEnclosAPIType } from '../../../../@types/enclos';
 import Config from '../../../../../config.json';
 
 const Enclos = (): React.ReactElement => {
@@ -48,17 +48,16 @@ const Enclos = (): React.ReactElement => {
         setTitle('');
     };
 
-    const handleClick = (newTitle: string, oldContent: string): void => {
+    const handleClick = (id: string, content: string): void => {
         if (input !== content) {
             updateEnclosAPI('/api/dofus/enclos/update', {
-                title: newTitle,
-                oldContent: oldContent,
-                newContent: input
+                id: id,
+                content: content
             });
         }
     };
 
-    const updateEnclosAPI = async (url: string, paramsObj: createEnclosType | modifyEnclosType): Promise<void> => {
+    const updateEnclosAPI = async (url: string, paramsObj: callEnclosAPIType): Promise<void> => {
         try {
             const res = await Axios.post(url, { ...paramsObj, token: Config.security.token, type: 'site' });
             if (res.data) setEnclos(_.orderBy(res.data, 'title', 'asc'));
@@ -91,15 +90,14 @@ const Enclos = (): React.ReactElement => {
 
     const handleRemoveEnclos = (): void => {
         updateEnclosAPI('/api/dofus/enclos/remove', {
-            title: removeEnclos.title,
-            content: removeEnclos.content
+            id: removeEnclos._id
         });
         handleClose();
     };
 
-    const handleModifyInfos = (e: any, newTitle: string, newContent: string): void => {
+    const handleModifyInfos = (e: any, id: string, newTitle: string, newContent: string): void => {
         if (e.target.tagName === 'svg' || e.target.tagName === 'SPAN' || e.target.tagName === 'path')
-            showModal('remove', { title: newTitle, content: newContent });
+            showModal('remove', { _id: id, title: newTitle, content: newContent });
         else if (e.target.type !== 'textarea') {
             setInput(newContent);
             setShowInput(showInput === newTitle ? '' : newTitle);
@@ -136,7 +134,7 @@ const Enclos = (): React.ReactElement => {
                         return (
                             <div
                                 className='one_infos text-center col-sm-12 col-md-5 col-lg-5'
-                                onClick={(e: any): void => handleModifyInfos(e, enclo.title, enclo.content)}
+                                onClick={(e: any): void => handleModifyInfos(e, enclo._id, enclo.title, enclo.content)}
                                 key={index}
                             >
                                 <h4>
@@ -154,7 +152,7 @@ const Enclos = (): React.ReactElement => {
                                             onChange={handleChange}
                                         />
                                         <button
-                                            onClick={(): void => handleClick(enclo.title, enclo.content)}
+                                            onClick={(): void => handleClick(enclo._id, input)}
                                         >
                                             Valider
                                         </button>
