@@ -48,11 +48,11 @@ const Enclos = (): React.ReactElement => {
         setTitle('');
     };
 
-    const handleClick = (id: string, content: string): void => {
-        if (input !== content) {
+    const handleClick = (id: string, newContent: string): void => {
+        if (input !== newContent) {
             updateEnclosAPI('/api/dofus/enclos/update', {
                 id: id,
-                content: content
+                content: newContent
             });
         }
     };
