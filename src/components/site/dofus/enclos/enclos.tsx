@@ -11,7 +11,6 @@ import Config from '../../../../../config.json';
 
 const Enclos = (): React.ReactElement => {
     const [showInput, setShowInput] = useState('');
-    const [showContent, setShowContent] = useState('');
     const [removeEnclos, setRemoveEnclos] = useState({} as enclosType);
     const [wait, setWait] = useState(true);
     const [input, setInput] = useState('');
@@ -48,10 +47,11 @@ const Enclos = (): React.ReactElement => {
         setTitle('');
     };
 
-    const handleClick = (id: string, newContent: string): void => {
+    const handleClick = (id: string, title: string, newContent: string): void => {
         if (input !== newContent) {
-            updateEnclosAPI('/api/dofus/enclos/update', {
-                id: id,
+            updateEnclosAPI('/api/dofus/enclos/modify', {
+                enclosID: id,
+                title: title,
                 content: newContent
             });
         }
@@ -62,7 +62,6 @@ const Enclos = (): React.ReactElement => {
             const res = await Axios.post(url, { ...paramsObj, token: Config.security.token, type: 'site' });
             if (res.data) setEnclos(_.orderBy(res.data, 'title', 'asc'));
             setShowInput('');
-            setShowContent('');
         }
         catch (e) {
             console.log(`Error ${url} : `, e.message);
@@ -80,7 +79,7 @@ const Enclos = (): React.ReactElement => {
 
     const handleCreateEnclos = (): void => {
         if (enclosTitle && content) {
-            updateEnclosAPI('/api/dofus/enclos/create', {
+            updateEnclosAPI('/api/dofus/enclos/modify', {
                 title: enclosTitle,
                 content: content
             });
@@ -89,8 +88,9 @@ const Enclos = (): React.ReactElement => {
     };
 
     const handleRemoveEnclos = (): void => {
-        updateEnclosAPI('/api/dofus/enclos/remove', {
-            id: removeEnclos._id
+        updateEnclosAPI('/api/dofus/enclos/modify', {
+            action: 'remove',
+            enclosID: removeEnclos._id
         });
         handleClose();
     };
@@ -101,7 +101,6 @@ const Enclos = (): React.ReactElement => {
         else if (e.target.type !== 'textarea') {
             setInput(newContent);
             setShowInput(showInput === newTitle ? '' : newTitle);
-            setShowContent(showContent === newContent ? '' : newContent);
             if ($('textarea')[0]) $('textarea')[0].setAttribute('value', String(input));
         }
     };
@@ -143,7 +142,7 @@ const Enclos = (): React.ReactElement => {
                                         <FontAwesomeIcon icon='times-circle' />
                                     </span>
                                 </h4>
-                                {showInput === enclo.title && showContent === enclo.content ?
+                                {showInput === enclo._id.toString() ?
                                     <>
                                         <textarea
                                             className='infos-input'
@@ -152,7 +151,7 @@ const Enclos = (): React.ReactElement => {
                                             onChange={handleChange}
                                         />
                                         <button
-                                            onClick={(): void => handleClick(enclo._id, input)}
+                                            onClick={(): void => handleClick(enclo._id, enclo.title, input)}
                                         >
                                             Valider
                                         </button>

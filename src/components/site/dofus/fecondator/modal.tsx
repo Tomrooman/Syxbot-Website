@@ -7,7 +7,7 @@ import { usedAndLastArrayDragoType } from '../../../../@types/dragodindes';
 
 interface propsType {
     dragodindes: usedAndLastArrayDragoType;
-    handleCallAutomateAPI(): void;
+    handleCallAutomaticAPI(): void;
     handleClose(): void;
     show: boolean;
 }
@@ -30,7 +30,7 @@ const FecondatorModal = (props: propsType): React.ReactElement => {
                         {props.dragodindes.used.length > 0 ?
                             <>
                                 <h3 className='used-modal-title'>{props.dragodindes.used.length > 1 ? 'Utilisées' : 'Utilisée'}</h3>
-                                <div className='automate-list'>
+                                <div className='automatic-list'>
                                     {props.dragodindes.used.map((drago, index) => {
                                         return (
                                             <div
@@ -50,7 +50,7 @@ const FecondatorModal = (props: propsType): React.ReactElement => {
                                 </div>
                             </> : ''}
                         <h3 className='last-modal-title'>La dernière fécondée</h3>
-                        <div className='automate-list'>
+                        <div className='automatic-list'>
                             {props.dragodindes.last.map((drago, index) => {
                                 return (
                                     <div
@@ -70,7 +70,7 @@ const FecondatorModal = (props: propsType): React.ReactElement => {
                         <span className='col-6 text-left'>
                             <button
                                 className='enclos-modal-create-btn'
-                                onClick={props.handleCallAutomateAPI}
+                                onClick={props.handleCallAutomaticAPI}
                             >
                                 Mettre à jour
                             </button>
@@ -94,7 +94,7 @@ const FecondatorModal = (props: propsType): React.ReactElement => {
 FecondatorModal.propTypes = {
     show: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
-    handleCallAutomateAPI: PropTypes.func.isRequired,
+    handleCallAutomaticAPI: PropTypes.func.isRequired,
     dragodindes: PropTypes.object.isRequired
 };
 

@@ -191,7 +191,7 @@ const Fecondator = (props: propsType): React.ReactElement => {
         return hours > 0 ? hours + 'H' + goodMinutes + goodSeconds : goodMinutes + goodSeconds;
     };
 
-    const handleAutomateFecond = (index: number): void => {
+    const handleAutomaticFecond = (index: number): void => {
         const used: T.dragoType[] = [];
         const localLast: T.dragoType[] = [];
         dragodindes.map((drago, mapIndex) => {
@@ -203,9 +203,9 @@ const Fecondator = (props: propsType): React.ReactElement => {
         setShow(true);
     };
 
-    const handleCallAutomateAPI = async (): Promise<void> => {
+    const handleCallAutomaticAPI = async (): Promise<void> => {
         try {
-            await Axios.post('/api/dofus/dragodindes/fecondator/automate', {
+            await Axios.post('/api/dofus/dragodindes/fecondator/automatic', {
                 dragodindes: selectedDrago,
                 token: Config.security.token,
                 type: 'site'
@@ -234,7 +234,7 @@ const Fecondator = (props: propsType): React.ReactElement => {
         <div className='principal-container'>
             <FecondatorModal
                 handleClose={handleClose}
-                handleCallAutomateAPI={handleCallAutomateAPI}
+                handleCallAutomaticAPI={handleCallAutomaticAPI}
                 show={show}
                 dragodindes={selectedDrago}
             />
@@ -293,14 +293,14 @@ const Fecondator = (props: propsType): React.ReactElement => {
                                                 <div className='fecondator-time-now'>
                                                     {(showedDragodindes[index + 1] && showedDragodindes[index + 1].end?.time.substr(0, 10) !== 'Maintenant') || (!showedDragodindes[index + 1]) ?
                                                         <>
-                                                            <p className='fecondator-automate-time col-10 text-center'>Maintenant</p>
+                                                            <p className='fecondator-automatic-time col-10 text-center'>Maintenant</p>
                                                             <Tooltip
                                                                 title='Définir comme la dernière dragodinde fécondée et définir les dragodindes précédentes comme utilisées'
                                                                 placement='top'
                                                             >
                                                                 <span
-                                                                    className='fecondator-automate-icon col-2'
-                                                                    onClick={(): void => handleAutomateFecond(index)}
+                                                                    className='fecondator-automatic-icon col-2'
+                                                                    onClick={(): void => handleAutomaticFecond(index)}
                                                                 >
                                                                     <FontAwesomeIcon icon='sync' />
                                                                 </span>

@@ -5,7 +5,8 @@ export interface enclosType {
 }
 
 export interface callEnclosAPIType {
-    id?: string;
+    action?: string;
+    enclosID?: string;
     title?: string;
     content?: string;
 }

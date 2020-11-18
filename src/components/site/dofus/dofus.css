@@ -33,7 +33,7 @@ input {
     margin-top: 2rem;
 }
 
-.add-drago-list, .automate-list {
+.add-drago-list, .automatic-list {
     max-height: 70vh;
     margin-top : 16px;
     overflow-y: auto;
@@ -41,7 +41,7 @@ input {
     border-radius: 5px;
 }
 
-.automate-list .automate-line img {
+.automatic-list .automatic-line img {
     width : 50px;
     height: auto;
 }
@@ -140,7 +140,7 @@ input {
     cursor: pointer;
 }
 
-.automate-line, .drago-line {
+.automatic-line, .drago-line {
     padding-top : 5px;
     padding-bottom : 5px;
     padding-right: 10px;
@@ -153,12 +153,12 @@ input {
     transition: all 0.2s;
 }
 
-.automate-line .last {
+.automatic-line .last {
     background : rgb(166, 190, 201);
     border: 1px solid rgb(24, 100, 134);
 }
 
-.automate-line .last p {
+.automatic-line .last p {
     color : rgb(21, 72, 95) !important;
 }
 
@@ -225,7 +225,7 @@ input {
     padding : 0;
 }
 
-.fecondator-automate-icon {
+.fecondator-automatic-icon {
     color: white;
     cursor: pointer;
     font-size: 1.2rem;
@@ -234,7 +234,7 @@ input {
     border-radius: 10px;
 }
 
-.fecondator-automate-icon:hover {
+.fecondator-automatic-icon:hover {
     transform: scale(1.5, 1.5);
     transition: all .2s;
 }

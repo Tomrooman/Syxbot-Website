@@ -11,7 +11,7 @@ export interface userType {
 export interface sessionDataType {
     username: string;
     discriminator: string;
-    userId: string;
+    userID: string;
     token_type: string;
     expires_in: number;
     countdown: boolean;
